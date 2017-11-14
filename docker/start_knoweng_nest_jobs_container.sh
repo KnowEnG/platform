@@ -19,4 +19,4 @@ docker run \
     --volume="$DOCKER_HOST_NEST_DIR/data/projects/knoweng/zip_readmes":/zip_readmes \
     --env="PYTHONPATH=/code_live" \
     --env="PROJECT_ENV=knoweng" \
-    nest/nest_jobs:latest 
+    knowengdev/nest_jobs:latest 

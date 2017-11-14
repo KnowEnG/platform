@@ -14,4 +14,4 @@ docker run \
     --volume="$DOCKER_HOST_NEST_DIR":/code_live \
     --env="PYTHONPATH=/code_live" \
     --env="PROJECT_ENV=hello_world" \
-    nest/nest_jobs:latest 
+    knowengdev/nest_jobs:latest 

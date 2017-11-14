@@ -25,6 +25,6 @@ docker run \
 	--rm=true \
 	--volume="$DOCKER_HOST_NEST_DIR/data/userfiles":/userfiles \
 	--volume="$DOCKER_HOST_NEST_DIR":/code_live \
-	nest/nest_ops:latest \
+	knowengdev/nest_ops:latest \
 	"$@"
 

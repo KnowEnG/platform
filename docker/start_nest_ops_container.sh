@@ -34,5 +34,5 @@ docker run \
     --volume=/usr/bin/docker:/usr/bin/docker \
 	--volume="$DOCKER_PROJECT_DIR/nest_ops_ssh_config":/ssh/config \
 	--workdir=/code_live/ \
-	nest/nest_ops:latest \
+	knowengdev/nest_ops:latest \
 	"$@"

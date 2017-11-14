@@ -19,5 +19,5 @@ docker run \
     --env="PROJECT_ENV=mmbdb" \
     --env="NEST_RUNLEVEL=$NEST_RUNLEVEL" \
 	--workdir=/code_live \
-    nest/nest_flask:latest 
+    knowengdev/nest_flask:latest 
 

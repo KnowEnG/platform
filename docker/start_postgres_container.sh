@@ -12,4 +12,4 @@ docker run \
 	--env=POSTGRES_USER="nest" \
 	--env=POSTGRES_PASSWORD="GARBAGESECRET" \
 	--volume="$DOCKER_HOST_NEST_DIR/data/db":/data/db \
-	nest/postgres:latest 
+	knowengdev/postgres:latest 
