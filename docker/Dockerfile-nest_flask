@@ -1,0 +1,18 @@
+FROM bodom0015/uwsgi-nginx-flask:latest
+RUN mkdir /home/dockeruser
+RUN chmod 777 /home/dockeruser
+ENV HOME=/home/dockeruser
+
+RUN apt-get update && apt-get install -y vim
+
+#see explanation in Dockerfile-nest_ops
+RUN pip install setuptools==33.1.1
+
+#postgres/python interop for sqlalchemy
+RUN apt-get update && apt-get install -y libpq-dev python-dev
+
+# install python libs
+ADD ./requirements /code_buildtime_tmp/requirements
+WORKDIR /code_buildtime_tmp
+RUN pip install -q -r requirements/nest_flask.txt
+

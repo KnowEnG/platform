@@ -1,0 +1,49 @@
+<div class="row-alpha-diversity">
+    <span class="alpha-diversity">Alpha Diversity</span>
+</div>
+<div class="chart-table-container" *ngIf="comparingCohortsPhylumData">
+    <div class="chart-table-column">
+        <div class="row-richness-evenness">
+            <span class="richness-evenness-distribution">Richness Distribution</span>
+        </div>
+        <div>
+            <div class="richness-evenness-chart" *ngIf="richnessData">
+                <grouped-barchart [data]="richnessData" [maxXLabel]="maxRichness" [configOption]="{width: 420, height: 110, svgMargin: {top:20, right:50, bottom: 20, left: 15}, svgBorder: true, xLabel: 'Richness Score', binTitleLabel: 'Richness Score'}"></grouped-barchart>
+            </div>
+            <div class="individual-box" *ngIf="individual">
+                <div class="individual-box-title">{{individual.display_name_short}}</div>
+                <div class="individual-box-content">
+                    <span class="individual-box-score">{{individualRichnessScore}}</span>
+                    <br>
+                    <span class="individual-box-unit">Richness Score</span>
+                </div>
+            </div>
+        </div>
+        <div class="row-richness-evenness-by-phylum">
+            <span class="richness-evenness-by-phylum">RICHNESS BY PHYLUM</span>
+        </div>
+        <richness-table [comparingCohortsPhylumData]="comparingCohortsPhylumData"></richness-table>
+    </div><!-- this trick is to get rid of white spaces between inline-blocks  
+    --><div class="chart-table-column">
+        <div class="row-richness-evenness">
+            <span class="richness-evenness-distribution">Evenness Distribution</span>
+        </div>
+        <div>
+            <div class="richness-evenness-chart" *ngIf="evennessData">
+                <grouped-barchart [data]="evennessData" [maxXLabel]="maxEvenness" [configOption]="{width: 420, height: 110, svgMargin: {top:20, right:50, bottom: 20, left: 15}, svgBorder: true, xLabel: 'Evenness Score', binTitleLabel: 'Evenness Score'}"></grouped-barchart>
+            </div>
+            <div class="individual-box" *ngIf="individual">
+                <div class="individual-box-title">{{individual.display_name_short}}</div>
+                <div class="individual-box-content">
+                    <span class="individual-box-score">{{individualEvennessScore}}</span>
+                    <br>
+                    <span class="individual-box-unit">Evenness Score</span>
+                </div>
+            </div>
+        </div>
+        <div class="row-richness-evenness-by-phylum">
+            <span class="richness-evenness-by-phylum">EVENNESS BY PHYLUM</span>
+        </div>
+        <evenness-table [comparingCohortsPhylumData]="comparingCohortsPhylumData "></evenness-table>
+    </div>
+</div>

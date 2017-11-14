@@ -1,0 +1,29 @@
+<div class="row-relative-abundance">
+    <div class="text-relative-abundance">
+        Relative Abundance
+    </div>
+</div>
+<div class="row-radius-scale-top-otu">
+    <div class="radius-scale-container">
+        <span class="radius-scale middle">
+                RADIUS SCALE
+            </span>
+        <span class="slider-container middle">
+                <abundance-slider (radiusChanges)="onRadiusChange($event)"></abundance-slider>
+            </span>
+    </div>
+    <div class="top-otus-label">
+        <svg width="8" height="8">
+                <circle cx="4" cy="4" r="4" fill="#e05869"/>
+            </svg>
+        <span>&nbsp;&nbsp;TOP OTUS </span>
+    </div>
+</div>
+<div class="row-relative-abundance">
+    <div class="radar-chart-container">
+        <radarchart [data]="radarChartInputData" [configOption]="radarConfigOption"></radarchart>
+    </div>
+    <div class="abundance-table-container" *ngIf="comparingCohortsPhylumData">
+        <abundance-table [topOtuThreshold]="topOtuThreshold" [abundanceData]="comparingCohortsPhylumData" [comparisonData]="comparisonData" (selectedPhylums)="onSelectedPhylumsChange($event)"></abundance-table>
+    </div>
+</div>

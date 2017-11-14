@@ -1,0 +1,10 @@
+<div class="table-container">
+    <div class="table-header">
+        <div *ngFor="let filter of filters" class="table-filter"><button class="btn" [class.selected]="filter == selectedFilter" (click)="onClickFilter(filter)">{{filter}}</button></div>
+        <!-- TODO get mockups for table columns and interactions for other filter values -->
+    </div>
+    <div class="table-area">
+        <welcome-text *ngIf="selectedFilter == 'Welcome'"></welcome-text>
+        <recent-results-table *ngIf="selectedFilter == 'Recent Results'"></recent-results-table>
+    </div>
+</div>

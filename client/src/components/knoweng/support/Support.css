@@ -1,0 +1,161 @@
+.support-container {
+    white-space: nowrap; /* keep panels side by side */
+    font-family: 'Lato', sans-serif;
+}
+
+.menu, .contents {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.col-md-4 {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.menu {
+    width: 383px;
+    padding: 46px 26px 0 0;
+    font-size: 24px;
+    line-height: 35px;
+    font-weight: 700;
+    color: #C2DBEF;
+    list-style: none;
+}
+
+.menu li {
+    border-bottom: 1px solid #35516a;
+    padding: 6px 0 6px 10px;
+    cursor: pointer;
+}
+
+.menu li:first-of-type {
+    border-top: 1px solid #35516a;
+}
+
+.menu li.selected {
+    color: #FFFFFF;
+}
+
+.menu li:hover {
+    color: #50F1F5;
+}
+
+.menu li .title, .menu li i {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.menu li .title {
+    width: 320px;
+}
+
+.menu li i {
+    font-size: 28px;
+    padding-top: 8px;
+}
+
+.menu li:not(.selected) i {
+    color: transparent;
+}
+
+.contents {
+    width: 852px;
+    margin-top: 46px;
+    border-radius: 13px;
+    background-color: #35516A;
+}
+
+h2 {
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 27px;
+}
+
+.font-weight-normal {
+    font-weight: 500;
+}
+
+h3 {
+    color: #FFFFFF;
+    font-size: 18px;
+    line-height: 22px;
+    text-transform: uppercase;
+}
+
+.contents ul {
+    -moz-padding-start: 0;
+    -webkit-padding-start: 0;
+    -khtml-padding-start: 0;
+    -o-padding-start: 0;
+    padding-start: 0;
+    padding: 0;
+    list-style-position: inside;
+}
+
+.contents li {
+    color: #E5F0F2;
+    font-size: 14px;
+    line-height: 17px;
+    padding-bottom: 8px;
+}
+
+.contents li:last-of-type {
+    padding-bottom: 0;
+}
+
+.section {
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.logo-line {
+    white-space: nowrap;
+    color: #E5F0F2;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 17px;
+    padding: 7px 0;
+}
+
+.logo-line * {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.logo-line img {
+    width: 133px;
+    margin-left: -6px;
+}
+
+.logo-line div {
+    padding: 3px 0 0 4px;
+}
+
+.address-block {
+    color: #E5F0F2;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.section .btn.youtube {
+    height: 32px;
+    font-size: 16px;
+    line-height: 19px;
+    padding: 3px 18px 0 6px;
+}
+
+.btn.youtube * {
+    vertical-align: middle;
+}
+
+.btn.youtube .fa {
+    font-size: 24px;
+    padding-right: 10px;
+}
+
+.limits-block {
+    padding: 0 0 10px 0;
+}

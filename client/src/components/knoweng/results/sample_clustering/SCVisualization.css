@@ -1,0 +1,10 @@
+.sc-visualization-container {
+    display: flex;
+}
+
+sc-control-panel {
+}
+
+sc-data-area {
+    width: 100%;
+}

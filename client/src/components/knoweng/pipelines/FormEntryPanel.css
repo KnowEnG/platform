@@ -1,0 +1,230 @@
+.body-container {
+    white-space: nowrap; /* keep panels side by side */
+}
+
+.alert-invalid {
+    padding: 10px !important;
+    background-color: #E05869;
+    color: #DAE8F8;
+    border-radius: 5px;
+}
+
+/* Generated via http://apps.eky.hk/css-triangle-generator/ */
+.alert-pointer {
+    display: inline-block;
+    position: relative;
+    top: 7px;
+    margin-right: -5px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 12.5px 21.7px 12.5px 0;
+    border-color: transparent #E05869 transparent transparent;
+    -webkit-transform: rotate(360deg);
+}
+
+.form-container, help-panel {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.form-container {
+    width: 884px;
+    margin-top: 40px;
+}
+
+help-panel {
+    position: relative;
+    top: 40px;
+}
+
+.field-container:not(:first-of-type) {
+    margin-top: 50px;
+}
+
+/* form radio buttons */
+.btn.btn-radio {
+    width: 101px;
+    height: 32px;
+    border-radius: 7px;
+    font-size: 20px;
+    padding: initial;
+    margin: 0 24px 0 0;
+}
+
+.btn.btn-radio.numbered {
+    margin-left: 53px;
+}
+
+.btn.btn-radio.selected, .btn.btn-radio:hover {
+    background-color: #07abaf;
+    color: #ffffff;
+}
+
+.btn.btn-radio.unselected {
+    background-color: #d8d8d8;
+    color: #9b9b9b;
+}
+
+/* clickable text */
+.clickable-text {
+    font-size: 14px;
+    color: #b5d1eb;
+    cursor: pointer;
+}
+
+.clickable-text:hover {
+    color: #b5d1eb;
+}
+
+.reset-text {
+    padding-right: 40px;
+}
+
+/* form labels */
+.label-large {
+    font-size: 28px;
+    color: #ffffff;
+    margin-bottom: 42px;
+}
+
+.label-normal {
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.label-bordered {
+    border-radius: 5px;
+    border: solid 1px #4f6579;
+    height: 34px;
+}
+
+.label-compound, .label-conjunct {
+    display: inline-block;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.label-conjunct-number-container {
+    display: inline-block;
+}
+
+.label-conjunct-or {
+    color: #7493af;
+    margin: 0 5px;
+}
+
+.label-compound, .label-conjunct {
+    display: inline-block;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.label-compound.label-bordered:not(.inactive), .label-conjunct.label-bordered:not(.inactive) {
+    border-color: #ffffff;
+}
+
+.label-text {
+    display: inline-block;
+}
+
+.inactive .label-text {
+    color: #7493af;
+}
+
+.label-compound .label-text {
+    margin-right: 27px;
+}
+
+.label-normal:not(.label-compound) .optional {
+    margin-left: 27px;
+}
+
+.label-conjunct .label-text {
+    margin-left: 13px;
+    margin-right: 27px;
+}
+
+.label-number {
+    display: inline-block;
+    text-align: center;
+    width: 34px;
+    margin-right: 18px;
+}
+
+.inactive .label-number {
+    color: #b5d1eb;
+}
+
+.optional {
+    display: inline-block;
+    font-size: 10px;
+    color: #b5d1eb;
+}
+
+.inactive .optional {
+    color: #7493af;
+}
+
+.label-compound .optional, .label-conjunct .optional {
+    margin-right: 10px;
+}
+
+/* dropdowns */
+select {
+    width: 320.4px;
+    height: 37px;
+    border-radius: 7px;
+    background-color: #ffffff;
+    font-size: 20px;
+    color: #4a4a4a;
+    padding-left: 5px; /* matching comp while compensating for built-in padding */
+}
+
+select.numbered {
+    margin-left: 46px;
+}
+
+.select-field-default {
+    font-size: 14px;
+    font-style: italic;
+    color: #9b9b9b;
+    padding-left: 15px;
+    position: relative;
+    top: 7px;
+}
+
+/* text fields */
+.text-field {
+    width: 66px;
+    height: 37px;
+    margin-left: 7px;
+    padding-left: 7px;
+    font-size: 18px;
+    color: #4a4a4a;
+}
+
+.text-field.numbered {
+    margin-left: 53px;
+}
+
+.text-field-percent {
+    font-size: 20px;
+    color: #ffffff;
+    padding-left: 9px;
+}
+
+.text-field-default {
+    font-size: 14px;
+    font-style: italic;
+    color: #9b9b9b;
+    padding-left: 15px;
+    position: relative;
+    top: 9px;
+}
+
+grouped-multi-selector.numbered {
+    position: relative;
+    left: 53px;
+}

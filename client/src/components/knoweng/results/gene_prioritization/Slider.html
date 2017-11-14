@@ -1,0 +1,15 @@
+<div class="slider-container">
+    <div class="label-container">
+        <div class="label-number">{{ currentValue }}</div>
+        <div class="label-units">TOP<br>GENES</div>
+    </div>
+    <div class="svg-container">
+        <svg [attr.width]="width" [attr.height]="2*controlRadius">
+            <g [attr.transform]="'translate(0,'+controlRadius+')'">
+                <line [attr.x1]="height" y1="0" [attr.x2]="width-height" y2="0" [style.stroke-width]="height" class="background"/>
+                <circle [attr.cx]="currentX" cy="0" [attr.r]="controlRadius" class="control"/>
+            </g>
+        </svg>
+        <div class="scale-label-container" [style.width.px]="width"><span class="pull-left">{{ leftValue }}</span><span class="pull-right">{{ rightValue }}</span></div>
+    </div>
+</div>

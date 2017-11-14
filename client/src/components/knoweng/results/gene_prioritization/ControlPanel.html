@@ -1,0 +1,27 @@
+<div class="control-panel-container">
+    <div class="job-name-area">
+        <div class="control-label">RESULT</div>
+        <div class="job-name">{{ job.name }}</div>
+    </div>
+    <div class="gradient-area">
+        <div class="gradient-header">
+            <div class="control-label">SCORE</div><!-- no whitespace
+         --><div class="gradient-info-icon"><i class="fa fa-info-circle"></i></div>
+        </div>
+        <gradient-legend [leftColor]="gradientMaxColor" [rightColor]="gradientMinColor" [leftValue]="gradientMaxValue" [rightValue]="gradientMinValue"></gradient-legend>
+    </div>
+    <div class="filter-area">
+        <div class="slider-desc">
+            SELECT NUM. OF TOP GENES PER RESPONSE
+        </div>
+        <slider [leftValue]="1" [rightValue]="100" [initialValue]="currentNumTopGenes" (updatedCurrentValue)="updateNumCurrentTopGenes($event)"></slider>
+    </div>
+    <div class="total-genes-selected-area">
+        <div class="total-genes-count" *ngIf="totalGenesSelectedCount">{{ totalGenesSelectedCount }}</div><!-- no whitespace
+     --><div class="total-genes-selected">TOTAL GENES SELECTED</div><!-- no whitespace
+     --><div class="gradient-info-icon"><i class="fa fa-info-circle"></i></div>
+    </div>
+    <div class="response-selector-area">
+        <response-selector *ngIf="result" [result]="result" [numTopGenes]="currentNumTopGenes" (selectedResponses)="updateSelectedResponses($event)"></response-selector>
+    </div>
+</div>

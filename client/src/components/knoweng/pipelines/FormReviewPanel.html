@@ -1,0 +1,46 @@
+<div class="body-container full-fixed-width">
+    <div class="table-container">
+        <table>
+            <thead></thead>
+            <tbody>
+                <template ngFor let-summary [ngForOf]="summaries">
+                    <tr *ngIf="summary !== null">
+                        <td class="summary-label">{{ summary.label }}</td>
+                        <td class="summary-value" [attr.title]="summary.value">{{ summary.value | truncator:200 }}</td>
+                    </tr>
+                    <tr *ngIf="summary === null">
+                        <td class="summary-label">&nbsp;</td><td class="summary-value">&nbsp;</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div><!-- no whitespace
+ --><div class="metadata-container">
+        <div class="job-name-container">
+            <div class="meta-label">Job Name</div>
+            <input class="job-name-input" type="text" [value]="form.suggestJobName()" (keyup)="setJobName($event.target.value)">
+        </div>
+        <div class="project-container">
+            <div class="meta-label">Project</div>
+            <select class="project-input" (change)="onChangeProjectId($event.target.value)">
+                <option *ngFor="let project of projectList" [attr.value]="project._id" [attr.selected]="project._id == currentProject?._id ? true : null">{{ project.name }}</option>
+            </select>
+        </div>
+        <div class="tags-container hidden">
+            <div class="meta-label">Tags<i class="fa fa-pencil" (click)="openModal($event, 'tags')"></i></div>
+            <div class="tag-area">
+                <div class="tag">Experiment 1</div>
+            </div>
+        </div>
+        <div class="notes-container">
+            <div class="meta-label">Notes<i class="fa fa-pencil" (click)="openModal($event, 'notes')"></i></div>
+            <div class="notes-value">{{form.notes}}</div>
+        </div>
+    </div>
+ </div>
+
+ <!-- consolidate with similar block and accompanying code in ResultPanel -->
+<div [ngSwitch]="modal" class="modal-container" [style.bottom.px]="modalBottom" [style.right.px]="modalRight">
+    <textbox-editor-modal *ngSwitchCase="'notes'" (save)="saveCloseNotesModal($event)" (cancel)="closeModal($event)" [initialValue]="''"></textbox-editor-modal>
+    <tag-editor-modal *ngSwitchCase="'tags'" [initialTags]="[{name: 'Experiment 1', applied: true}, {name: 'Experiment 2', applied: false}, {name: 'Curated', applied: false}, {name: 'Uncurated', applied: false}]" (done)="closeModal()"></tag-editor-modal>
+</div>

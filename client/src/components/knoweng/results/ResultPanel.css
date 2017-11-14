@@ -1,0 +1,188 @@
+.result-panel-container {
+    width: 301px;
+    height: 566px;
+    border-radius: 8px;
+    background-color: #c6d8e8;
+    padding: 10px 16px 16px 16px;
+}
+
+.job-name {
+    font-size: 18px;
+    line-height: 1.22;
+    color: #4a4a4a;;
+}
+
+.notes-area, .project-area, .tags-area {
+    border-top: solid 1px #b5d1eb;
+}
+
+.files-area {
+    padding: 16px 0 7px 0;
+}
+
+.parameters-area, .notes-area, .project-area, .tags-area {
+    padding: 6px 0 16px 0;
+    margin: 0 17px 0 7px;
+}
+
+.value-label { /* plain old .label is used by bootstrap */
+    font-size: 12px;
+    color: #1d609e;
+    margin-right: 20px;
+}
+
+.value {
+    font-size: 12px;
+    line-height: 1.17;
+    color: #000000;
+}
+
+.parameters-table {
+    table-layout: fixed;
+    width: 245px;
+}
+
+
+.parameters-table td {
+    color: #000000;
+    word-wrap: break-word;
+    white-space: normal;
+    line-height: 1;
+    vertical-align: top;
+}
+.parameters-table .value-label {
+    padding: 0 0 4px 0;
+    width: 85px;
+    text-align: right;
+}
+
+.parameters-table .value {
+    padding: 0 0 4px 8px;
+    width: 160px;
+}
+
+
+.line-break {
+    line-height: 0.8;
+}
+
+.file-item {
+    line-height: .3;
+    white-space: nowrap;
+}
+
+.file-item .value-label, .file-item .value {
+    display: inline-block;
+}
+
+.file-item .value-label {
+    width: 69px;
+}
+
+.error-area {
+    border-radius: 5px;
+    background-color: #f6cad0;
+    color: #b70c22;
+    padding: 12px 11px 15px 10px;
+    margin-bottom: 9px;
+    line-height: 17px;
+}
+
+.error-area .error-message {
+    margin: 8px 0 0 0;
+    white-space: pre-line;
+}
+
+.note {
+    white-space: normal;
+    font-style: italic;
+}
+
+.tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 0px 7px 2px 7px;
+    border-radius: 16px;
+    background-color: #4f6579;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.icons-area {
+    text-align: center;
+    padding: 27px 0 14px 0;
+}
+
+.icon-item {
+    color: #7493af;
+    stroke: #7493af;
+    display: inline-block;
+    width: 50px;
+    height: 38px;
+    cursor: pointer;
+}
+
+.icon-item:hover {
+    color: #1d609e;
+    stroke: #1d609e;
+}
+
+.icon-item .fa {
+    font-size: 26px;
+    height: 26px;
+}
+
+.favstar {
+    stroke-width: 5px;
+    fill: none;
+    display: inline-block;
+    height: 22px;
+    width: 22px;
+}
+
+.favstar.favorite {
+    fill: #fcc905;
+}
+
+.icon-text {
+    font-size: 10px;
+}
+
+.fa-pencil {
+    color: #7493af;
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+.fa-pencil:hover {
+    color: #1d609e;
+}
+
+.view-results {
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 5px;
+    background-color: #1d609e;
+    font-size: 14px;
+    color: #ffffff;
+    padding: 2px 11px;
+}
+
+.modal-container {
+    position: fixed;
+    z-index: 102;
+}
+
+.icon-item.not-yet-allowed {
+    cursor: not-allowed !important;
+}
+
+.scrollable-area {
+    height: 387px;
+}
+
+.detail-area {
+    background-color: #ffffff;
+    padding-top: 5px;
+}

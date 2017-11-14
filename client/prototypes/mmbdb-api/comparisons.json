@@ -1,0 +1,24 @@
+[
+  {
+    _id: "comp1",
+    name: "Comparison 1",
+    baseline_cohort_id: "healthy_females",
+    variant_cohort_id: "crohns_females",
+
+    top_ranked_otus_fst:[
+      "OTU-4",
+      "OTU-2",
+      "OTU-9",
+      "OTU-3",
+      "OTU-5",
+      "OTU-7",
+      "OTU-6",
+      "OTU-8",
+      "OTU-1",
+      "OTU-10"
+      ],
+    top_ranked_fst_otu_scores:[100.0, 98.0, 90.0, 80.0, 78.0, 77.0, 70.0, 50.0, 30.0, 10.0]
+  }
+]
+
+    

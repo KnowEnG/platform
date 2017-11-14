@@ -1,0 +1,178 @@
+<div class="support-container full-fixed-width">
+    <ul class="menu">
+       <li [class.selected]="menuSelection == 'contact'" (click)="selectTopic('contact')"><div class="title">Contacts &amp; Feedback</div><i class="fa fa-sort-asc fa-rotate-90"></i></li>
+       <li [class.selected]="menuSelection == 'training'" (click)="selectTopic('training')"><div class="title">Info &amp; Training</div><i class="fa fa-sort-asc fa-rotate-90"></i></li>
+       <li [class.selected]="menuSelection == 'about'" (click)="selectTopic('about')"><div class="title">About KnowEnG Platform</div><i class="fa fa-sort-asc fa-rotate-90"></i></li>
+    </ul><!-- no whitespace
+ --><div class="contents text-container">
+        <div *ngIf="menuSelection == 'contact'">
+            <div class="section">
+                <br>
+                <a href="mailto:knoweng-support@illinois.edu" class="button btn">Email Technical Support</a>
+                <p>
+                    Have questions about your account or something you can’t
+                    find the answer to in support materials? KnowEnG Center
+                    staff will respond to your technical support questions by
+                    email M-F during normal business hours and as we are able.
+                </p>
+                <p>
+                    Contact us at
+                    <a href="mailto:knoweng-support@illinois.edu">knoweng-support@illinois.edu</a>
+                </p>
+            </div>
+            <hr>
+            <div class="section">
+                <br>
+                <a href="//hub.knoweng.org/support/tickets" class="button btn" target="_blank">Submit Feedback</a>
+                <p>
+                    KnowEnG Platform offers a ticketing system for submitting
+                    feature requests, reporting bugs and offering feedback on
+                    user experience issues.
+                </p>
+                <p>
+                    Your feedback about the KnowEnG Platform is very important
+                    to us. Please submit questions and suggestions using our
+                    <a href="//hub.knoweng.org/support/tickets" target="_blank">Feedback Form</a>. Thanks!
+                </p>
+            </div>
+            <hr>
+            <div class="section">
+                <h2>Contact Us</h2>
+                <div class="logo-line">
+                    <img src="img/knoweng/knoweng_logo_mark.svg"><!-- no whitespace
+                 --><div>Big Data to Knowledge Center of Excellence</div>
+                </div>
+                <div class="address-block">
+                    Carl R. Woese Institute for Genomic Biology<br>
+                    1206 W. Gregory Drive, MC-195; Urbana IL 61801<br><br>
+                    For general questions, please contact <a href="mailto:knoweng@illinois.edu">knoweng@illinois.edu</a><br>
+                    <a href="//knoweng.org" target="_blank">knoweng.org</a>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="menuSelection == 'training'">
+            <div class="section">
+                <br>
+                <a href="//knoweng.org/quick-start/" class="button btn" target="_blank">Read the Quickstart Guide</a>
+                <p>
+                    To get started immediately, check out our
+                    <a href="//knoweng.org/quick-start/" target="_blank">Quickstart Guide</a>
+                    for examples on using our three available analysis
+                    pipelines. Also, watch out for the release of additional
+                    <a href="//knoweng.org/pipelines/" target="_blank">Knowledge-Guided Pipelines</a>
+                    that are currently in development.
+                </p>
+            </div>
+            <hr>
+            <div class="section">
+                <h2 class="font-weight-normal">Watch Our Video Tutorials</h2>
+                <div class="row">
+                    <div class="col-md-4" *ngFor="let code of videoCodes; let i = index">
+                        <iframe allowfullscreen height="160" width="195" [src]="sanitizeYoutubeUrl(code)"></iframe>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <a href="//www.youtube.com/channel/UCjyIIolCaZIGtZC20XLBOyg" class="button btn youtube" target="_blank"><i class="fa fa-youtube-play"></i><span>KnowEnG Youtube Channel</span></a>
+                    </div>
+                </div>
+                
+            </div>
+            <hr>
+            <div class="section">
+                <br>
+                <a href="//knoweng.org/kn-overview/" class="button btn" target="_blank">Learn About the Knowledge Network</a>
+                <p>
+                    The knowledge-guided analyses use the KnowEnG Knowledge
+                    Network, which integrates many and varied public biological
+                    datasets of gene/protein interactions, relationships, and
+                    annotations.  Explore information about the
+                    Knowledge Network <a href="//knoweng.org/kn-overview/" target="_blank">here</a>.
+                </p>
+            </div>
+            <hr>
+            <div class="section">
+                <br>
+                <a href="//knoweng.org" class="button btn" target="_blank">Visit the Center Website</a>
+                <p>
+                    The Center website at <a href="//knoweng.org" target="_blank">knoweng.org</a>
+                    provides information about the Center, its goals, research
+                    publications, collaborators, activities and events.
+                </p>
+            </div>
+        </div>
+        <div *ngIf="menuSelection == 'about'">
+            <!-- skipping release notes for now
+            <div class="section">
+                <h1>Release Notes</h1>
+                <h2>KnowEnG Platform</h2> VERSION SELECTOR
+                NOTES BOX
+            </div>
+            <hr>
+            -->
+            <div class="section">
+                <h1>Account Information</h1>
+                <h2>Explorer Account</h2>
+                <p>
+                    Be aware that because KnowEnG is providing the scalable
+                    computation for free, we have placed the following
+                    limitations on Explorer Accounts:
+                </p>
+
+                <div class="limits-block">
+                    <h3>Data Retention</h3>
+                    <ul>
+            	        <li>
+            	            Uploaded spreadsheets older than 1 week are subject
+            	            to deletion, after notification
+                	    </li>
+                	    <li>
+	                        Analysis results older than 1 week are subject to
+	                        deletion, after notification
+            	        </li>
+                    </ul>
+	
+	                <h3>Uploads</h3>
+                    <ul>
+                	    <li>
+	        	            Uploaded spreadsheets must be plain text files in
+	        	            <a href="//en.wikipedia.org/wiki/Tab-separated_values" target="_blank">.tsv format</a>
+            	        </li>
+                	    <li>
+	                        The maximum size for any uploaded spreadsheet is
+	                        250MB
+                	    </li>
+                	    <li>
+	                        The cumulative total for all uploaded spreadsheets
+	                        may not surpass 5GB
+                	    </li>
+                    </ul>
+
+                    <h3>Computation</h3>
+                    <ul>
+            	        <li>
+            	            The total number of analyses concurrently queued or
+            	            executing may not surpass 5
+                	    </li>
+                	    <li>
+	                        The number of
+	                        <a href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)" target="_blank">bootstraps</a>
+	                        per analysis may not exceed 200
+                	    </li>
+            	        <li>
+	                        The total number of saved analysis results may not
+	                        surpass 40
+                	    </li>
+                    </ul>
+                </div>
+	
+	            <h2>Premium Account</h2>
+	            <p>
+                    If you need additional resources and are interested in
+                    collaborating with the KnowEnG center, we can customize your
+                    account to meet your needs. Please contact
+	                <a href="mailto:knoweng@illinois.edu">knoweng@illinois.edu</a>.
+	            </p>
+            </div>
+        </div>
+    </div>
+</div>

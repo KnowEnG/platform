@@ -1,0 +1,17 @@
+<svg [attr.width]="2 * maxRectangleWidth + centerWidth" [attr.height]="height">
+    <defs>
+        <!-- note: using multiple DifferenceBarCharts in the same DOM will cause id collisions on these patterns, which are harmless but bad practice -->
+        <!-- workarounds are possible but maybe not worth the trouble -->
+        <pattern id="pattern-stripe-left" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+            <rect class="pattern-foreground" style="fill: #269e9d;" width="3" height="4" transform="translate(0,0)"></rect>
+            <rect class="pattern-background" style="fill: #707070;" width="1" height="4" transform="translate(3,0)"></rect>
+        </pattern>
+        <pattern id="pattern-stripe-right" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+            <rect class="pattern-foreground" style="fill: #f08938;" width="3" height="4" transform="translate(0,0)"></rect>
+            <rect class="pattern-background" style="fill: #707070;" width="1" height="4" transform="translate(3,0)"></rect>
+        </pattern>
+    </defs>
+    <rect *ngIf="difference > 0" class="difference left" [attr.x]="maxRectangleWidth-rectangleWidth" y="0" [attr.width]="rectangleWidth" [attr.height]="height"></rect>
+    <text class="difference" [ngClass]="{'left': difference > 0, 'right': difference < 0}" [attr.x]="maxRectangleWidth + centerWidth/2" [attr.y]="height-2" text-anchor="middle">{{ difference | abundanceFormatter:true }}</text>
+    <rect *ngIf="difference < 0" class="difference right" [attr.x]="maxRectangleWidth+centerWidth" y="0" [attr.width]="rectangleWidth" [attr.height]="height"></rect>
+</svg>

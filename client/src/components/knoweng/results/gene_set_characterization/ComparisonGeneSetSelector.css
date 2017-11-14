@@ -1,0 +1,147 @@
+.comparison-gene-set-selector-container {
+    margin: 2px 0 0 45px;
+}
+
+.supercollection-container {
+    width: 284px;
+    margin-top: 6px;
+    border-radius: 5px;
+    background-color: #35516a;
+}
+
+.supercollection-header {
+    height: 37px;
+    cursor: pointer;
+}
+
+.supercollection-icon, .supercollection-name, .supercollection-count, .supercollection-checkbox {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.supercollection-icon {
+    margin: 4px 7px 0 9px;
+    width: 27px;
+    height: 27px;
+    border-radius: 2px;
+}
+
+.supercollection-icon img {
+    margin-left: -2px;
+}
+
+.supercollection-name {
+    margin-top: 6px;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.supercollection-count {
+    margin-top: 9px;
+    font-size: 14px;
+    color: #cae1f5;
+}
+
+.supercollection-checkbox {
+    margin: 11px 11px 0 11px;
+    width: 16px;
+    height: 16px;
+    border-radius: 3.5px;
+    background-color: #ffffff;
+    color: #35516a;
+}
+
+.supercollection-checkbox .fa {
+    margin: -1px 0 0 -1px;
+}
+
+.supercollection-body {
+    max-height: 0;
+    overflow-y: hidden;
+    transition: all .65s ease-in-out;
+}
+
+.supercollection-body.open {
+    max-height: 1000px;
+}
+
+.collection-container {
+    border-top: solid 1px #1e384e;
+}
+
+.collection-header {
+    height: 23px;
+}
+
+.collection-caret, .collection-name, .collection-count, .collection-checkbox {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.collection-caret {
+    margin: 2px 8px 0 10px;
+    font-size: 14px;
+    color: #cae1f5;
+    cursor: pointer;
+}
+
+.collection-name {
+    margin-top: 2px;
+    font-size: 14px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.collection-count {
+    margin-top: 2px;
+    font-size: 14px;
+    color: #b5d1eb;
+}
+
+.collection-checkbox {
+    margin: 6px 13px 0 13px;
+    width: 12px;
+    height: 12px;
+    border-radius: 3.5px;
+    background-color: #ffffff;
+    color: #35516a;
+    font-size: 12px;
+    line-height: 1.1;
+}
+
+.collection-checkbox .fa {
+    margin: 0 0 0 -2px;
+}
+
+.collection-body {
+    max-height: 0;
+    overflow-y: hidden;
+    transition: all .65s ease-in-out;
+    padding-top: 2px;
+}
+
+.collection-body.open {
+    max-height: 1000px;
+}
+
+.gene-set-container {
+    line-height: 1.13;
+    cursor: pointer;
+}
+
+.gene-set-name, .gene-set-checkbox {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.gene-set-name {
+    font-size: 12px;
+    color: #ffffff;
+    margin-left: 37px;
+}
+
+.gene-set-checkbox {
+    font-size: 10px;
+    color: #b5d1eb;
+    margin: 1px 11.5px 0 0;
+}

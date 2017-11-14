@@ -1,0 +1,41 @@
+.svg-vis {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+.baseline-stroke {
+  stroke: #c5b9a6;
+  stroke-width: 2px;
+}
+
+.cohort1-stroke {
+  stroke: #6182a9;
+  stroke-width: 2px;
+}
+
+.individual-stroke {
+  stroke: #71be12;
+  stroke-width: 2px;
+}
+
+.levels {
+  fill: white;
+  stroke: #c7c7c7;
+  stroke-width: 1px;
+}
+
+.axis-lines {
+  stroke: #c7c7c7;
+  stroke-width: 1px;
+}
+
+.polygon-areas {
+
+}
+
+.axis-labels {
+  text-anchor: middle;
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+}

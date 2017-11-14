@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- Polyfill(s) for older browsers -->
+    <script src="node_modules/angular-polyfills/dist/all.js"></script>
+    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+    <script src="polyfills.js"></script>
+
+    <meta charset="utf-8">
+    <base href="/static/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>KnowEnG</title>
+
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/knoweng/style.css" rel="stylesheet">
+
+    <link href="img/favicon.ico" rel="shortcut icon">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,400italic,300italic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400" rel="stylesheet" type="text/css">
+
+    <script src="node_modules/d3/d3.min.js"></script>
+    <script src="node_modules/pixi.js/dist/pixi.min.js"></script>
+    
+    <script src="node_modules/rxjs/bundles/Rx.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.min.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/systemjs-cachebuster/src/system.cachebuster.js"></script>
+    <script>
+        SystemCacheBuster.config({ baseUrl: '/static/', jsonFileName: 'static/system.cachebuster.json' });
+    </script>
+</head>
+
+<body>
+    <!-- Configure System.js, our module loader -->
+    <script src="systemjs.config.js"></script>
+    <script>
+      System.import('dist/components/knoweng/Main')
+            .then(null, console.error.bind(console));
+    </script>
+
+    <app>
+        <!-- Show spinner until app has finished bootstrapping -->
+        <div class="loading white-text">
+            <i class="fa fa-fw fa-spinner fa-pulse"></i>
+            Loading...
+        </div>
+    </app>
+    
+    <!-- Warn users about outdated/insecure browsers -->
+    <!-- See http://browser-update.org/ -->
+    <link href="css/knoweng/buorg.css" rel="stylesheet">
+    <script> 
+        var $buoop = {vs:{i:10,f:-4,o:-4,s:9,c:-4},unsecure:true,api:4}; 
+        $buoop.text = '<strong>Warning: Your web browser ({brow_name}) is not supported.</strong> KnowEnG is compatible with recent versions of Chrome, Firefox, Safari, Edge, and Internet Explorer. <a{up_but}>Update Browser</a> <a{ignore_but}>Ignore</a>';
+        function $buo_f(){ var e = document.createElement("script"); e.src = "//browser-update.org/update.min.js"; document.body.appendChild(e); };
+        try { document.addEventListener("DOMContentLoaded", $buo_f,false); } catch(e) { window.attachEvent("onload", $buo_f); }
+    </script>
+</body>
+</html>

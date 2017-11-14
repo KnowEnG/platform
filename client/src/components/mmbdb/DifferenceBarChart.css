@@ -1,0 +1,19 @@
+rect.difference.left {
+  fill: url(#pattern-stripe-left);
+}
+rect.difference.right {
+  fill: url(#pattern-stripe-right);
+}
+text.difference {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 2.1;
+  fill: #273847;
+}
+text.difference.left {
+  fill: #269e9d;
+}
+text.difference.right {
+  fill: #f08938;
+}

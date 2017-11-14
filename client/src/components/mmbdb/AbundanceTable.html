@@ -1,0 +1,63 @@
+<table *ngIf="abundanceData">
+    <thead>
+        <tr class="first-heading">
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <th class="phylum">PHYLUM</th>
+            <th class="abundance-cohort"><div class="abundance-cohort-baseline-title">BASELINE</div></th>
+            <th class="abundance-cohort" [class.last]="abundanceData.length == 2"><div class="abundance-cohort-comparison-title">COHORT 1</div></th>
+            <th class="abundance-cohort last" *ngIf="abundanceData.length == 3"><div class="abundance-cohort-patient-title">INDIVIDUAL</div></th>
+            <th class="abundance-comparison">ABUNDANCE COMPARISON</th>
+            <th class="abundance-distribution">DISTRIBUTION</th>
+        </tr>
+        <tr class="second-heading">
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <th class="phylum">&nbsp;</th>
+            <th class="abundance-cohort">&nbsp;</th>
+            <th class="abundance-cohort" [class.last]="abundanceData.length == 2">&nbsp;</th>
+            <th class="abundance-cohort last" *ngIf="abundanceData.length == 3">&nbsp;</th>
+            <th class="abundance-comparison">
+                <div class="scale-label">0</div>
+                <div class="scale-label" style="left: 115px;">100%</div>
+            </th>
+            <th class="abundance-distribution">
+                <div class="scale-label" style="left: 4px;">0</div>
+                <div class="scale-label" style="left: 22px;">0-5</div>
+                <div class="scale-label" style="left: 163px;">100%</div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let abundance of abundances; let i=index">
+            <td><i *ngIf="abundance.phylum !== 'Uncommon'" class="{{ abundance.selected ? 'fa fa-check-square' : 'fa fa-square-o' }}" (click)="onCheckboxChange(abundance)"></i></td>
+            <td class="img-button"><img *ngIf="abundance.phylum == 'Uncommon'" src="{{uncommonPhylumImageSrc}}" (click)="changeImage()"/></td>
+            <td class="phylum">{{abundance.phylum}}</td>
+            <td class="abundance-cohort"><div class="abundance-cohort-baseline">{{ abundance.baselinePerc }}{{ i == 0 ? "%" : "" }}</div></td>
+            <td class="abundance-cohort" [class.last]="abundanceData.length == 2"><div class="abundance-cohort-comparison">{{ abundance.cohort1Perc }}{{ i == 0 ? "%" : "" }} <abundance-topotu *ngIf="abundance.topOTUCount > 0" class="pull-right" [numDigits]="maxOtuLength" [topOTUCount]="abundance.topOTUCount"></abundance-topotu></div></td>
+            <td class="abundance-cohort last" *ngIf="abundanceData.length == 3"><div class="abundance-cohort-patient">{{ abundance.individualPerc }}{{ i == 0 ? "%" : "" }}</div></td>
+            <td class="abundance-comparison">
+                <abundance-barchart [width]="142" [height]="26" [baselineAbundance]= "abundance.baselinePerc"  [cohortAbundance]="abundance.cohort1Perc"  [individualAbundance]="abundanceData.length == 3 ? abundance.individualPerc : null"></abundance-barchart>
+            </td>
+            <td class="abundance-distribution">
+                <grouped-barchart  *ngIf="abundance.phylum != 'Uncommon'" [data]="abundance.distributions"></grouped-barchart>
+            </td>
+        </tr>
+        <template [ngIf]="showUncommonPhylum">
+            <tr *ngFor="let ua of uncommonAbundances">
+                <td><i class="{{ ua.selected ? 'fa fa-check-square' : 'fa fa-square-o' }}" (click)="onCheckboxChange(ua)"></i></td>
+                <td>&nbsp;</td>
+                <td class="phylum">{{ua.phylum}}</td>
+                <td class="abundance-cohort"><div class="abundance-cohort-baseline">{{ ua.baselinePerc }}</div></td>
+                <td class="abundance-cohort" [class.last]="abundanceData.length == 2"><div class="abundance-cohort-comparison">{{ ua.cohort1Perc }}<abundance-topotu *ngIf="ua.topOTUCount > 0" class="pull-right" [numDigits]="maxOtuLength" [topOTUCount]="ua.topOTUCount"></abundance-topotu></div></td>
+                <td *ngIf="abundanceData.length == 3" class="abundance-cohort last"><div class="abundance-cohort-patient">{{ ua.individualPerc }}</div></td>
+                <td class="abundance-comparison">
+                    <abundance-barchart [width]="142" [height]="26" [baselineAbundance]= "ua.baselinePerc"  [cohortAbundance]="ua.cohort1Perc"  [individualAbundance]="abundanceData.length == 3 ? ua.individualPerc : null"></abundance-barchart>
+                </td>
+                <td class="abundance-distribution">
+                    <grouped-barchart [data]="ua.distributions"></grouped-barchart>
+                </td>
+            </tr>
+        </template>
+    </tbody>
+</table>

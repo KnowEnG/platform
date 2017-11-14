@@ -1,0 +1,116 @@
+<div class="header">
+    Heatmap
+</div>
+<div class="heatmap-container">
+    <div class="col-label-type-area">
+        SAMPLES
+    </div>
+    <div class="col-label-block-area">
+        <div *ngFor="let cluster of result.clusters" class="col-label-block" [style.width.px]="getWidthOfColLabel(cluster)">{{ cluster.shortName }}</div>
+    </div>
+    <div class="row-label-type-area">
+        <div class="btn-group" dropdown>
+            <a class="btn row-type-dropdown dropdown-toggle" dropdownToggle>{{ getRowType().toUpperCase() }}<span class="fa fa-angle-down" title="Toggle dropdown menu"></span></a>
+            <ul *dropdownMenu class="dropdown-menu" role="menu">
+                <div *ngFor="let option of rowTypeOptions; let i=index" class="dropdown-row-type-row">
+                    <li role="menuitem" (click)="setRowTypeOptionsIndex(i)">
+                        <span class="dropdown-item">
+                            <span class="dropdown-row-type-option">{{ option }}</span>
+                        </span>
+                    </li>
+                </div>
+            </ul>
+        </div>
+    </div><!-- no whitespace
+ --><div class="row-label-block-area">
+        <template [ngIf]="getRowType() == 'samples'">
+            <div *ngFor="let cluster of result.clusters"
+                class="row-label-block"
+                [style.height.px]="getHeightOfRowLabel(cluster)"
+                [style.padding-top.px]="getPaddingTopOfRowLabel(cluster)">{{ cluster.shortName }}</div>
+        </template>
+    </div><!-- no whitespace
+ --><div class="heatmap-area">
+        <cell-heatmap
+            [cellWidth]="heatmapWidth / primaryHeatmapData[0].length"
+            [cellHeight]="heatmapHeight / primaryHeatmapData.length"
+            [borderThickness]="0"
+            [selectedBorderThicknessMultiplier]="0"
+            [selectedBorderColor]="0"
+            [highlightColor]="0"
+            [rowsOfColumns]="primaryHeatmapData"
+            [updateHighlight]="false">
+        </cell-heatmap>
+    </div>
+</div>
+<div class="mini-heatmap-container">
+        <div class="mini-heatmap-title-area">
+            <div class="label-score">
+                {{ getSelectedPhenotypes().length > 0 ? 'Score' : '' }}
+            </div><!-- no whitespace
+         --><div class="label-selector">
+                <div class="btn-group" dropdown> <!-- btn-group wants relative/float: left -->
+                    <a class="btn add-phenotype-dropdown dropdown-toggle" dropdownToggle>ADD PHENOTYPES TO COMPARE <span class="fa fa-angle-down" title="Toggle dropdown menu"></span></a>
+                    <ul *dropdownMenu class="dropdown-menu" role="menu">
+                        <div *ngFor="let phenotype of miniHeatmapData; let i=index" class="dropdown-phenotype-row">
+                            <li role="menuitem">
+                                <span class="dropdown-item">
+                                    <i class="dropdown-checkbox {{ phenotype.selected ? 'fa fa-check-square' : 'fa fa-square-o' }}" (click)="onCheckboxChange(phenotype)"><span class="dropdown-phenotype-name">{{ phenotype.name }}</span></i>
+                                </span>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div *ngFor="let phenotype of getSelectedPhenotypes()">
+            <div class="minimap-phenotype-name" [attr.title]="phenotype.name" [innerHTML]="phenotype.getSoftHyphenatedName()"></div><!-- no whitespace
+         --><div class="minimap-phenotype-score">
+                {{ phenotype.score | numFormatter }}
+            </div><!-- no whitespace
+         --><div class="minimap-area">
+                <cell-heatmap
+                    [cellWidth]="heatmapWidth / primaryHeatmapData[0].length"
+                    [cellHeight]="36"
+                    [borderThickness]="0"
+                    [selectedBorderThicknessMultiplier]="0"
+                    [selectedBorderColor]="0"
+                    [highlightColor]="0"
+                    [rowsOfColumns]="[phenotype.values]"
+                    [updateHighlight]="false">
+                </cell-heatmap>
+            </div><!-- no whitespace
+         --><div [ngSwitch] = "phenotype.type" class="minimap-colors">
+                <div *ngSwitchCase = "'number'" class="color-gradient" [style.background]="getGradientCssForPhenotype(phenotype)" (click)="onColorBoxClick(phenotype, $event)"></div>
+                <div *ngSwitchCase = "'category'" class="color-palette" (click)="onColorBoxClick(phenotype, $event)">
+                    <table class="category-color-table">
+                        <tr>
+                            <td *ngFor = "let color of phenotype.colorScale.range()" [ngStyle]="{ 'background-color': color }"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div *ngSwitchDefault class="color-gradient" (click)="onColorBoxClick(phenotype, $event)"></div> 
+            </div>
+        </div>
+</div>
+
+<div *ngIf="showColorBoxRollover" class="colorbox-rollover-container" [style.top.px]="rolloverTop" [style.left.px]="rolloverLeft">
+    <div class="colorbox-rollover-header">
+         <span class="colorbox-rollover-phenotype-name"> {{ clickedPhenotype.name }} </span>
+         <span class="close pull-right" (click)="onClose()"><i class="fa fa-times"></i></span>
+    </div>
+    <div [ngSwitch] = "clickedPhenotype.type" class="colorbox-rollover-colors">
+        <div *ngSwitchCase = "'number'" class="colorbox-rollover-number">
+            <div class="colorbox-rollover-gradient" [style.background]="getGradientCssForPhenotype(clickedPhenotype)"></div>
+            <div class="colorbox-rollover-gradient-label">{{ clickedPhenotype.valueRange[0] }}<span class="range-max"> {{ clickedPhenotype.valueRange[1] }}</span></div>
+        </div>
+        <div *ngSwitchCase = "'category'" class="colorbox-rollover-category">
+            <table>
+                <tr *ngFor = "let color of clickedPhenotype.colorScale.range(); let i=index" class="category-row">
+                    <td class="colorbox-rollover-palette-square" [ngStyle]="{ 'background-color': color }"></td>
+                    <td class="colorbox-rollover-palette-label"> {{ clickedPhenotype.valueRange[i] !== null ? clickedPhenotype.valueRange[i] : 'missing value' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

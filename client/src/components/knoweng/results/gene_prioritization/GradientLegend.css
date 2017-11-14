@@ -1,0 +1,9 @@
+svg {
+    display: block;
+}
+
+.label-container {
+    font-size: 12px;
+    font-weight: 700;
+    color: #e5f0f2;
+}

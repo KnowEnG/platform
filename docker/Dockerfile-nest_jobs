@@ -1,0 +1,34 @@
+FROM python:2.7
+RUN mkdir /home/dockeruser
+RUN chmod 777 /home/dockeruser
+ENV HOME=/home/dockeruser
+
+# install libraries for jobs
+RUN apt-get update && apt-get install -y pkg-config libpng-dev libfreetype6-dev libblas-dev liblapack-dev gfortran libatlas-base-dev libhdf5-dev python-tk
+#to download from Box
+RUN apt-get update && apt-get install -y libffi-dev libssl-dev
+
+# force setuptools v33; newer versions will fail https://github.com/pypa/setuptools/issues/937
+# alternative is to update pip, but that requires updating python (otherwise we
+# hit security errors), and that's complicated, because ubuntu 14.04 locks in
+# 2.7.6
+RUN pip install setuptools==33.1.1
+
+ADD ./requirements /code_buildtime_tmp/requirements
+WORKDIR /code_buildtime_tmp
+RUN pip install numpy==1.11.3
+RUN pip install -q -r requirements/nest_jobs.txt
+
+#The following pip packages do not declare their dependencies properly, and
+#therefore cannot reliably be installed from the requirements txt files.
+# (pip does not install in the order declared in the file, but rather
+# an ordering based on installing the order to resolve dependencies)
+RUN pip install biom-format==2.1.5 #requires numpy
+RUN pip install h5py==2.5.0 #requires Cython
+
+# python doesn't want modules from our package run as scripts 
+# if that package is defined in the current working directory
+ADD . /code_buildtime_snapshot
+WORKDIR /
+ENV PYTHONPATH=/code_buildtime_snapshot
+ENTRYPOINT ["python","-m","nest_py.knoweng.jobs.worker_app"]

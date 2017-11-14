@@ -1,0 +1,20 @@
+<div class="multi-selector-container">
+    <div *ngFor="let group of groups" class="group-container" [class.open]="group.open">
+        <div class="group-header noselect">
+            <div class="group-field" (click)="toggleGroup(group)">
+                <div class="open-close-icon  pull-left"><img src="{{ getCurrentIcon(group.open) }}"></div><!-- no whitespace
+             --><div class="group-name pull-left">{{ group.name }}</div><!-- no whitespace
+             --><div class="check-box-controls pull-right"><!-- no whitespace
+                --><div class="check-box" [class.checked]="group.getSelectedOptionsCount() > 0" (click)="group.onAllClicked(); $event.stopPropagation()"><!-- no whitespace
+                     --><i class="fa" [ngClass]="{'fa-check': group.getSelectedOptionsCount() == group.getTotalOptionsCount(), 'fa-minus': group.getSelectedOptionsCount() > 0 && group.getSelectedOptionsCount() < group.getTotalOptionsCount()}"></i><!-- no whitespace
+                --></div><!-- no whitespace
+                --><div class="check-box-label">All</div><!-- no whitespace
+             --></div><!-- no whitespace
+         --></div><!-- no whitespace
+         --><div class="group-count">{{ group.getSelectedOptionsCount() }} / {{ group.getTotalOptionsCount() }} Selected</div>
+        </div>
+        <div class="group-options-container">
+            <div *ngFor="let option of group.options" class="group-option">{{ option.label }}<div class="check-box pull-right" [class.checked]="option.selected" (click)="option.selected = !option.selected"><i class="fa" [class.fa-check]="option.selected"></i></div></div>
+        </div>
+    </div>
+</div>

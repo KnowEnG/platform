@@ -1,0 +1,53 @@
+<div *ngIf="selectedBin" class="groupedBarTooltip" [style.top.px]="tooltipY" [style.left.px]="tooltipX">
+    <div class="header">
+        <span class="bin-title">{{ prettyBinLabel(selectedBin) }}</span>
+        <span class="bin-title-label">{{ binTitleLabel }}</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="cohort-label"></th>
+                <th class="cohort-count"># Samples</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="cohort-label">{{ selectedBin.barDataRecords[0].cohort }}</td>
+                <td class="cohort-count">{{ selectedBin.barDataRecords[0].sampleSize }} <span class="cohort-count-total">/ {{ cohorts['Baseline'].totalSize }}</span></td>
+            </tr>
+            <tr>
+                <td class="cohort-label">{{ selectedBin.barDataRecords[1].cohort }}</td>
+                <td class="cohort-count">{{ selectedBin.barDataRecords[1].sampleSize }} <span class="cohort-count-total">/ {{ cohorts['Cohort 1'].totalSize }}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<svg [attr.width]="svgWidth + svgMargin.left + svgMargin.right" [attr.height]="svgHeight + svgMargin.top + svgMargin.bottom">
+    <!-- draw border that surrounds the svg area -->
+    <rect *ngIf="svgBorder" [attr.x]="svgMargin.left + 5" y="0" [attr.width]="svgWidth - 5" [attr.height]="svgHeight + svgMargin.top" style="fill:none;stroke-width:1;stroke:#c7c7c7" />
+    <!-- divider between first bin and remaining bins, if there is border, like the overall richness and overall evenness, draw the divider line shorter; otherwise draw longer -->
+    <line class="divider" stroke-dasharray="4,3" [attr.x1]="svgBorder? dividerXPosition + svgMargin.left : dividerXPosition" y1="0"  [attr.x2]="svgBorder? dividerXPosition + svgMargin.left : dividerXPosition" [attr.y2]="svgBorder ? svgHeight + svgMargin.top : svgHeight + svgMargin.top + svgMargin.bottom"/>
+    <!-- remaining bins -->
+    <g [attr.transform]="'translate(' + (svgMargin.left + mainAreaMarginLeft) + ',' + svgMargin.top + ')'">
+        <rect class="background" x="0" y="0" [attr.width]="svgWidth - mainAreaMarginLeft" [attr.height]="svgHeight"></rect>
+        <g *ngFor="let bin of data; let binIndex=index" [attr.transform]="'translate(' + binOffset(bin) + ',0)'">
+            <template ngFor let-bar [ngForOf]="bin.barDataRecords" let-barIndex="index">
+                <g *ngIf="barIndex < 2">
+                    <!-- data bar -->
+                    <rect [attr.width]="barWidth()" [attr.x]="barOffset(bar)" [attr.y]="svgHeight-barHeight(bar)" [attr.height]="barHeight(bar)" [ngClass]="barClass(bar)"/>
+                    <!-- full-height bar to listen for mouse events; also highlights selected cell -->
+                    <rect [class.highlight]="bin === selectedBin" class="mouse-catcher" [attr.width]="barWidth()" [attr.x]="barOffset(bar)" y="0" [attr.height]="svgHeight" (mouseenter)="selectBin(bin, $event)" (mouseleave)="deselectBin(bin)"/>
+                </g>
+                <!-- individual's bar -->
+                <rect *ngIf="barIndex == 2 && bar.sampleSize > 0" class="individual" width="2" [attr.x]="barOffset(bin.barDataRecords[barIndex-1])-1" [attr.y]="-svgMargin.top" [attr.height]="svgHeight+svgMargin.top"/>
+            </template>
+        </g>
+    </g>
+    <!-- scale label -->
+    <text class="y-label" y="0" dy="1.5em" [attr.x]="svgWidth+svgMargin.left" dx=".35em">{{ yScale.domain()[1] }}</text>
+    <!-- labels that are only shown with the overall richness/evenness chart -->
+    <text *ngIf="svgBorder" class="y-label" [attr.y]="svgHeight + svgMargin.top" dy="1.5em" [attr.x]="svgMargin.left" dx=".35em">0</text>
+    <text *ngIf="svgBorder" class="y-label" [attr.y]="svgHeight + svgMargin.top" dy="1.5em" [attr.x]="svgWidth / 2 - 20" dx=".35em">{{xLabel}}</text>
+    <text *ngIf="svgBorder" class="y-label" [attr.y]="svgHeight + svgMargin.top" dy="1.5em" [attr.x]="svgWidth + svgMargin.left - 20" dx=".35em">{{maxXLabel}}</text>
+    <text *ngIf="svgBorder" class="y-label" dy="1.5em" dx=".35em" [attr.transform]="'rotate(90 0 ' + svgMargin.top + ')'">#Samples</text>
+</svg>

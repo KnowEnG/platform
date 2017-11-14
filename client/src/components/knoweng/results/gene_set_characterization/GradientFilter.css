@@ -1,0 +1,32 @@
+.gradient-filter-container {
+    margin: 5px 0 0 44px;
+}
+
+svg {
+    display: block;
+}
+
+.background {
+    fill: #000000;
+}
+
+.slider {
+    cursor: ew-resize;
+}
+
+.slider line {
+    stroke: #000000;
+    stroke-width: 3px;
+}
+
+.slider circle {
+    fill: #ffffff;
+    stroke: #666666;
+    stroke-width: 1px;
+}
+
+.label-container {
+    font-size: 12px;
+    font-weight: 700;
+    color: #e5f0f2;
+}

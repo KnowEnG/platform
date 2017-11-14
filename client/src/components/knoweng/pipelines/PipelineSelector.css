@@ -1,0 +1,41 @@
+.header-area {
+    height: 82px;
+    padding-bottom: 12px;
+    border-bottom: solid 1px #4f6579;
+}
+
+.header-container {
+    white-space: nowrap; /* keep panels side by side */
+}
+
+.body-area {
+}
+
+.body-container {
+    white-space: nowrap; /* keep panels side by side */
+}
+
+.template-header, .selector-header, template-panel, pipeline-list {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.template-header, template-panel {
+    width: 320px;
+}
+
+.selector-header, pipeline-list {
+    width: 862;
+}
+
+.template-header {
+    font-size: 18px;
+    color: #73eaed;
+    padding-top: 48px;
+}
+
+.selector-header {
+    font-size: 28px;
+    color: #73eaed;
+    padding: 38px 0 0 21px;
+}

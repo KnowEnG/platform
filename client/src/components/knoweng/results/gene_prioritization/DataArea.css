@@ -1,0 +1,38 @@
+.tab-header {
+    white-space: nowrap;
+    overflow-x: hidden; /* TODO figure out tab positioning; see .tab:first-of-type below */
+}
+
+.tab {
+    display: inline-block;
+    margin-top: 37px;
+    padding: 4px 29px 4px 16px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #7493af;
+    cursor: pointer;
+}
+
+.tab:first-of-type {
+    margin-left: 400px; /* TODO figure out how we really want to position tabs wrt changing viewport width and scroll position */
+}
+
+.tab:not(.active):hover {
+    color: #50f1f5;
+}
+
+.tab.active {
+    background-color: #ffffff;
+    color: #2a5a67;
+}
+
+/* FIXME: Remove this once spreadsheet tab is implemented */
+.tab.disabled {
+    cursor: not-allowed !important;
+}
+
+.tab-body {
+    background-color: #ffffff;
+    min-height: 566px; /* matching height of white area on Data-02; TODO revisit everything for case of single user set */
+    padding-bottom: 50px;
+}

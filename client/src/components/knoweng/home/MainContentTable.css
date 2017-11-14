@@ -1,0 +1,42 @@
+.table-container {
+    width: 100%;
+    min-height: 436px;
+    margin: 56px 0 64px 0;
+    padding-top: 9px;
+    border-radius: 13px;
+    background-color: #35516a;
+}
+
+.table-header {
+    display: table-row;
+}
+
+.table-filter {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.table-filter:first-of-type {
+    padding-left: 25px;
+}
+
+.table-filter .btn {
+    height: 29px;
+    min-width: 110px;
+    padding: 1px 14px 6px 17px;
+    margin-right: 7px;
+    border-radius: 5px;
+    border: solid 1px #7493af;
+    font-size: 18px;
+    color: #7493af;
+    background-color: #35516a;
+}
+
+.table-filter .btn.selected {
+    color: #ffffff;
+    background-color: #7493af;
+}
+
+.table-area {
+    margin-top: 44px;
+}

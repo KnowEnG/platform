@@ -1,0 +1,39 @@
+<div class="rollover">
+    <div class="header">
+        <span class="title">Enrichment Analysis</span>
+        <span class="close pull-right" (click)="onClose()"><i class="fa fa-times"></i></span>
+    </div>
+    <div class="counts-area">
+        <div class="counts-text-area">
+            <div class="set-counts">
+                <div class="set-counts-supercollection user"></div><!-- no whitespace
+             --><div class="set-counts-label-area">
+                    <div class="set-name" [attr.title]="userGeneSet.name">{{ userGeneSet.name | truncator:25 }}</div><!-- no whitespace
+                 --><div class="collection-name">Your Gene Set</div>
+                </div><!-- no whitespace
+             --><div class="set-counts-number-area"><span class="primary-count">{{ geneSetLevelScore?.overlapCount }}</span><span class="secondary-count">{{ geneSetLevelScore !== null ? " of " : "" }}{{ userGeneSet.geneIds.length }}</span></div>
+            </div>
+            <div class="set-counts">
+                <div class="set-counts-supercollection" [style.background-color]="comparisonColor"></div><!-- no whitespace
+             --><div class="set-counts-label-area">
+                    <div class="set-name" [attr.title]="comparisonGeneSet.name">{{ comparisonGeneSet.name | truncator:25 }}</div><!-- no whitespace
+                 --><div class="collection-name">{{ comparisonGeneSet.supercollectionName }}</div><!-- no whitespace
+                 --><div class="collection-name">{{ comparisonGeneSet.collectionName }}</div>
+                </div><!-- no whitespace
+             --><div class="set-counts-number-area"><span class="primary-count">{{ comparisonGeneSet.geneCount }}</span><span class="primary-count-label">Genes</span></div>
+            </div>
+        </div><!-- no whitespace
+     --><div *ngIf="geneSetLevelScore !== null" class="counts-chart-area">
+            <pie-chart [radius]="35.5" [percentage]="piePercentage" [sliceColor]="'#29465f'" [remainderColor]="comparisonColor"></pie-chart><!-- no whitespace
+         --><div class="pie-chart-label">{{ piePercentage | numFormatter }}%</div>
+        </div>
+    </div>
+    <div *ngIf="geneSetLevelScore !== null" class="score-area">
+        <div class="score-label">Score</div><div class="score-info-icon"><i class="fa fa-info-circle"></i></div><div class="score-graph">
+            <gradient-number-line [leftColor]="gradientMaxColor" [rightColor]="gradientMinColor" [leftValue]="gradientMaxThreshold" [rightValue]="gradientMinThreshold" [currentValue]="geneSetLevelScore?.shadingScore"></gradient-number-line>
+        </div>
+    </div>
+    <div *ngIf="geneSetLevelScore !== null" class="overlaps-area">
+        <a class="show-control">Show List of Gene Overlaps</a>
+    </div>
+</div>

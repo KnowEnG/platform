@@ -1,0 +1,42 @@
+.login-container {
+  position: relative;
+  left: 492px;
+}
+h2 {
+  font-family: 'Lato', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #3dbfc2;
+}
+form {
+  margin-top: 56px;
+}
+fieldset {
+  margin-bottom: 59px;
+}
+label {
+  font-family: 'Lato', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #c6c7c9;
+  padding-left: 13px;
+}
+input {
+  width: 633px;
+  height: 45px;
+}
+.submit {
+  width: 189px;
+  height: 45px;
+  border-radius: 5px;
+  background-color: #3dbfc2;
+  border: solid 1px #ffffff;
+  font-family: 'Lato', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 1.1px;
+  text-align: center;
+  color: #ffffff;
+}
+  
+  

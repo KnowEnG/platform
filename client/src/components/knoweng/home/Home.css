@@ -1,0 +1,17 @@
+.home-container {
+  white-space: nowrap; /* keep panels side by side */
+}
+
+pipeline-panel, main-content-panel {
+  display: inline-block;
+  vertical-align: top;
+}
+
+pipeline-panel {
+  width: 300px;
+  margin-right: 21px;
+}
+
+main-content-panel {
+  width: 859px;
+}

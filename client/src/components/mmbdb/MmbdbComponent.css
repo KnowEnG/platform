@@ -1,0 +1,260 @@
+.app-container.sidenav-collapsed {
+  min-width: 1498px;
+}
+
+.app-container:not(.sidenav-collapsed) {
+  min-width: 1792px;
+}
+
+.omix-header {
+  height: 30px;
+}
+.omix-header.login {
+  height: 290px;
+}
+
+.omix {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: #ffffff;
+  position: absolute;
+  top: .35em;
+  transition: all 0.65s ease-in-out;
+}
+.app-container.sidenav-collapsed .omix-header.login .omix {
+  left: 550px;
+  font-size: 36px;
+  top: 240px;
+}
+.app-container.sidenav-collapsed .omix-header:not(.login) .omix {
+  left: 65px;
+}
+.app-container:not(.sidenav-collapsed) .omix-header:not(.login) .omix {
+  left: 359px;
+}
+
+.account {
+  position: absolute;
+  top: 0.75em;
+  white-space: nowrap;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #ffffff;
+  transition: all 0.65s ease-in-out;
+}
+.app-container.sidenav-collapsed .account {
+  left: 1356px;
+}
+.app-container:not(.sidenav-collapsed) .account {
+  left: 1650px;
+}
+
+.omix-header.login .account {
+  display: none;
+}
+
+.account-dot {
+  color: #eeb154;
+  font-size: 9px;
+  padding-right: 15px;
+}
+.account-name {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.line-separator {
+  margin: 10px -15px 10px -15px;
+  height: 1px;
+  background: #9b9b9b;
+}
+
+.sidenav-container {
+  white-space: nowrap;
+}
+
+.sidenav-menu,
+.sidenav-main {
+  transition: all 0.65s ease-in-out;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.sidenav-menu.sidenav-disabled {
+  visibility: hidden;
+}
+
+.app-container.sidenav-collapsed .sidenav-menu {
+  width: 58px;
+}
+
+.app-container:not(.sidenav-collapsed) .sidenav-menu {
+  width: 352px;
+}
+
+.sidenav-main {
+  min-width: 1440px;
+  margin-right: 20px;
+}
+
+.sidenav-control {
+  border: none;
+  background-color: inherit;
+  color: #96a7b7;
+  outline: none;
+}
+
+.sidenav-control line {
+  stroke: #96a7b7;
+  stroke-width: 2px;
+}
+
+.sidenav-control > svg {
+  margin: 0.5em 0.5em 0 0;
+}
+
+.side-menu-content {
+  margin-top: 56px;
+}
+
+.side-menu-item {
+  margin-bottom: 3px;
+}
+
+.side-menu-item-header {
+  width: 100%;
+  height: 40px;
+  background-color: #4f6579;
+  color: #ffffff;
+  cursor: pointer;
+  overflow: hidden; /* for our transition */
+}
+
+.side-menu-item.collapsed .side-menu-item-header:not(:hover) {
+  background-color: #40505f;
+  color: #96a7b7;
+}
+
+.side-menu-text {
+  float: left;
+  margin-left: 30px;
+  margin-top: 10px;
+  display: block;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+/* begin rules for showing/hiding/animating the menu bodies */
+.side-menu-item.collapsed .side-menu-item-body {
+  padding-top: 0;
+  max-height: 0;
+}
+.side-menu-item:not(.collapsed) .side-menu-item-body {
+  padding-top: 7px;
+  max-height: 10000px;
+}
+.side-menu-item-body {
+  transition: all 0.65s ease-in-out;
+  overflow-y: hidden;
+}
+/* end rules for showing/hiding/animating the menu bodies */
+
+.side-menu-icon {
+  float: right;
+  margin-top: 10px;
+  margin-right: 24px;
+  display: block;
+}
+
+.side-menu-icon circle, .side-menu-icon line {
+  fill: none;
+  stroke: #e5f0f2;
+  stroke-width: 1px;
+}
+
+.side-menu-item.collapsed .side-menu-item-header:not(:hover) .side-menu-icon circle,
+.side-menu-item.collapsed .side-menu-item-header:not(:hover) .side-menu-icon line {
+  stroke: #96a7b7;
+}
+
+.side-menu-item-body ul {
+  list-style-type: none;
+  padding-left: 14px;
+  padding-right: 16px;
+}
+
+.side-menu-item-body a {
+  text-decoration: none;
+}
+
+.side-menu-item-body li {
+  padding-left: 16px;
+}
+.side-menu-item-body li:hover {
+  background-color: #96a7b7;
+  border-radius: 5px;
+}
+
+.side-menu-sub-item {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #ecf0f4;
+  line-height: 26px;
+}
+
+.side-menu-sub-item-count {
+  font-size: 12px;
+  color: #96a7b7;
+  float: right;
+  line-height: 26px;
+  padding-right: 9px;
+}
+
+.side-menu-item-body li:hover .side-menu-sub-item {
+  font-weight: 700;
+  color: #283948;
+}
+
+.side-menu-item-body li:hover .side-menu-sub-item-count {
+  color: #283948;
+}
+
+.instructions {
+  color: #88a7cc;
+  padding-left: 30px;
+  border-bottom: solid 1px #43586a;
+  margin-bottom: 7px;
+}
+
+.instructions-text {
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.86;
+  padding-bottom: 2px;
+  display: inline-block;
+}
+
+.instructions svg {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 22px;
+  margin-bottom: 4px;
+}
+
+.instructions path {
+  stroke: none;
+  fill: #88a7cc;
+}
+
+.instructions rect {
+  fill: none;
+  stroke: #88a7cc;
+  stroke-dasharray: 2;
+}

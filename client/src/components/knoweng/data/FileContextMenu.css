@@ -1,0 +1,59 @@
+.menu {
+    width: 192px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border: solid 1px #d8d8d8;
+    padding: 6px 0 16px 0;
+}
+
+.submenu {
+    position: fixed;
+}
+
+.submenu .item {
+    padding-left: 16px;
+}
+
+.item {
+    font-size: 14px;
+    line-height: 2.07;
+    color: #000000;
+    cursor: pointer;
+}
+
+.icon {
+    font-size: 16px;
+    color: #c7c7c7;
+    margin: 0 13px 0 13px;
+}
+
+.submenu-caret {
+    padding-left: 28px; /* TODO this won't align if we have more than one submenu */
+    color: #c7c7c7;
+}
+
+hr {
+    margin: 14px 0 14px 0;
+    color: #d8d8d8;
+}
+
+.item:hover {
+    background-color: #c6d8e8;
+}
+
+.item:hover .icon {
+    color: #1e384e;
+}
+
+.favstar {
+    stroke: #c7c7c7;
+    stroke-width: 4px;
+    fill: none;
+    display: inline-block;
+    height: 15px;
+}
+
+.favstar.favorite {
+    fill: #fcc905;
+}

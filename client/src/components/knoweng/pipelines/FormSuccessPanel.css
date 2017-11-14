@@ -1,0 +1,46 @@
+.spinner, .job-state, .job-status, .button-area {
+    width: 100%;
+    text-align: center;
+}
+
+.spinner {
+    margin-top: 75px;
+    color: #b5d1eb;
+    font-size: 50px;
+}
+
+.job-state {
+    margin-top: 22px;
+    font-size: 28px;
+    color: #ffffff;
+}
+
+.job-status {
+    margin-top: 17px;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.button-area {
+    margin-top: 51px;
+    margin-bottom: 51px;
+}
+
+/* form huge buttons */
+.btn.huge {
+    width: 290px;
+    height: 73px;
+    border-radius: 5px;
+    background-color: #7493af;
+    font-size: 28px;
+    color: #ffffff;
+    margin-left: 59px;
+}
+
+.btn.huge:first-of-type {
+    margin-left: 0;
+}
+
+.btn.huge:hover {
+    background-color: #07abaf;
+}

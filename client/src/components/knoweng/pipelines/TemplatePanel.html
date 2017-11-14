@@ -1,0 +1,6 @@
+<div class="filters hidden">
+    <div *ngFor="let filter of filters" class="filter"><button class="btn" [class.selected]="filter == selectedFilter" (click)="onClickFilter(filter)">{{filter}}</button></div>
+</div>
+<div class="templates hidden">
+    <div *ngFor="let template of templates" class="template clickable-text" (click)="onClickTemplate(template)">{{ template }}</div>
+</div>

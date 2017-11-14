@@ -1,0 +1,18 @@
+svg {
+    display: block;
+}
+
+line {
+    stroke-width: 1px;
+    stroke: #29465f;
+}
+
+.label-min-max {
+    font-size: 12px;
+    fill: #c7c7c7;
+}
+
+.label-tick {
+    font-size: 18px;
+    fill: #000000;
+}

@@ -1,0 +1,2 @@
+<pipeline-selector *ngIf="pipeline === null" (templateSelected)="onTemplateSelected($event)" (pipelineSelected)="onPipelineSelected($event)"></pipeline-selector>
+<form-container *ngIf="pipeline !== null"></form-container>

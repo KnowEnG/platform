@@ -1,0 +1,19 @@
+[
+  {
+    _id: "healthy_females",
+    name: "Women, Healthy, Age: 30-40, Diet: Meat Eater",
+    query:"((sex=female) AND (crohns=false) AND (age_bucket=30_40) AND (diet=meat_eater))",
+    date_created: "2016-03-11T03:45:40Z",
+    num_samples: 5,
+    sample_ids: ["x0", "x1", "x2", "x3", "x4"]
+  },
+  {
+    _id: "crohns_females",
+    name: "Women, Healthy, Age: 30-40, Diet: Meat Eater",
+    query:"((sex=female) AND (crohns=true) AND (age_bucket=30_40) AND (diet=meat_eater))",
+    date_created: "2016-03-11T03:48:22Z",
+    num_samples: 6,
+    sample_ids: ["x5", "x6", "x7", "x8", "x9", "x10"]
+  }
+
+]

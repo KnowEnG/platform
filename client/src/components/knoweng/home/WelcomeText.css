@@ -1,0 +1,27 @@
+/* many styles for this component are defined in ../common/SupportAndWelcomeText.css */
+/* styles not shared with the support route can go below */
+
+.intro {
+    color: #E5F0F2;
+    font-size: 24px;
+    line-height: 36px;
+    padding: 8px 23px 24px 23px;
+}
+
+.section {
+    font-size: 16px;
+    line-height: 19px;
+}
+
+.btn.youtube {
+    padding-top: 6px;
+}
+
+.btn.youtube * {
+    vertical-align: middle;
+}
+
+.btn.youtube .fa {
+    font-size: 30px;
+    padding-right: 11px;
+}

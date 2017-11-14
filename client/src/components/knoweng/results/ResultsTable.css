@@ -1,0 +1,86 @@
+.table-container {
+    width: 859px;
+    height: 566px;
+    padding-top: 14px;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+th {
+    font-size: 12px;
+    color: #1d609e;
+    padding-bottom: 6px;
+}
+
+th.project {
+    padding-left: 15px;
+    width: 193px;
+}
+
+th.tags {
+    text-align: left;
+    width: 495px;
+    padding-left: 50px;
+}
+
+th.search {
+    width: 100%;
+}
+
+td.project {
+    padding-left: 10px;
+}
+
+select {
+    padding-left: 5px;
+    width: 183px;
+    height: 29px;
+    border-radius: 5px;
+    background-color: #4f6579;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+td.tags {
+    padding-left: 24px;
+}
+
+.tag {
+    margin: 0 4px 0 4px;
+    padding: 1px 15px 3px 15px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    background-color: #d8d8d8;
+    border-radius: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.tag.active {
+    background-color: #1D609E
+}
+
+.tag-divider {
+    width: 1px;
+    height: 28px;
+    background-color: #d8d8d8;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+td.search {
+    text-align: right;
+    padding-right: 18px;
+}
+
+.fa-search {
+    /*cursor: pointer;*/
+    cursor: not-allowed;
+    font-size: 16px;
+}
+
+.table-area {
+    margin-top: 44px;
+}

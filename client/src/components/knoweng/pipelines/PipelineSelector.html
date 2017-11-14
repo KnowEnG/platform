@@ -1,0 +1,12 @@
+<div class="header-area">
+    <div class="header-container full-fixed-width">
+        <!-- no whitespace between elements on the next line -->
+        <div class="template-header"><span class="hidden">Or start from a saved Template</span></div><div class="selector-header">SELECT A PIPELINE</div>
+    </div>
+</div>
+<div class="body-area">
+    <div class="body-container full-fixed-width">
+        <!-- no whitespace between elements on the next line -->
+        <template-panel (templateSelected)="templateSelected.emit($event)"></template-panel><pipeline-list (pipelineSelected)="pipelineSelected.emit($event)"></pipeline-list>
+    </div>
+</div>

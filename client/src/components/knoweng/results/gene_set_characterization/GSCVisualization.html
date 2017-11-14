@@ -1,0 +1,32 @@
+<div class="gsc-visualization-container">
+    <!-- Show a spinner until "result" is populated -->
+    <div *ngIf="!result" class="loading white-text">
+        <i class="fa fa-fw fa-spinner fa-pulse"></i>
+        Loading...
+    </div>
+    
+    <gsc-control-panel *ngIf="result"
+        [job]="job"
+        [gradientMaxColor]="gradientMaxColor"
+        [gradientMinColor]="gradientMinColor"
+        [gradientMaxThreshold]="gradientMaxThreshold"
+        [gradientMinThreshold]="gradientMinThreshold"
+        [gradientCurrentThreshold]="gradientCurrentThreshold"
+        [userGeneSets]="userGeneSets"
+        [comparisonGeneSets]="comparisonGeneSets"
+        [result]="result"
+        (selectedUserGeneSets)="updateSelectedUserGeneSets($event)"
+        (selectedComparisonGeneSets)="updateSelectedComparisonGeneSets($event)"
+        (updateThreshold)="updateThreshold($event)"></gsc-control-panel>
+    <gsc-data-area *ngIf="result"
+        [job]="job"
+        [gradientMaxColor]="gradientMaxColor"
+        [gradientMinColor]="gradientMinColor"
+        [gradientMaxThreshold]="gradientMaxThreshold"
+        [gradientMinThreshold]="gradientMinThreshold"
+        [gradientCurrentThreshold]="gradientCurrentThreshold"
+        [comparisonGeneSets]="comparisonGeneSets"
+        [selectedUserGeneSets]="selectedUserGeneSets"
+        [selectedComparisonGeneSets]="selectedComparisonGeneSets"
+        [result]="result"></gsc-data-area>
+</div>

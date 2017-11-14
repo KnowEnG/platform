@@ -1,0 +1,69 @@
+.tag-modal {
+    border-radius: 5px;
+    background-color: #eeeeee;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+    border: solid 1px #d8d8d8;
+    padding: 13px 0px 11px 0px;
+    white-space: nowrap;
+}
+
+.new-tag {
+    margin: 0 13px 0 12px;
+    padding: 7px 12px 9px 12px;
+    width: 464px;
+    height: 38px;
+    background-color: #ffffff;
+    border: solid 1px #7493af;
+    font-size: 18px;
+    font-style: italic;
+    color: #4a4a4a;
+    cursor: not-allowed;
+}
+
+.apply-remove-instructions {
+    margin: 19px 13px 0 25px;
+    font-family: Lato;
+    font-size: 18px;
+    color: #7493af;
+}
+
+.divider {
+    border-top-color: #d8d8d8;
+    margin-top: 3px;
+    margin-bottom: 9px;
+}
+
+.tag-container {
+    margin: 5px 0 3px 14px;
+}
+
+.tag {
+    padding: 0px 11px 2px 11px;
+    font-size: 14px;
+    color: #4a4a4a;
+    border-radius: 16px;
+    /*cursor: pointer;*/
+    cursor: not-allowed;
+}
+
+.tag.applied {
+    background-color: #4f6579;
+    color: #ffffff;
+}
+
+.fa-times-circle {
+    color: #c7c7c7;
+    position: relative;
+    left: 5px;
+}
+
+.tag-container:last-of-type {
+    margin-bottom: 46px;
+}
+
+.done {
+    background-color: #7493af;
+    font-size: 14px;
+    color: #ffffff;
+    margin-left: 425px;
+}

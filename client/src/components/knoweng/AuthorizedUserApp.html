@@ -1,0 +1,35 @@
+<div class="nav-container">
+    <div class="full-fixed-width">
+        <nav>
+            <div class="nav-home">
+                <a [routerLink]="['/home']"><img src="img/knoweng/knoweng_logo_mark.svg"></a>
+            </div>
+            <div class="nav-space"></div>
+            <div class="nav-main-item" routerLinkActive="selected"><a [routerLink]="['/pipelines']">Analysis Pipelines</a></div>
+            <div class="nav-space"></div>
+            <div class="nav-space"></div>
+            <div class="nav-main-item" routerLinkActive="selected"><a [routerLink]="['/results']">Results</a></div>
+            <div class="nav-space"></div>
+            <!--<div class="nav-space"></div>
+            <div class="nav-main-item" routerLinkActive="selected"><a [routerLink]="['/network']">Knowledge Network</a></div>
+            <div class="nav-space"></div>-->
+            <div class="nav-space"></div>
+            <div class="nav-main-item" routerLinkActive="selected"><a [routerLink]="['/data']">Data</a></div>
+            <div class="nav-space"></div>
+            <div class="nav-space"></div>
+            <div class="nav-main-item" routerLinkActive="selected"><a [routerLink]="['/support']">Support</a></div>
+            <div class="nav-account btn-group" dropdown placement="bottom right">
+                <div dropdownToggle>
+                    <span class="account-name">{{displayName.length > 0 ? displayName : "&nbsp;" }}</span>
+                    <i class="fa fa-circle account-dot"></i>
+                </div>
+                <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/logout']">Log out</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<router-outlet></router-outlet>
+

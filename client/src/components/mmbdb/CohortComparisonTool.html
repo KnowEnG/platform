@@ -1,0 +1,49 @@
+<div *ngIf="!loadingComparison" class="tab-comparison">
+        {{comparison.display_name}}
+</div>
+<div *ngIf="!loadingComparison && !loadingCohortData">
+    <div class="row-cohorts-otu-picker">
+        <div class="row-cohorts">
+            <div class="row-cohorts-item">
+                <p class="title-cohort">
+                    Baseline Cohort
+                </p>
+                <button type="button" class="btn button-cohort baseline-bg-color">
+                    {{baselineCohort.display_name_long}}
+                </button>
+            </div>
+            <div class="row-cohorts-item">
+                <p class="title-cohort">
+                    Cohort 1
+                </p>
+                <button type="button" class="btn button-cohort cohort1-bg-color">
+                    {{variantCohort.display_name_long}}
+                </button>
+            </div>
+            <div class="row-cohorts-item">
+                <p class="title-cohort">
+                    Individual
+                </p>
+                <button type="button" class="btn button-cohort individual-bg-color">
+                    {{individual.display_name_long}}
+                </button>
+            </div>
+        </div>
+        <topotu-picker [sortedOtuImportanceScores]="comparison.top_fst_ranked_otu_scores"></topotu-picker>
+    </div>
+    <div>
+        <tabset>
+            <tab label="Abundance &amp; Diversity Overview">
+                <div *ngIf="!loadingPhylumData">
+                    <relative-abundance [topOtuThreshold]="topOtuThreshold" [comparingCohortsPhylumData]="comparingCohortsPhylumData" [comparisonData]="comparisonData"></relative-abundance>
+                    <alpha-diversity [individual]="individual" [comparingCohortsPhylumData]="comparingCohortsPhylumData"></alpha-diversity>
+                </div>
+            </tab>
+            <tab label="OTU Tree Explorer">
+                <div *ngIf="!loadingNodeData">
+                    <tree-explorer [topOtuThreshold]="topOtuThreshold" [comparison]="comparison"></tree-explorer>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

@@ -1,0 +1,188 @@
+.activator {
+    margin: 3px 22px 0 47px;
+    padding: 10px 13px 0 15px;
+    width: 284px;
+    height: 38px;
+    border-radius: 7px;
+    background-color: #35516a;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.activator.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.job-name, .count, .all-checkbox {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.job-name {
+    color: #ffffff;
+}
+
+.all-checkbox {
+    height: 16px;
+    width: 16px;
+    background-color: #ffffff;
+    border-radius: 3.5px;
+    margin-left: 7px;
+    position: relative;
+    top: 2px;
+}
+
+.all-checkbox .fa-check, .all-checkbox .fa-minus {
+    color: #35516a;
+    position: relative;
+    top: -1px;
+    left: -1px;
+}
+
+.count {
+    color: #cae1f5;
+}
+
+.body {
+    width: 284px;
+    margin-left: 47px;
+    position: absolute;
+    max-height: 0px;
+    overflow-y: hidden;
+    background-color: #ffffff;
+    box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    transition: all .65s ease-in-out;
+}
+
+.body.open {
+    max-height: 1000px;
+}
+
+.body-table {
+    margin-bottom: 21px;
+}
+
+.body-table th {
+    font-size: 12px;
+    color: #1d609e;
+    padding-top: 10px;
+}
+
+.body-table td {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #35516a;
+}
+
+.single-checkbox {
+    width: 49px;
+    text-align: right;
+    font-size: 12px;
+    padding-right: 10px;
+}
+
+.single-checkbox .fa-check-square {
+    color: #7ed321;
+    cursor: pointer;
+}
+
+.single-checkbox .fa-square {
+    color: #c7c7c7;
+    cursor: pointer;
+}
+
+.set-name {
+    width: 118px;
+}
+
+.set-count {
+    width: 103px;
+}
+
+.group-header {
+    white-space: nowrap;
+}
+
+.group-name, .group-count {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.group-name {
+    width: 491px;
+    height: 39px;
+    font-size: 18px;
+    color: #73eaed;
+    padding: 8px 0 0 16px;
+    background-color: #1e384e;
+    cursor: pointer;
+}
+
+.group-count {
+    font-size: 18px;
+    color: #7493af;
+    margin: 8px 0 0 28px;  
+}
+
+.check-box {
+    display: inline-block;
+    vertical-align: top;
+    width: 16px;
+    height: 16px;
+    border: 2px solid;
+    border-radius: 5px;
+    padding-top: 1px;
+    line-height: 1;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.group-header .check-box {
+    border-color: #ffffff;
+    background-color: #1e384e;
+    color: #7493af;
+    margin-top: 4px;
+}
+
+.group-header .check-box.checked {
+    background-color: #ffffff;
+}
+
+.group-option .check-box {
+    border-color: #979797;
+    color: #4a4a4a;
+    margin-top: 6px;
+    padding-left: 1px;
+}
+
+.check-box-label {
+    display: inline-block;
+    vertical-align: top;
+    color: #d8d8d8;
+    margin: 0 20px 0 8px;
+}
+
+.group-options-container {
+    width: 491px;
+    background-color: #ffffff;
+    font-size: 18px;
+    line-height: 1.5; /* comp says 1.22 but looks more like 1.5 */
+    color: #4a4a4a;
+    transition: all .65s ease-in-out; /* TODO in the even that the user already has a list open, should really wait until current list closes (i.e., its animation is done) before opening next list */
+    overflow-y: hidden;
+    margin: 0 0 0 0; /* note group-container already has 2px margin-bottom */
+    padding: 0 50px 0 16px;
+    border: solid 0px #979797;
+    max-height: 0;
+}
+
+.group-container.open .group-options-container {
+    margin: 5px 0 4px 0; /* note group-container already has 2px margin-bottom */
+    padding: 11px 50px 11px 16px;
+    border: solid 1px #979797;
+    max-height: 600px;
+}

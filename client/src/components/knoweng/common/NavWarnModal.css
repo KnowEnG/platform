@@ -1,0 +1,72 @@
+.nav-warning {
+	height: 332px;
+	width: 547px;
+	border: 1px solid #B1B1B1;
+	border-radius: 7px;
+	background-color: #FFFFFF;
+	box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.19);
+}
+
+.warning-area {
+	height: 251px;
+	border-radius: 7px 7px 0 0;
+	background-color: #F3D368;
+}
+
+.warning-icon {
+	font-family: Lato;
+	font-size: 48px;
+	line-height: 45px;
+	text-align: center;
+	padding-top: 30px;
+}
+
+.warning-text {
+	color: #4A4A4A;
+	font-family: Lato;
+	font-size: 30px;
+	line-height: 36px;
+	text-align: center;
+	padding-top: 7px;
+}
+
+.navigation-desc-1 {
+	color: #4A4A4A;
+	font-family: Lato;
+	font-size: 18px;
+	line-height: 22px;
+	text-align: center;
+	padding-top: 50px;
+}
+
+.navigation-desc-2 {
+	color: #4A4A4A;
+	font-family: Lato;
+	font-size: 18px;
+	line-height: 22px;
+	text-align: center;
+}
+
+.leave-btn {
+	margin-left: 116px;
+	background-color: #C6D8E8;
+	color: #4F6579;
+}
+
+.stay-btn {
+	margin-left: 21px;
+	background-color: #7493AF;
+	color: #FFFFFF;
+}
+
+.leave-btn,
+.stay-btn {
+	height: 43px;
+	width: 147px;
+	display: inline-block;
+	margin-top: 17px;
+	border-radius: 5px;
+	font-family: Lato;
+	font-size: 20px;
+	line-height: 24px;
+}

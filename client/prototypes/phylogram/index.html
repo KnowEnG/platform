@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <meta content='text/html;charset=UTF-8' http-equiv='content-type'>
+    <title>Phylogram</title>
+    <script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
+    <script src="newick.js" type="text/javascript"></script>
+    <script src="d3.phylogram.js" type="text/javascript"></script>
+    <style type="text/css" media="screen">
+      body { font-family: "Helvetica Neue", Helvetica, sans-serif; }
+      td { vertical-align: top; }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>
+          <h2>Phylogram</h2>
+          <select id="data_set_select">
+            <option value="" disabled selected>Select a data file</option>
+            <option value="myNewick1.nwk">myNewick1.nwk</option>
+            <option value="myNewick2.nwk">myNewick2.nwk</option>
+            <option value="myNewick3.nwk">myNewick3.nwk</option>
+          </select>
+          <div id='phylogram'></div>
+        </td>
+      </tr>
+    </table>
+  </body>
+  <script>
+    function preparePage() {
+      var bins = [
+        {
+          color: "#CF6842",
+          testFtn: function(x) {
+            return x === Number.POSITIVE_INFINITY;},
+          label: "positive infinity"
+        },
+        {
+          color: "#EB9758",
+          testFtn: function(x) {
+            return isFinite(x) && x > 0;},
+          label: "positive"
+        },
+        {
+          color: "#B2B29D",
+          testFtn: function(x) {
+            return x == 0;},
+          label: "no change"
+        },
+        {
+          color: "#72A5BD",
+          testFtn: function(x) {
+            return 0 > x && isFinite(x);},
+          label: "negative"
+        },
+        {
+          color: "#517293",
+          testFtn: function(x) {
+            return x === Number.NEGATIVE_INFINITY;},
+          label: "negative infinity"
+        }
+      ];
+      var nodeAttributes = {};
+      // load the node attributes when the page is loaded
+      d3.csv("data/Abundance.csv", function(rows) {
+        rows.forEach(function(row) {
+          var otu = row["OTU # from refuse table"];
+          if (!otu.startsWith("Shadow")) {
+            var abundance = row["Relative Abundance"];
+            // convert the abundance to a float
+            var fAbundance = parseFloat(abundance);
+            if (isNaN(fAbundance)) {
+              if (abundance === "inf") {
+                fAbundance = Number.POSITIVE_INFINITY;
+              } else if (abundance === "-inf") {
+                fAbundance = Number.NEGATIVE_INFINITY;
+              } else {
+                console.log("*" + abundance + "* for " + otu);
+                fAbundance = NaN; // TODO FIXME temporary only
+              }
+            }
+            // bin the abundance
+            var abundanceBin = null;
+            bins.forEach(function(bin, binIndex) { 
+              if (bin.testFtn(fAbundance)) {
+                abundanceBin = binIndex;
+                // forEach doesn't let us break
+              } 
+            });
+            nodeAttributes["OTU"+otu] = {
+              sAbundance: abundance,
+              fAbundance: fAbundance,
+              binIndex: abundanceBin,
+              phylumName: row["Phylum"],
+              className: row["Class"],
+              orderName: row["Order"],
+              familyName: row["Family"],
+              genusName: row["Genus"],
+              color: "red"
+            };
+          }
+        }); 
+      });
+      d3.select("#data_set_select").on("change", function() {
+        d3.text("data/" + this.value, function(text) {
+          var newick = Newick.parse(text);
+
+          var newickNodes = []
+          function buildNewickNodes(node, callback) {
+            if ("name" in node) {
+              if (node.name in nodeAttributes) {
+                // this is one of the top features; copy its attributes from nodeAttributes
+                var attrs = nodeAttributes[node.name];
+                node.phylumName = attrs.phylumName;
+                node.className = attrs.className;
+                node.orderName = attrs.orderName;
+                node.familyName = attrs.familyName;
+                node.genusName = attrs.genusName;
+                node.sAbundance = attrs.sAbundance;
+                node.fAbundance = attrs.fAbundance;
+                node.binIndex = attrs.binIndex;
+                if (node.name.match(/OTU\d+/)) {
+                  node.name = node.name.slice(0,3) + " " + node.name.slice(3); // add space between "OTU" and digits
+                }
+              } else {
+                // this is a reference node
+                node.binIndex = null;
+                node.name = node.name.replace(/;.*$/, "").replace(/\s*\(T\)\s*$/, ""); // simplify
+              }
+            }
+            newickNodes.push(node)
+            if (node.branchset) {
+              for (var i=0; i < node.branchset.length; i++) {
+                buildNewickNodes(node.branchset[i])
+              }
+            }
+          }
+          buildNewickNodes(newick)
+      
+          // empty #phylogram before drawing in it
+          d3.select("#phylogram *").remove();
+      
+          d3.phylogram.build('#phylogram', newick, bins, {
+            width: 1000,
+            height: 800,
+            skipTicks: true
+          });
+        });
+      });
+    }
+    preparePage();
+  </script>
+</html>

@@ -1,0 +1,48 @@
+*.py[cod]
+*$py.class
+data/db/*
+data/userfiles/*
+!data/userfiles/.gitkeep
+# created by data/projects/knoweng/populate.sh
+data/src
+data/gene_annotations
+data/logs
+data/networks
+data/projects/mmbdb/*
+data/projects/hello_world/*
+
+# user-generated environment variables for Docker
+docker-compose-user.yml
+
+# linter
+lint.txt
+# the linter generates this maybe?
+.coverage
+
+# Sphinx
+docs/generated/*
+!docs/generated/conf.py
+
+# client
+client/node_modules
+client/dist
+client/reports
+client/index.html
+client/system.cachebuster.json
+
+# client logs
+client-debug.log
+
+#vi
+**/*.swp
+
+# Certificates and keys
+**/*.pem
+**/*.key
+**/*.crt
+**/*.cert
+**/*.info
+
+# Include default self-signed certs in scm
+!nest_flask_etc/nginx/ssl/nginx.crt
+!nest_flask_etc/nginx/ssl/nginx.key

@@ -1,0 +1,85 @@
+.x.axis path.domain, .y.axis path.domain {
+  stroke: #ecf0f4;
+  fill: none;
+  stroke-width: 1px;
+  display: none;
+}
+
+.x.axis text {
+  font-weight: 400;
+  font-size: 12px;
+  text-anchor: middle;
+  font-family: 'Lato', sans-serif;
+  fill: #ecf0f4;
+}
+
+.y.axis text.label {
+  text-anchor: middle;
+  font-weight: 400;
+  font-size: 10px;
+  font-family: 'Lato', sans-serif;
+  fill: #ecf0f4;
+}
+
+.y.axis text.minmax {
+  font-weight: 400;
+  font-size: 16px;
+  font-family: 'Lato', sans-serif;
+  fill: #ecf0f4;
+}
+
+.threshold line {
+  stroke-width: 2px;
+  stroke: #4a4a4a;
+  cursor: ew-resize;
+}
+
+.threshold ellipse {
+  fill: #e05869;
+  cursor: ew-resize;
+}
+
+.threshold text {
+  cursor: ew-resize;
+  text-anchor: middle;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: 'Lato', sans-serif;
+  fill: #ffffff;
+}
+
+select {
+  float: right;
+}
+
+select, select option {
+  border: none;
+  color: #ecf0f4;
+  background: none;
+  outline: none;
+  font-weight: 400;
+  font-size: 12px;
+  font-family: 'Lato', sans-serif;
+}
+
+select option {
+  outline: #dee4e9;
+  background-color: #5e778e;
+}
+
+rect.area {
+  stroke: #9b9b9b;
+  stroke-width: 1px;
+}
+
+.foreground.included {
+  fill: #4f6579;
+}
+
+.foreground.excluded {
+  fill: #dee4e9;
+}
+
+.background.included, .background.excluded {
+  fill: #ffffff;
+}

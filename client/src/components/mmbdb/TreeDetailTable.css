@@ -1,0 +1,198 @@
+/* text labeling entire table */
+.title {
+  font-weight: 700;
+  font-size: 14px;
+  font-family: 'Lato', sans-serif;
+  color: #46607e;
+  margin-top: 32px;
+  margin-left: 80px;
+}
+
+table {
+  margin-top: 33px;
+  margin-left: 30px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+}
+
+th {
+  letter-spacing: 1.4px;
+  color: #4a4a4a;
+  border-bottom: solid 1px #c7c7c7;
+  padding-bottom: 6px;
+}
+
+td {
+  border-bottom: solid 1px #dfe1e5;
+}
+
+table > tbody > tr:last-child > td {
+  border-bottom: solid 1px #c7c7c7;
+}
+
+/* columns in table */
+.top-feature {
+  width: 50px;
+}
+td.top-feature {
+  color: #e05869;
+  padding-left: 4px;
+}
+.name {
+  width: 210px;
+}
+td.name {
+  font-size: 14px;
+  line-height: 2.1;
+  color: #273847;
+}
+.rank {
+  width: 49px;
+}
+td.rank {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1;
+  color: #6d6d6d;
+  text-align: right;
+  padding-right: 16px;
+  padding-top: 6px;
+}
+.flag {
+  width: 30px;
+  border-left: solid 1px #c7c7c7;
+  text-align: center;
+}
+th.flag {
+  padding-top: 5px;
+  color: #9b9b9b;
+}
+td.flag {
+  color: #f08938;
+}
+.abundance {
+  width: 102px;
+  border-left: solid 1px #c7c7c7;
+}
+th.abundance {
+  padding-left: 6px;
+  padding-right: 4px;
+}
+td.abundance {
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+}
+.abundance-cohort {
+  width: 41px;
+  padding-right: 4px;
+}
+.abundance-cohort.last {
+  width: 46px;
+  padding-right: 9px;
+}
+th.abundance-cohort {
+  text-align: center;
+}
+td.abundance-cohort {
+  text-align: right;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 2.1;
+  color: #273847;
+}
+div.abundance-cohort-comparison {
+  background-color: #ecf0f4;
+  padding-right: 6px;
+}
+div.abundance-cohort-baseline {
+  background-color: #f5f3ee;
+  padding-right: 6px;
+}
+div.abundance-cohort-patient {
+  background-color: #e6efdc;
+  padding-right: 6px;
+}
+.difference {
+  border-left: solid 1px #c7c7c7;
+}
+th.difference {
+  padding-left: 6px;
+  padding-right: 4px;
+}
+td.difference {
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+}
+.distribution {
+  width: 133px;
+  border-left: solid 1px #c7c7c7;
+}
+th.distribution {
+  padding-left: 6px;
+  padding-right: 4px;
+}
+td.distribution {
+  padding-left: 8px;
+  padding-right: 10px;
+}
+.uid {
+  width: 45px;
+}
+th.uid {
+  text-align: center;
+}
+td.uid {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1;
+  color: #6d6d6d;
+  border-left: solid 1px #c7c7c7;
+  border-right: solid 1px #c7c7c7;
+  text-align: right;
+  padding-right: 6px;
+  padding-top: 6px;
+}
+/* toggle buttons for difference column */
+.toggle-button-line {
+  text-align: center;
+}
+.toggle-button-line .center-text {
+  display: inline-block;
+  width: 36px;
+}
+.toggle-button {
+  display: inline-block;
+  width: 70px;
+  height: 15px;
+  padding: 1px;
+  text-align: center;
+  border: solid 1px;
+  cursor: pointer;
+}
+.toggle-button.cohort-comparison {
+  background-color: #6182a9;
+  color: #ffffff;
+  border-color: #6182a9;
+}
+.toggle-button.cohort-baseline {
+  color: #7c7c7c;
+  border-color: #c6c7c9;
+}
+.toggle-button.cohort-patient {
+  background-color: #96b570;
+  color: #ffffff;
+  border-color: #96b570;
+}
+
+.spinner {
+  width: 100%;
+  color: #c6c7c9;
+  margin-left: 80px;
+  margin-top: 20px;
+}

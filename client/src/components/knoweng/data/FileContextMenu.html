@@ -1,0 +1,39 @@
+<div class="menu">
+    <div class="item hidden" (mouseenter)="openSubmenu($event, 'start')">
+        <i class="icon fa fa-fw fa-code-fork"></i>
+        Start a Pipeline
+        <i class="submenu-caret fa fa-fw fa-caret-right"></i>
+    </div>
+    <div class="item" (mouseenter)="closeSubmenu()" (click)="updateFavorite()">
+        <svg class="icon favstar fa-fw" [class.favorite]="file?.favorite" viewBox="0 0 51 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+        </svg>
+        {{file?.favorite ? 'Unfavorite' : 'Favorite' }}
+    </div>
+    <div class="item hidden" (mouseenter)="closeSubmenu()">
+        <i class="icon fa fa-fw fa-tag"></i>
+        Tags
+    </div>
+    <div class="item hidden" (mouseenter)="closeSubmenu()">
+        <i class="icon fa fa-fw fa-share-square-o"></i>
+        Share
+    </div>
+    <div class="item" (mouseenter)="closeSubmenu()" (click)="downloadFile()" [style.cursor]="(downloadStatus !== 'start') ? '' : 'not-allowed'" >
+        <i [ngClass]="downloadStatus == 'start' ? 'icon fa fa-spinner fa-spin' : 'icon fa fa-download'"></i>
+        Download
+    </div>
+    <div class="item hidden" (mouseenter)="closeSubmenu()">
+        <i class="icon fa fa-fw fa-lock"></i>
+        Lock file
+    </div>
+    <div class="item" (click)="deleteFile()">
+        <i class="icon fa fa-fw fa-times"></i>
+        Delete
+    </div>
+</div>
+
+<div *ngIf="showSubmenu" class="menu submenu" [style.left.px]="submenuLeft" [style.top.px]="submenuTop" (mouseleave)="closeSubmenu()">
+    <div *ngFor="let pipeline of pipelines" class="item">
+        {{ pipeline.title }}
+    </div>
+</div>

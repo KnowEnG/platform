@@ -1,0 +1,135 @@
+.getting-started {
+    background-color: #b1bfc3;
+    white-space: nowrap;
+}
+
+.left-container {
+    width: 730px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.right-container {
+    width: 720px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.getting-started-with {
+    width: 487px;
+    height: 88px;
+    font-family: 'Lato', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #283948;
+    text-align: left;
+    margin-top: 22px;
+    margin-left: 45px;
+}
+
+.line {
+    border: solid 1px #46607e;
+    margin-top: 18px;
+    margin-bottom: 40px;
+    margin-left: 20px;
+}
+
+.item-one-container {
+    margin-top: 50px;
+    white-space: nowrap;
+}
+
+.left-arrow {
+    width: 24px;
+    height: 24px;
+    margin-left: 28px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.circle-one {
+    width: 46px;
+    height: 46px;
+    margin-left: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.list-item {
+    width: 487px;
+    font-family: 'Lato', sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #283948;
+    text-align: left;
+    margin-left: 21px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.circle-two,
+.circle-three {
+    width: 46px;
+    height: 46px;
+    margin-left: 75px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.item-two-container,
+.item-three-container {
+    margin-top: 40px;
+    white-space: nowrap;
+}
+
+.about-copyright-container {
+    width: 650px;
+    height: 950px;
+    border-radius: 15px;
+    background-color: #e5f0f2;
+    margin-top: 26px;
+    margin-left: 20px;
+    margin-bottom: 25px;
+}
+
+.last-update {
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+    color: #6e8498;
+    padding-top: 20px;
+    padding-right: 20px;
+}
+
+.heading {
+    font-family: 'Lato', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #283948;
+    padding-left: 50px;
+}
+
+.content {
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #283948;
+    margin-top: 10px;
+    padding-left: 50px;
+    margin-bottom: 10px;
+}
+
+.content ul {
+    line-height: 2.06;
+}
+
+.content.small {
+    font-size: 12px;
+}
+
+.email {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: #04a2a5;
+}

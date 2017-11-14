@@ -1,0 +1,34 @@
+<div *ngFor="let pipeline of pipelines; let i=index" class="accordion-panel" [class.selected]="i == selectedIndex">
+    <div class="header" (click)="onClickPanel(i)">
+        {{pipeline.title}}
+    </div>
+    <div class="body">
+        <span [innerHTML]="pipeline.description"></span>
+        <div class="start-button-container">
+            <button class="btn start-button" [routerLink]= "['/pipelines', pipeline.slug]">Start this Pipeline</button>
+        </div>
+    </div>
+</div>
+<div class="accordion-panel" [class.selected]="pipelines.length == selectedIndex">
+    <div class="header" (click)="onClickPanel(pipelines.length)">
+        More Pipelines Coming Soon !
+    </div>
+    <div class="body">
+        <div>
+            We have several other Pipelines in development as we seek to round
+            out the analytics capabilities of the KnowEnG Platform. These
+            include:
+        </div>
+        <ul>
+            <li>Literature Mining</li>
+            <li>Signature Analysis</li>
+            <li>Phenotype Predictive Modeling</li>
+            <li>Gene Regulatory Network Reconstruction</li>
+            <li>Publication Search</li>
+            <li>Multi-Omics Analysis</li>
+        </ul>
+        <div class="start-button-container">
+            <a class="button btn start-button" href="//knoweng.org/pipelines" target="_blank">Learn More !</a>
+        </div>
+    </div>
+</div>

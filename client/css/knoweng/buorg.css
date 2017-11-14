@@ -1,0 +1,23 @@
+/* Styling for the browser-update banner */
+
+.buorg div {
+    text-align: center; 
+    cursor:pointer;
+    font-family: Lato;
+    font-size: 17px;
+    background-color: #F3D368;
+    color: #4A4A4A;
+    border-radius: 0 0 7px 7px;
+}
+
+#buorgul{ 
+    color: #FFFFFF;
+    background-color: #7493AF;
+    border-radius: 5px;
+}
+
+#buorgig{
+    color: #4F6579;
+    background-color: #C6D8E8;
+    border-radius: 5px;
+}

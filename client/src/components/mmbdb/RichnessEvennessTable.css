@@ -1,0 +1,43 @@
+.table-container {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 21px;
+}
+
+.dividing-hline {
+    margin-top: 5px;
+    margin-left: 21px;
+    margin-right: 21px;
+    border: solid 1px #c7c7c7;
+}
+
+.richness-evenness-by-phylum-table {
+    margin-top: 5px;
+    border: 0;
+}
+
+td.phylum {
+    width: 80px;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 2.83;
+    color: #4a4a4a;
+}
+
+th.phylum {
+    width: 80px;
+    height: 20px;
+}
+
+.scale-label {
+    position: relative;
+}
+
+.chart-x-range {
+    width: 230px;
+    font-family: 'Lato', sans-serif;
+    font-size: 8px;
+    font-weight: 400;
+    color: #273847;
+}

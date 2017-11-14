@@ -1,0 +1,100 @@
+.body-container {
+    white-space: nowrap; /* keep panels side by side */
+}
+
+.table-container, .metadata-container {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 72px;
+}
+
+.table-container {
+    width: 771px;
+}
+
+.summary-label, .summary-value {
+    white-space: normal;
+    vertical-align: top;
+    font-size: 18px;
+    line-height: 1.2;
+    padding-bottom: .5em;
+}
+
+.summary-label {
+    width: 162px;
+    text-align: right;
+    color: #7493af;
+}
+
+.summary-value {
+    width: 449px;
+    padding-left: 37px;
+    color: #ffffff;
+}
+
+.meta-label {
+    font-size: 18px;
+    color: #7493af;
+    margin-left: 8px;
+}
+
+.job-name-input, .project-input {
+    font-size: 18px;
+    color: #4a4a4a;
+    margin-top: 11px;
+}
+
+.job-name-input {
+    width: 399px;
+    height: 34px;
+    padding-left: 8px;
+}
+
+.project-input {
+    width: 400px;
+    height: 36px;
+    padding-left: 8px;
+    border-radius: 7px;
+}
+
+.project-container, .tags-container, .notes-container {
+    margin-top: 27px;
+}
+
+.notes-container .meta-label {
+    width: 403px;
+    border-bottom: solid 1px #4f6579;
+}
+
+.meta-label .fa-pencil {
+    margin-left: 13px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.tag-area {
+    margin-left: 8px;
+    padding-top: 13px;
+}
+
+.tag {
+    font-size: 12px;
+    color: #000000;
+    padding: 0px 7px 2px 7px;
+    border-radius: 16px;
+    background-color: #b5d1eb;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.notes-value {
+    font-size: 14px;
+    font-style: italic;
+    color: #ffffff;
+    margin-left: 8px;
+    padding-top: 10px;
+}
+
+.modal-container {
+    position: fixed;
+}

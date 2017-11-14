@@ -1,0 +1,57 @@
+<!-- TODO: we probably want slimScroll on the .table-area instead, but that would
+mean setting the height on the .table-area, which changes according to mode -->
+<div class="mode-button-container">
+    <button class="btn upload-new-data" [class.hidden]="!modeIsSelect" (click)="setModeIsSelect(false)">Upload New Data</button>
+    <div class="upload-new-data-x" [class.hidden]="modeIsSelect">Upload New Data   <i class="fa fa-times close-upload" (click)="setModeIsSelect(true)"></i></div>
+</div>
+<div class="table-container">
+    <table class="header-area" *ngIf="modeIsSelect">
+        <thead>
+            <tr>
+                <th class="project">PROJECT</th>
+                <th class="tags">FILTER BY</th>
+                <th class="search">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="project">
+                    <select class="project-selector">
+                        <option *ngFor="let project of projectList" value="{{ project._id }}">{{ project.name }}</option>
+                    </select>
+                </td>
+                <td class="tags">
+                    <div class="tag">Recent</div>
+                    <div class="tag">Favorites</div>
+                </td>
+                <td class="search"><i class="fa fa-search hidden"></i></td><!-- hiding for now, to match comp -->
+            </tr>
+        </tbody>
+    </table>
+    <div class="upload-new-data-area" [class.hidden]="modeIsSelect">
+        <!-- previously didn't use ngIf here because dropzone had to find #dropzone in the DOM, but could probably replace this class.hidden now -->
+        <div class="drop-browse-url-area">
+            <!-- TODO consider moving ng2FileDrop higher in the DOM; consider handling fileOver event w/ color change or similar -->
+            <div ng2FileDrop [uploader]="uploader" class="drop-browse">
+                <div class="drop-text">
+                    Drop files here or
+                    <label for="file-browse" class="browse-text">BROWSE</label>
+                    <input id="file-browse" type="file" ng2FileSelect [uploader]="uploader" multiple/>
+                </div>
+            </div><!-- no whitespace
+         --><div class="enter-url hidden"><input #url type="text" class="url-input" placeholder="Paste URL here" (keyup)="setUrl($event.target.value)"><button class="btn get-button" [disabled]="!isUrlValid()">Get Data</button></div>
+        </div><!-- no whitespace
+     --><div class="gene-paste-btn-area">
+            <button class="gene-paste-btn" (click)="openGenePasteModal($event)">Paste a Gene List</button>
+        </div>
+    </div>
+    <div class="table-area">
+        <files-table-body [fileList]="allFileList" [uploaderQueue]="uploaderQueue" [projectList]="projectList" (fileSelected)="fileSelected.emit($event)"></files-table-body>
+    </div>
+    <div *ngIf="showGenePasteModal" class="modal-container">
+        <gene-paste-modal [defaultProjectId]="projectList[0]._id" [userName]="userName" (close)="closeGenePasteModal($event)"></gene-paste-modal>
+    </div>
+</div>
+<div bsModal #errModal="bs-modal" class="modal fade" tabindex="-1">
+    <error-modal [header]="'Upload Failed'" [body]="errorMessage" (closeMe)="errModal.hide()"></error-modal>
+</div>

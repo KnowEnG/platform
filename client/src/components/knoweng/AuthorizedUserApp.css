@@ -1,0 +1,74 @@
+.nav-container {
+  background-color: #35516a;
+}
+
+nav {
+  height: 62px;
+  display: table-row;
+}
+
+.nav-home, .nav-main-item, .nav-space, .nav-account {
+  display: table-cell;
+  vertical-align: middle;
+  white-space: nowrap;
+  border-bottom: 2px solid #35516a;
+}
+
+.nav-home {
+  padding-right: 157px;
+}
+
+.nav-home img {
+  position: relative;
+  left: -6px; /* account for padding in image itself */
+}
+
+.nav-main-item {
+  padding: 0;
+}
+
+.nav-space {
+  padding-left: 20px; /* used to keep the active route's underline confined to the width of the text */
+}
+
+.nav-main-item.selected {
+  border-bottom-color: #3dbfc2;
+}
+
+.nav-main-item a {
+  font-size: 20px;
+  color: #b5d1eb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-main-item:hover a {
+  color: #50f1f5;
+}
+
+.nav-main-item.selected a {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.nav-account {
+  padding-top: 2px;
+  text-align: right;
+  width: 100%;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #c6d8e8;
+}
+
+.account-name {
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.account-dot {
+  font-size: 9px;
+  padding-left: 9px;
+  color: #86b25a;
+}

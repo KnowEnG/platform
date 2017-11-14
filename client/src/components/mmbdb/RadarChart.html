@@ -1,0 +1,17 @@
+<svg class="svg-vis" [attr.width]="configOption.width + configOption.paddingX" [attr.height]="configOption.height + configOption.paddingY">
+  <g transform="translate(75,75)">
+    <!-- level -->
+    <g class="levels">
+      <circle [attr.cx]="configOption.width / 2" [attr.cy]="configOption.height / 2" [attr.r]="circleRadius(configOption.width, configOption.height)"/>
+    </g>
+    <!-- axes -->
+    <g *ngFor="let axis of allAxis; let axisIndex = index">
+      <line class="axis-lines" [attr.x1]="configOption.width / 2" [attr.y1]="configOption.height / 2" [attr.x2]="axisEndingX(configOption.width, axisIndex, allAxis.length)" [attr.y2]="axisEndingY(configOption.height, axisIndex, allAxis.length)"/>
+      <text class="axis-labels" [attr.x]="axisLabelX(configOption.width, axisIndex, allAxis.length)" [attr.y]="axisLabelY(configOption.height, axisIndex, allAxis.length)" >{{axis}}</text>
+    </g>
+    <!-- polygon for each group -->
+    <g *ngFor="let groupData of data">
+      <polygon [ngClass]="getGroupCSSClassNames(groupData)" [attr.points]="getGroupPoints(groupData, configOption.width, configOption.height, allAxis.length)" fill-opacity="0.3" stroke-opacity="1" (mouseover)="highlightPolygonArea($event)" (mouseout)="dehighlightPolygonArea($event)" />
+    </g>
+  </g>
+</svg>

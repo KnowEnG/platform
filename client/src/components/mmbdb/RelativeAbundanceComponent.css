@@ -1,0 +1,67 @@
+.row-relative-abundance {
+  background-color: #ffffff;
+  white-space: nowrap;
+  /* make radar chart and abundance table overflow instead of wrapping */
+}
+
+.radar-chart-container {
+  float: left;
+}
+
+.abundance-table-container {
+  display: inline-block;
+}
+
+.top-otus-label {
+  display: inline-block;
+  padding-left: 55px;
+}
+
+.radius-scale-container {
+  width: 428px;
+  display: inline-block;
+}
+
+.text-relative-abundance {
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  color: #273847;
+  padding-top: 28px;
+  padding-bottom: 8px;
+  margin-left: 24px;
+}
+
+.row-radius-scale-top-otu {
+  background-color: #ecf0f4;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: #4a4a4a;
+  padding-top: 4px;
+  padding-bottom: 3px;
+}
+
+.radius-scale {
+  margin-left: 24px;
+}
+
+.slider-container {
+  margin-left: 10px;
+}
+
+.middle {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}
+
+.slider-value {
+  font-family: 'Lato', sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: #4f6579;
+  margin-left: 21px;
+}

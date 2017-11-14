@@ -1,0 +1,63 @@
+{
+  {
+    comp_id: "comp_1",
+    cohort_id: "healthy_females",
+    node_id: "aaaaa",
+
+    ranked_otus_fst_in_node: [0,1,2,3,4,5,6,7,8,9]
+  },
+  {
+    comp_id: "comp_1",
+    cohort_id: "healthy_females",
+    node_id: "bbbbb",
+
+    ranked_otus_fst_in_node: [1,2,3]
+  },
+  {
+    comp_id: "comp_1",
+    cohort_id: "healthy_females",
+    node_id: "ccccc",
+
+    ranked_otus_fst_in_node: [4,5,10]
+  },
+  {
+    comp_id: "comp_1",
+    cohort_id: "healthy_females",
+    node_id: "ddddd",
+
+    ranked_otus_fst_in_node: [6,7,8,9]
+  },
+  {
+    comp_id: "comp_1",
+    cohort_id: "crohns_females",
+    node_id: "eeeee",
+
+    ranked_otus_fst_in_node: [0,1,2,3,4,5,6,7,8,9]
+  },
+  {
+    comp_id: "comp_1",
+    cohort_id: "crohns_females",
+    node_id: "fffff",
+
+    ranked_otus_fst_in_node: [1,2]
+  },
+  {
+    comp_id: "comp_1",
+    cohort_id: "crohns_females",
+    node_id: "ggggg",
+    ranked_otus_fst_in_node: [3,6,7,8,9]
+
+  },
+  {
+    comp_id: "comp_1",
+    cohort_id: "crohns_females",
+    node_id: "hhhhh",
+
+    ranked_otus_fst_in_node: [4,5,10]
+  }
+
+]
+
+
+
+

@@ -1,0 +1,96 @@
+[
+  {
+    _id: "eeeee",
+    batch_id: "tree_01",
+    cohort_id: "crohns_females",
+    node_level: "ROOT",
+    node_name: "root",
+
+    num_unique_otus_agg: 3300.0,
+    num_unique_otus_per_sample: [2500.0, 3300.0, 4000.0, 2332.0, 1000.0],
+    num_unique_otus_quantiles: [1000.0,  3300.0, 4000.0],
+
+    local_shannon_evenness_agg: 0.8,
+    local_shannon_evenness_per_sample: [0.6, 0.8, 0.8. 0.5, 1.0],
+    local_shannon_evenness_quantiles:  [0.5,  0.8, 1.0],
+
+    species_shannon_evenness_agg: 0.7, 
+    species_shannon_evenness_per_sample: [0.6, 0.8, 0.7, 0.7, 0.5]
+    species_shannon_evenness_quantiles: [0.5, 0.7, 0.8]
+
+    relative_abundance_frac_agg: 1.0,
+    relative_abundance_frac_per_sample: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+    relative_abundance_frac_quantiles: [1.0, 1.0, 1.0],
+  },
+  {
+    _id: "fffff",
+    batch_id: "tree_01",
+    cohort_id: "crohns_females",
+    node_level: "phylum",
+    node_name: "Firmicutes",
+
+    num_unique_otus_agg: 2500.0,
+    num_unique_otus_per_sample: [2500.0, 3300.0, 4000.0, 2332.0, 1000.0],
+    num_unique_otus_quantiles: [1000.0,  2500.0, 4000.0],
+
+    local_shannon_evenness_agg: 0.8,
+    local_shannon_evenness_per_sample: [0.6, 0.8, 0.8, 0.5, 1.0],
+    local_shannon_evenness_quantiles:  [0.5, 0.8, 1.0],
+
+    species_shannon_evenness_agg: 0.6, 
+    species_shannon_evenness_per_sample: [0.6, 0.6, 0.6, 0.5, 0.8]
+    species_shannon_evenness_quantiles: [0.5, 0.6, 0.8]
+
+    relative_abundance_frac_agg: 0.2,
+    relative_abundance_frac_per_sample: [0.2, 0.2, 0.3, 0.4, 0.1],
+    relative_abundance_frac_quantiles: [0.1, 0.2, 0.4],
+
+  },
+  {
+    _id: "ggggg",
+    batch_id: "tree_01",
+    cohort_id: "crohns_females",
+    node_level: "phylum",
+    node_name: "Tenericutes",
+
+    num_unique_otus_agg: 2300.0,
+    num_unique_otus_per_sample: [2500.0, 3300.0, 4000.0, 2332.0, 1000.0],
+    num_unique_otus_quantiles: [1000.0,  2500.0, 4000.0],
+
+    local_shannon_evenness_agg: 0.8,
+    local_shannon_evenness_per_sample: [0.6, 0.8, 0.8, 0.5, 1.0],
+    local_shannon_evenness_quantiles:  [0.5, 0.8, 1.0],
+
+    species_shannon_evenness_agg: 0.6, 
+    species_shannon_evenness_per_sample: [0.6, 0.6, 0.6, 0.5, 0.8]
+    species_shannon_evenness_quantiles: [0.5, 0.6, 0.8]
+
+    relative_abundance_frac_agg: 0.2,
+    relative_abundance_frac_per_sample: [0.2, 0.2, 0.3, 0.4, 0.1],
+    relative_abundance_frac_quantiles: [0.1, 0.2, 0.4],
+
+  },
+  {
+    _id: "hhhhhh",
+    batch_id: "tree_01",
+    cohort_id: "crohns_females",
+    node_level: "phylum",
+    node_name: "Spirochaetes",
+
+    num_unique_otus_agg: 2300.0,
+    num_unique_otus_per_sample: [2500.0, 3300.0, 4000.0, 2332.0, 1000.0],
+    num_unique_otus_quantiles: [1000.0,  2300.0, 2000.0],
+
+    local_shannon_evenness_agg: 0.8,
+    local_shannon_evenness_per_sample: [0.6, 0.8, 0.8, 0.5, 1.0],
+    local_shannon_evenness_quantiles:  [0.5, 0.8, 1.0],
+
+    species_shannon_evenness_agg: 0.6, 
+    species_shannon_evenness_per_sample: [0.6, 0.6, 0.6, 0.5, 0.8]
+    species_shannon_evenness_quantiles: [0.5, 0.6, 0.8]
+
+    relative_abundance_frac_agg: 0.2,
+    relative_abundance_frac_per_sample: [0.2, 0.2, 0.3, 0.4, 0.1],
+    relative_abundance_frac_quantiles: [0.1, 0.2, 0.4],
+  }
+]

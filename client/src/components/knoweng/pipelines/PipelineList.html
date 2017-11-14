@@ -1,0 +1,11 @@
+<div class="list-container">
+    <table class="list">
+        <tbody>
+            <tr *ngFor="let pipeline of pipelines; let index = index" [class.selected]="index == selectedIndex" (mouseenter)="onPipelineMouseEnter(index)">
+                <td><div class="pipeline-title hover-content">{{ pipeline.title }}</div></td>
+                <td><div class="pipeline-button hover-content"><button class="btn" [routerLink]="['/pipelines', pipeline.slug]">Start Pipeline</button></div></td>
+            </tr>
+        </tbody>
+    </table><!-- no whitespace between these elements
+ --><help-panel [height]= "627" [content]="helpContent"></help-panel>
+</div>

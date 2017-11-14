@@ -1,0 +1,29 @@
+<div class="table-container" slimScroll [options]="slimScrollOpts">
+    <div class="table-header">
+        <table>
+            <thead>
+                <tr>
+                    <th class="project">PROJECT</th>
+                    <th class="tags">SHOW</th>
+                    <th class="search">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="project">
+                        <select>
+                            <option *ngFor="let project of projects" value="{{project._id}}">{{project.name}}</option>
+                        </select>
+                    </td>
+                    <td class="tags">
+                        <div class="tag" [class.active]="!selectedTag || selectedTag === 'all'" (click)="selectTag()" placement="bottom" tooltip="Show all results">All</div>
+                        <div class="tag" [class.active]="selectedTag === 'recent'" (click)="selectTag('recent')" placement="bottom" tooltip="Show only results from the past 7 days">Recent</div>
+                    <td class="search"><i class="fa fa-search hidden"></i></td><!-- hiding for now, to match comp -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="table-area">
+        <results-table-body [jobs]="jobs" (jobSelected)="jobSelected.emit($event)"></results-table-body>
+    </div>
+</div>

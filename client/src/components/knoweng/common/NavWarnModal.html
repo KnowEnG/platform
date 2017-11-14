@@ -1,0 +1,10 @@
+<div class="nav-warning" ngDraggable>
+    <div class="warning-area">
+        <div class="warning-icon"><i class="fa fa-exclamation-triangle"></i></div>
+        <div class="warning-text">Warning</div>
+        <div class="navigation-desc-1">Navigating away from this page will cancel the file upload</div>
+        <div class="navigation-desc-2">currently in progress.</div>
+    </div>
+    <button class="leave-btn" (click)="onCancelUpload($event)">Leave Page</button>
+    <button class="stay-btn" (click)="onFinishUpload($event)">Finish Upload</button>
+</div>

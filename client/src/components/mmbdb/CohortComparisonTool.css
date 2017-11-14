@@ -1,0 +1,144 @@
+.mockup-empty {
+  background-color: #ffffff;
+  padding-bottom: 1000px;
+}
+
+.button-cohort.mockup-individual {
+  border: dashed 2px #c2ced1;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 16px;
+  color: #ecf0f4;
+  background-color: #5e778e;
+}
+
+.button-run-analysis {
+  height: 42px;
+  border-radius: 6px;
+  background-color: #269e9d;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #f9f9f9;
+  margin:60px 50px;
+}
+
+.tab-comparison {
+  width: 309px;
+  background-color: #4f6579;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: #ffffff;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.row-cohorts-otu-picker {
+  background-color: #5e778e; /* updated to match zeplin 4/6/2016 */
+  white-space: nowrap; /* make columns overflow instead of wrapping */
+  padding-bottom: 8px;
+}
+
+.row-cohorts-item {
+  text-align: center;
+  display: inline-block;
+  padding-right: 21px;
+  padding-left: 21px;
+  border-right: 1px solid #4f6579;
+  margin-top: 20px;
+}
+
+.run-analysis-container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.row-cohorts {
+  display: inline-block;
+  vertical-align: top;
+}
+
+topotu-picker {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 50px;
+}
+
+.title-cohort {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px; /* updated to match zeplin 4/7/2016 */
+  color: #c2ced1; /* updated to match zeplin 4/7/2016 */
+  padding-bottom: 15px;
+  margin: 0;
+  position: relative;
+  top: -6px;
+}
+
+.button-cohort {
+  width: 205px;
+  height: 72px;
+  border-radius: 6px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 15px;
+  white-space: normal;
+}
+
+.baseline-bg-color {
+  background-color: #c5b9a6;
+}
+
+.cohort1-bg-color {
+  background-color: #88a7cc;
+}
+
+.individual-bg-color {
+  background-color: #96b570;
+}
+
+.title-otu-picker {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #ecf0f4;
+  margin-top: 15px;
+  margin-bottom: 0;
+  padding-left: 10px;
+}
+
+.row-richness-evenness-areachart {
+  background-color: #ffffff;
+}
+
+.row-richness-eveness-by-phylum {
+  background-color: #ffffff;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: #4a4a4a;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.table-phylum-areacharts {
+  background-color: #ffffff;
+}
+
+.centered {
+  text-align: left;
+  vertical-align: middle;
+  color: #4a4a4a;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.table-phylum-areacharts {
+  background-color: #ffffff;
+}

@@ -1,0 +1,40 @@
+<div class="title">NEAREST SPECIES OF GENUS {{ parentNode.comparisonNode.name | uppercase }}</div>
+<table>
+    <thead>
+        <tr>
+            <th class="top-feature">TOP<br/>OTU</th>
+            <th class="name">NEAREST<br/>NAMED SPECIES</th>
+            <th class="rank">RANK<br/>SCORE</th>
+            <th class="flag"><i class="fa fa-exclamation-triangle fa-2x"></i></th>
+            <th class="abundance">RELATIVE<br/>ABUNDANCE</th>
+            <th class="abundance-cohort">&nbsp;<br/>C1</th>
+            <th class="abundance-cohort" [class.last]="numCohorts == 2">&nbsp;<br/>BL</th>
+            <th *ngIf="numCohorts == 3" class="abundance-cohort last">&nbsp;<br/>IND</th>
+            <th class="difference">
+                ABUNDANCE DIFFERENCE<br/>
+                <span class="toggle-button-line">
+                    <!-- note: to control the width of this column consisting of inline-block elements, the next line can't have any whitespace (including newlines) between the spans -->
+                    <span class="toggle-button" [ngClass]="differenceOptions[differenceOptionsIndexLeft].style" (click)="advanceDifferenceLeft()">{{ differenceOptions[differenceOptionsIndexLeft].label | uppercase }}</span><span class="center-text">FROM</span><span class="toggle-button" [ngClass]="differenceOptions[differenceOptionsIndexRight].style" (click)="advanceDifferenceRight()">{{ differenceOptions[differenceOptionsIndexRight].label | uppercase }}</span>
+                </span>
+            </th>
+            <th class="distribution">ABUNDANCE<br/>DISTRIBUTION</th>
+            <th class="uid">&nbsp;<br/>OTU #</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of tableRows">
+            <td class="top-feature"><i *ngIf="row.isTopFeature" class="fa fa-circle"></i></td>
+            <td class="name">{{ row.name }}</td>
+            <td class="rank">{{ row.rank }}</td>
+            <td class="flag"><i *ngIf="row.isFlagged" class="fa fa-exclamation-triangle fa-2x"></i></td>
+            <td class="abundance"><abundance-barchart [width]="90" [height]="22" [baselineAbundance]= "100*row.abundanceMeans[0]"  [cohortAbundance]="100*row.abundanceMeans[1]"  [individualAbundance]="numCohorts == 3 ? 100*row.abundanceMeans[2] : null"></abundance-barchart></td>
+            <td class="abundance-cohort"><div class="abundance-cohort-comparison">{{ 100*row.abundanceMeans[0] | abundanceFormatter:false }}</div></td>
+            <td class="abundance-cohort" [class.last]="numCohorts == 2"><div class="abundance-cohort-baseline">{{ 100*row.abundanceMeans[1] | abundanceFormatter:false }}</div></td>
+            <td *ngIf="numCohorts == 3" class="abundance-cohort last"><div class="abundance-cohort-patient">{{ 100*row.abundanceMeans[2] | abundanceFormatter:false }}</div></td>
+            <td class="difference"><difference-barchart [leftValue]="100*row.abundanceMeans[differenceOptionsIndexLeft]" [rightValue]="100*row.abundanceMeans[differenceOptionsIndexRight]" [maxDifference]="100" [maxRectangleWidth]="70" [centerWidth]="36" [height]="15"></difference-barchart></td>
+            <td class="distribution"><grouped-barchart [data]="row.distribution"></grouped-barchart></td>
+            <td class="uid">{{ row.uid }}</td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="loading" class="spinner"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>

@@ -1,0 +1,23 @@
+<div class="stats-container">
+    <div class="header">
+        Cluster Summary
+    </div>
+    <div class="cluster-summary-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="cluster-name">CLUSTER</th>
+                    <th class="sample-count"># SAMPLES</th>
+                    <!-- TODO need quality scores from Nahil's team <th class="quality-score">QUALITY SCORE</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cluster of result.clusters">
+                    <td class="cluster-name">{{ cluster.longName }} ({{ cluster.shortName }})</td>
+                    <td class="sample-count">{{ cluster.size }}</td>
+                    <!-- <td class="quality-score">&nbsp;</td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

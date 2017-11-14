@@ -1,0 +1,28 @@
+{
+    "gene_prioritization": {
+        "features": {
+            "filename": "demo_GP.genomic.txt",
+            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_GP.genomic.txt"
+        }, 
+        "response": {
+            "filename": "demo_GP.phenotypic.txt",
+            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_GP.phenotypic.txt"
+        }
+    },
+    "gene_set_characterization": {
+        "features": {
+            "filename": "demo_GSC.spreadsheet.txt",
+            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_GSC.spreadsheet.txt"
+        }
+    },
+    "sample_clustering": {
+        "features": {
+            "filename": "demo_SC.genomic.txt",
+            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_SC.genomic.txt"
+        }, 
+        "response": {
+            "filename": "demo_SC.phenotypic.txt",
+            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_SC.phenotypic.txt"
+        }
+    }
+}

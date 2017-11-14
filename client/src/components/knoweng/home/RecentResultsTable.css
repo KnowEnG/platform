@@ -1,0 +1,82 @@
+table {
+    font-size: 14px;
+    width: 100%;
+}
+
+.spacer {
+    border-top: solid 1px #1e384e;
+    padding-bottom: 28px;
+}
+
+th {
+    padding-bottom: 1px;
+    font-size: 12px;
+    color: #b5d1eb;
+}
+
+.sort-caret {
+    padding-left: 10px;
+}
+
+.sortable {
+    cursor: pointer;
+}
+
+.unsortable {
+    cursor: not-allowed;
+}
+
+td {
+    color: #ffffff;
+}
+
+.name {
+    padding-left: 14px;
+    width: 317px;
+}
+
+.start {
+    width: 156px;
+}
+
+.pipeline {
+    width: 253px;
+}
+
+.status {
+    width: 70px;
+}
+
+td.status {
+    padding-left: 1em;
+}
+
+td.actions {
+    padding-left: 1em;
+    cursor: pointer;
+}
+
+tbody tr:hover, tbody tr.selected {
+    background-color: #1e384e;
+}
+
+.fa-refresh {
+    color: #b5d1eb;
+}
+.fa-check-square {
+    color: #7ed321;
+} 
+.fa-exclamation-triangle {
+    color: #e05869;
+}
+.fa-circle {
+    font-size: 4px;
+    color: #b5d1eb;
+    position: relative;
+    top: -3px;
+}
+
+.context-menu-container {
+    position: fixed;
+    padding: 15px;
+}

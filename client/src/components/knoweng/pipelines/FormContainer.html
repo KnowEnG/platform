@@ -1,0 +1,35 @@
+<div *ngIf="form" class="header-area">
+    <div class="full-fixed-width">
+        <div class="header-container">
+            <div class="job-name">
+                <span class="job-name-label">Pipeline:</span><span class="job-name-value">{{ form.suggestJobName() }}</span>
+            </div>
+
+            <template ngFor let-group [ngForOf]="form.formGroups" let-groupIndex="index">
+                <div class="stage-space"></div>
+                <div class="stage-name" [class.selected]="groupIndex == currentIndex" [class.disabled]="!groupIndexIsEnabled(groupIndex)" (click)="groupIndexIsEnabled(groupIndex) && onClickFormGroup(groupIndex)">{{group.title}}</div>
+                <div class="stage-space"></div>
+            </template>
+            <div class="stage-space"></div>
+            <div class="stage-name" [class.selected]="form.formGroups.length == currentIndex" [class.disabled]="!groupIndexIsEnabled(form.formGroups.length)" (click)="groupIndexIsEnabled(form.formGroups.length) && onClickFormGroup(form.formGroups.length)">Review &amp; Submission</div>
+            
+            <div class="job-cancel" (click)="onClickCancel()">Cancel</div>
+        </div>
+    </div>
+</div>
+<div *ngIf="form" class="body-area">
+    <form-entry-panel *ngIf="currentIndex < form.formGroups.length" [currentIndex]="currentIndex" [form]="form" [pipeline]="pipeline"></form-entry-panel>
+    <form-review-panel *ngIf="currentIndex == form.formGroups.length && !submitted" [form]="form" [currentProject]="currentProject" (changeProject)="onChangeProject($event)"></form-review-panel>
+    <form-success-panel *ngIf="submitted" [submittedJobId]= "submittedJobId" [form]="form" (restart)="onRestart()"></form-success-panel>
+</div>
+<div *ngIf="form" class="footer-area">
+    <div class="footer-container full-fixed-width">
+        <button *ngIf="currentIndex < form.formGroups.length" class="btn form-nav pull-right" (click)="onClickNext()" [attr.disabled]="form.formGroups[currentIndex].isValid(form.getData()) ? null : true">Next</button>
+        <button *ngIf="currentIndex == form.formGroups.length && !submitted" class="btn form-nav pull-right" (click)="onClickSubmit()">Submit Job</button>
+        <div *ngIf="currentIndex == form.formGroups.length && !submitted" class="save-template-container pull-right hidden" (click)="onClickSaveTemplate()"><div class="save-template-check-box"><i *ngIf="saveAsTemplate" class="fa fa-check"></i></div><div class="save-template-label noselect">Save as template</div></div>
+        <button *ngIf="currentIndex != 0 && !submitted" class="btn form-nav pull-left" (click)="onClickPrevious()">Previous</button>
+    </div>
+</div>
+<div bsModal #errModal="bs-modal" class="modal fade" tabindex="-1">
+    <error-modal [header]="'Job Limit Exceeded'" [body]="errorMessage" (closeMe)="errModal.hide()"></error-modal>
+</div>

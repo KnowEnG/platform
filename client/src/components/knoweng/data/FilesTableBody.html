@@ -1,0 +1,52 @@
+<div class="scrollable-area" slimScroll [options]="slimScrollOpts">
+    <table>
+        <tbody>
+            <tr *ngFor="let item of uploaderQueue">
+                <td class="icon">
+                    <img src="img/knoweng/file-unknown.svg">
+                </td>
+                <td class="info">
+                    <div class="name">{{ item?.file?.name }}</div>
+
+                    <div class="progress" style="margin-bottom: 0;">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+
+                    </div>
+                    <div class="progress-percent">{{ item.progress }} %</div>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr *ngFor="let file of fileList; let i=index" [class.selected]="isSelected('file', i)" (click)="selectRow('file', i)">
+                <td class="icon">
+                    <img src="{{file.getFileIcon(file.filetype)}}">
+                </td>
+                <td class="info">
+                    <div class="name">{{ file.filename }}</div>
+                    <div class="upload">Uploaded {{ getDateForFile(file) | date:'longDate' }} by {{file.uploadername}}</div>
+                    <div class="size">{{file.getPrettySize()}}</div>
+                </td>
+                <td class="project">Saved to Project:
+                    <div class="btn-group" dropdown>
+                        <a class="btn project-button dropdown-toggle" type="button" dropdownToggle>{{ _projectService.getProject(file.project_id) ? _projectService.getProject(file.project_id).name : 'Default Project' }} <span class="fa fa-angle-down" title="Toggle dropdown menu"></span></a>
+                        <ul *dropdownMenu class="dropdown-menu" role="menu">
+                            <div *ngFor="let project of projectList; let i=index">
+                                <li role="menuitem" class="project-name-list"><span class="dropdown-item">{{ project.name }}</span></li>
+                            </div>
+                            <!-- TODO: Uncomment when user projects have been fleshed out
+                            <li class="divider dropdown-divider"></li>
+                            <li role="menuitem"><a class="create-new-project dropdown-item"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Create a New Project</a></li>
+                            -->
+                        </ul>
+                    </div>
+                </td>
+                <!-- the fa-ellipsis-h is a poor match for the comp -->
+                <td class="actions" (click)="openContextMenu($event, 'file', i)"><i class="fa fa-circle"></i> <i class="fa fa-circle"></i> <i class="fa fa-circle"></i></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="showContextMenu" (mouseleave)="closePopup()" class="context-menu-container" [style.bottom.px]="contextMenuBottom" [style.right.px]="contextMenuRight">
+        <file-context-menu [file]="contextMenuFile" (closeMe)="closeContextMenu($event)" (selectedFileUpdated)="fileSelected.emit($event)"></file-context-menu>
+    </div>
+</div>

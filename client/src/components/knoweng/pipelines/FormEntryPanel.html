@@ -1,0 +1,82 @@
+<div class="body-container full-fixed-width">
+    <div class="form-container">
+        <div class="pull-right clickable-text reset-text" (click)="setCurrentPageToDefault()">Reset Defaults</div>
+        <!-- form screens prior to review & submission -->
+        <div *ngFor="let field of form.formGroups[currentIndex].fields; let fieldIndex=index" class="field-container">
+            <template [ngIf]="field.isEnabled(form.getData())">
+                <!-- TODO: replace ngIfs with ngSwitch in ng2 final -->
+                <!-- TODO: break these out into components (writing them inline now only to save time) and factor out label code -->
+                <div *ngIf="getFieldType(field) == 'select'">
+                    <div *ngIf="field.headline !== null" class="label-large">{{ field.headline }}</div>
+                    <div *ngIf="field.labelNumber !== null || field.label !== null" class="label-normal"><div *ngIf="field.labelNumber !== null" class="label-number label-bordered">{{ field.labelNumber }}</div><div class="label-text">{{ field.label }}</div></div>
+                    <select (change)="field.toggleValue($event.target.value)" [class.numbered]="field.labelNumber !== null">
+                        <template ngFor let-option [ngForOf]="field.options">
+                            <option [attr.value]="option.value" [attr.selected]="option.selected ? true : null">{{ option.label }}</option>
+                        </template>
+                    </select>
+                    <span class="select-field-default" *ngIf="field.isDefault()">default</span>
+                </div>
+                <div *ngIf="getFieldType(field) == 'grouped-select'">
+                    <div *ngIf="field.headline !== null" class="label-large">{{ field.headline }}</div>
+                    <div *ngIf="field.labelNumber !== null || field.label !== null" class="label-normal"><div *ngIf="field.labelNumber !== null" class="label-number label-bordered">{{ field.labelNumber }}</div><div class="label-text">{{ field.label }}</div></div>
+                    <select (change)="field.toggleValue($event.target.value)" [class.numbered]="field.labelNumber !== null">
+                        <template ngFor let-group [ngForOf]="field.getGroupNames()">
+                            <optgroup [attr.label]="group">
+                                <template ngFor let-option [ngForOf]="field.getGroupOptions(group)">
+                                    <option [attr.value]="option.value" [attr.selected]="option.selected ? true : null">{{ option.label }}</option>
+                                </template>
+                            </optgroup>
+                        </template>
+                    </select>
+                    <span class="select-field-default" *ngIf="field.isDefault()">default</span>
+                </div>
+                <div *ngIf="getFieldType(field) == 'grouped-multi-select'">
+                    <div *ngIf="field.headline !== null" class="label-large">{{ field.headline }}</div>
+                    <div *ngIf="field.labelNumber !== null || field.label !== null" class="label-normal"><div *ngIf="field.labelNumber !== null" class="label-number label-bordered">{{ field.labelNumber }}</div><div class="label-text">{{ field.label }}</div></div>
+                    <grouped-multi-selector [selectFormField]="field" [formData]="formData" [class.numbered]="field.labelNumber !== null"></grouped-multi-selector>
+                </div>
+                <div *ngIf="getFieldType(field) == 'boolean'">
+                    <div *ngIf="field.headline !== null" class="label-large">{{ field.headline }}</div>
+                    <div *ngIf="field.labelNumber !== null" class="label-normal"><div class="label-number label-bordered">{{ field.labelNumber }}</div><div class="label-text">{{ field.label }}</div></div>
+                    <button class="btn btn-radio" [class.selected]="field.currentValue" (click)="field.currentValue = true" [class.numbered]="field.labelNumber !== null">Yes</button>
+                    <button class="btn btn-radio" [class.selected]="field.currentValue !== null && !field.currentValue" (click)="field.currentValue = false">No</button>
+                </div>
+                <div *ngIf="getFieldType(field) == 'number'">
+                    <div *ngIf="field.headline !== null" class="label-large">{{ field.headline }}</div>
+                    <div *ngIf="field.labelNumber !== null" class="label-normal"><div class="label-number label-bordered">{{ field.labelNumber }}</div><div class="label-text">{{ field.label }}</div></div>
+                    <input type="text" class="text-field" (keyup)="field.currentValue = $event.target.value" [attr.value]="field.currentValue === null ? '' : field.currentValue" [class.numbered]="field.labelNumber !== null">
+                    <span class="text-field-percent" *ngIf="field.isPercentage">%</span>
+                    <span class="text-field-default" *ngIf="field.currentValue == field.defaultValue">default</span>
+                    
+                    <!-- Display validation message if required fields are missing -->
+                    <span *ngIf="field.required && !field.currentValue">
+                        <span class="alert-pointer"></span>
+                        <span class="alert alert-invalid">
+                            Value for {{ field.summaryLabel }} is required.
+                        </span>
+                    </span>
+                    
+                    <!-- Display validation message if field's value is invalid -->
+                    <span *ngIf="!field.isValid() && !field.pristine && field.currentValue">
+                        <span class="alert-pointer"></span>
+                        <span class="alert alert-invalid">
+                            Value for {{ field.summaryLabel }} is invalid: 
+                            <span *ngIf="field.minimum != null && field.maximum != null">must be between {{ field.minimum }} and {{ field.maximum }}.</span>
+                            <span *ngIf="field.minimum != null && field.maximum == null">must be {{ field.minimum }} or greater.</span>
+                            <span *ngIf="field.minimum == null && field.maximum != null">must be {{ field.maximum }} or less.</span>
+                        </span>
+                    </span>
+                </div>
+                <div *ngIf="getFieldType(field) == 'file'">
+                    <div *ngIf="field.headline !== null" class="label-large">{{ field.headline }}</div>
+                    <div *ngIf="field.labelNumber !== null || field.label !== null" class="label-normal"><div *ngIf="field.labelNumber !== null" class="label-number label-bordered">{{ field.labelNumber }}</div><div class="label-text">{{ field.label }}</div><div *ngIf="!field.required" class="optional">Optional</div></div>
+                    <file-picker [pipeline]="pipeline" [currentIndex]="currentIndex" [fileFormField]="field" [class.numbered]="field.labelNumber !== null"></file-picker>
+                </div>
+                <div *ngIf="getFieldType(field) === null">
+                    <h1>unhandled type {{ getFieldType(field, true) }}</h1>
+                </div>
+            </template>
+        </div>
+    </div><!-- no whitespace
+ --><help-panel [height]="544" [content]="form.formGroups[currentIndex].helpContent"></help-panel>
+ </div>

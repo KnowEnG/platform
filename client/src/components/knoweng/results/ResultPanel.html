@@ -1,0 +1,92 @@
+<div class="result-panel-container">
+    <template [ngIf]="job !== null">
+        <!-- [attr.title]="job.name" -->
+        <div class="job-name" trunctip [tooltipText]="job.name"></div>
+        <div class="files-area">
+            <!-- TODO ngSwitch and/or better -->
+            <!-- TODO better set of fields, which should include filenames as comped -->
+            <div class="file-item" *ngIf="false"><div class="value-label">METHOD</div><div class="value">{{ job.parameters.method }}</div></div>
+            <div class="file-item" *ngIf="job.parameters.gene_set_file"><div class="value-label">SPREADSHEET</div><div class="value" trunctip maxLength="24" [tooltipText]="geneSpreadsheetName"></div></div>
+            <div class="file-item" *ngIf="job.parameters.features_file"><div class="value-label">FEATURES</div><div class="value" trunctip maxLength="24" [tooltipText]="featuresFileName"></div></div>
+            <div class="file-item" *ngIf="job.parameters.response_file"><div class="value-label">RESPONSE</div><div class="value" trunctip maxLength="24" [tooltipText]="responseFileName"></div></div>
+        </div>
+        <div class="icons-area">
+            <!-- note: these are inline-block but not controlling whitespace between elements yet -->
+            <button class="btn view-results" [disabled]="job.status !== 'completed'" [routerLink]="['/results', job._id]">View Results</button>
+            <!-- This is a HACK - <div> can't be [disabled], but apparently <fieldset> can -->
+            <fieldset class="icon-item" (click)='downloadJob()' [disabled]="job.status !== 'completed'" [style.cursor]="(job.status === 'completed' && downloadStatus !== 'start') ? '' : 'not-allowed'" >
+                <i [ngClass]="downloadStatus == 'start' ? 'fa fa-spinner fa-spin' : 'fa fa-download'"></i>
+                <div class="icon-text">download</div>
+            </fieldset>
+            
+            <div class="icon-item" (click)="deleteJob()" >
+                <i class="fa fa-times-circle"></i>
+                <div class="icon-text">delete</div>
+            </div>
+            <div class="icon-item" (click)="updateFavorite()">
+                <svg class="favstar" [class.favorite]="job?.favorite" viewBox="0 0 51 48" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+                </svg>
+                <div class="icon-text"> {{job.favorite ? 'unfavorite' : 'favorite' }} </div>
+            </div>
+            <!-- TODO: wire these buttons up?
+            <div class="icon-item not-yet-allowed">
+                <i class="fa fa-ellipsis-h"></i>
+                <div class="icon-text">Menu</div>
+            </div>
+            
+            <div class="icon-item not-yet-allowed">
+                <i class="fa fa-share-square-o"></i>
+                <div class="icon-text">Share</div>
+            </div>
+            -->
+        </div>
+        <!-- hide this whole area until summaries are loaded; TODO add spinner -->
+        <div class="scrollable-area" *ngIf="summaries.length" slimScroll [options]="slimScrollOpts">
+            <div class="error-area" *ngIf="job.status === 'failed'">
+                <strong>Job Failed Error:</strong>
+                <p class="error-message">{{ job.error || 'An unknown error was encountered. Please contact technical support for more information.' }}</p>
+            </div>
+            <div class="detail-area">
+                <div class="parameters-area">
+                    <div class="value-label">PARAMETERS</div>
+                    <div class="value">&nbsp;</div> <!-- serving as line break -->
+                    
+                    <table class="parameters-table">
+                        <tbody>
+                            <!-- List our formatted parameters, but hide file names (these are displayed separately at the top of the panel) -->
+                            <template ngFor let-summary [ngForOf]="summaries">
+                                <tr *ngIf="summary && summary.label && summary.value != null && summary.value !== '' && ['Pasted Gene Set', 'Features File', 'Response File', 'Gene Spreadsheet'].indexOf(summary.label) === -1">
+                                    <td class="value-label" >{{ summary.label }}:</td>
+                                    <td class="value" trunctip maxLength="100" [tooltipText]="summary.value"></td>
+                                </tr>
+                                <tr *ngIf="!summary">
+                                    <td class="line-break">&nbsp;</td><td class="line-break">&nbsp;</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="project-area">
+                    <!-- TODO: Uncomment when user projects have been fleshed out -->
+                    <div><span class="value-label">PROJECT</span><!--<i class="fa fa-pencil" (click)="openModal($event, 'project')"></i>--></div>
+                    <div class="value">{{ projectName }}</div>
+                </div>
+                <div class="tags-area hidden">
+                    <div><span class="value-label">TAGS</span><i class="fa fa-pencil" (click)="openModal($event,'tags')"></i></div>
+                    <div class="tag">Experiment 1</div>
+                </div>
+                <div class="notes-area">
+                    <div><span class="value-label">NOTES</span><i class="fa fa-pencil" (click)="openModal($event, 'notes')"></i></div>
+                    <div class="value note">{{job.notes}}</div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+
+<div [ngSwitch]="modal" class="modal-container" [style.bottom.px]="modalBottom" [style.right.px]="modalRight">
+    <textbox-editor-modal *ngSwitchCase="'notes'" (save)="saveCloseNotesModal($event)" (cancel)="closeModal()" [initialValue]="job.notes"></textbox-editor-modal>
+    <textbox-editor-modal *ngSwitchCase="'project'" (save)="closeModal()" (cancel)="closeModal()" [initialValue]="'TODO no mockups for project editor yet.'"></textbox-editor-modal>
+    <tag-editor-modal *ngSwitchCase="'tags'" [initialTags]="[{name: 'Experiment 1', applied: true}, {name: 'Experiment 2', applied: false}, {name: 'Curated', applied: false}, {name: 'Uncurated', applied: false}]" (done)="closeModal()"></tag-editor-modal>
+</div>

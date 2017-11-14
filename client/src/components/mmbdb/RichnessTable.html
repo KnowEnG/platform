@@ -1,0 +1,45 @@
+<div class="dividing-hline"></div>
+<div class="table-container">
+    <table class="richness-evenness-by-phylum-table">
+        <thead>
+            <tr>
+                <th class="phylum"></th>
+                <th class="chart-x-range">
+                    <span class="scale-label" style="left: 5px;">0</span>
+                    <span class="scale-label" style="left: 20px;">{{firstBinName}}</span>
+                    <span class="scale-label" style="left: 160px;">{{maxXLabel}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let richness of richnessesPartOne">
+                <td class="phylum">{{richness.phylum}}</td>
+                <td>
+                    <grouped-barchart [data]="richness.data" [configOption]="{binTitleLabel: 'Richness Score'}"></grouped-barchart>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-container">
+    <table class="richness-evenness-by-phylum-table">
+        <thead>
+            <tr>
+                <th class="phylum"></th>
+                <th class="chart-x-range">
+                    <span class="scale-label" style="left: 5px;">0</span>
+                    <span class="scale-label" style="left: 20px;">{{firstBinName}}</span>
+                    <span class="scale-label" style="left: 160px;">{{maxXLabel}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let richness of richnessesPartTwo">
+                <td class="phylum">{{richness.phylum}}</td>
+                <td>
+                    <grouped-barchart [data]="richness.data" [configOption]="{binTitleLabel: 'Richness Score'}"></grouped-barchart>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

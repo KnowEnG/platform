@@ -1,0 +1,196 @@
+body {
+    width: 100%;
+    min-width: 1280px;
+    background-color: #152A3C;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+}
+
+.full-fixed-width {
+    width: 1280px;
+    margin: auto;
+    padding: 0 50px 0 50px;
+}
+
+.clickable-text {
+    cursor: pointer;
+    color: #b5d1eb;
+}
+
+.clickable-text:hover {
+    color: #50f1f5;
+}
+
+H1 {
+    font-size: 32px;
+    line-height: 1.28;
+    color: #b5d1eb;
+}
+
+H3 {
+    font-size: 28px;
+    color: #ffffff;
+}
+
+H2 {
+    font-size: 28px;
+    color: #73eaed;
+}
+
+.text-H3-centered {
+    font-size: 28px;
+    text-align: center;
+    color: #ffffff;
+}
+
+H4 {
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.text-list-style4 {
+    font-size: 18px;
+    line-height: 1.22;
+    color: #4a4a4a;
+}
+
+.text-teal-label {
+    font-size: 18px;
+    color: #73eaed;
+}
+
+.text-formlabel-style1 {
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.text-formlabel-style2 {
+    font-size: 18px;
+    color: #7493af;
+}
+
+.text-link-style2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #07abaf;
+}
+
+.text-list-style2 {
+    font-size: 14px;
+    line-height: 1.57;
+    color: #ffffff;
+}
+
+.text-list-style1 {
+    font-size: 14px;
+    line-height: 2.14;
+    color: #ffffff;
+}
+
+.Subnav-default {
+    font-size: 14px;
+    color: #7493af;
+}
+
+.text-list-style3 {
+    font-size: 14px;
+    color: #666666;
+}
+
+.text-link-style1 {
+    font-size: 13px;
+    color: #b5d1eb;
+}
+
+.default {
+    font-size: 12px;
+    font-style: italic;
+    color: #7493af;
+}
+
+.text-p-style2 {
+    font-size: 12px;
+    color: #1e384e;
+}
+
+.text-p-style1 {
+    font-size: 12px;
+    color: #b5d1eb;
+}
+
+.text-label-small {
+    font-size: 12px;
+    color: #1d609e;
+}
+
+.text-tiny-graph-label {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 9px;
+    line-height: 1.44;
+    text-align: right;
+    color: #4a4a4a;
+}
+
+/* for HelpPanel. TODO move to HelpPanel.css, complications of which are noted there. */
+.group-body .body a {
+    color: #73eaed;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* class to prevent user from selecting text */
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently
+                                    not supported by any browser */
+    cursor: default;
+}
+
+/* class to display "help" cursor (primarily for tooltips) */
+.help-cursor {
+    cursor: help;
+}
+
+/* override the default "white-on-black" bootstrap tooltip style to match our brand colors */
+.tooltip-inner {
+    background-color: #152A3C;
+    color: #fff;
+}
+
+.tooltip.top .tooltip-arrow {
+    border-top-color: #152A3C;
+}
+
+.tooltip.right .tooltip-arrow {
+    border-right-color: #152A3C;
+}
+
+.tooltip.bottom .tooltip-arrow {
+    border-bottom-color: #152A3C;
+}
+
+.tooltip.left .tooltip-arrow {
+    border-left-color: #152A3C;
+}
+
+
+.loading {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 80px;
+    font-size: 16pt;
+    z-index: -1;
+}
+
+.white-text {
+    color: white;
+}
+
+.brand-text {
+    color: #1D609E;
+}

@@ -1,0 +1,10 @@
+<div class="tag-modal">
+    <input class="new-tag" placeholder="Enter a new tag" (keyup)="onKeyup($event)" disabled> <!--TODO: disable input until the tag editing is implemented -->
+    <div class="apply-remove-instructions">Or apply/remove previously created tags</div>
+    <hr class="divider">
+    <div *ngFor="let tag of currentTags" class="tag-container">
+         <span class="tag" [class.applied]="tag.applied">{{ tag.name }} <i *ngIf="tag.applied" class="fa fa-times-circle" (click)="onRemove(tag)"></i></span>
+    </div>
+    <hr class="divider">
+   <button class="btn btn-sm done" (click)="onDone()">Done</button>
+</div>

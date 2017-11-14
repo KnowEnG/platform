@@ -1,0 +1,19 @@
+<div class="gradient-filter-container">
+    <svg [attr.width]="width + 2*borderThickness" height="57">
+        <defs>
+            <!-- TODO make id unique for multiple GradientFilters in the same DOM -->
+            <linearGradient id="gradient-filter-gradient">
+                <stop offset="0%" [attr.stop-color]="leftColor"/>
+                <stop offset="100%" [attr.stop-color]="rightColor"/>
+            </linearGradient>
+        </defs>
+        <rect x="0" y="0" [attr.width]="width + 2*borderThickness" [attr.height]="height + 2*borderThickness" class="background"/>
+        <rect x="4" y="4" [attr.width]="width" [attr.height]="height" fill="url(#gradient-filter-gradient)"/>
+        <g class="slider" [attr.transform]="'translate(' + currentX + ',' + borderThickness + ')'">
+            <line x1="0" y1="0" x2="0" [attr.y2]="height"/>
+            <!-- note circle not vertically centered in comp; matching comp here -->
+            <circle cx="0" [attr.cy]=".53 * height" r="5"/>
+        </g>
+    </svg>
+    <div class="label-container" [style.width.px]="width + 2*borderThickness"><span>{{ leftValue | numFormatter: true:(1 != leftValue) }}</span><span class="pull-right">{{ rightValue | numFormatter: true:(0 != rightValue) }}</span></div>
+</div>

@@ -1,0 +1,98 @@
+.group-container {
+    margin-bottom: 2px;
+}
+.group-header {
+    white-space: nowrap;
+}
+
+.group-field {
+    width: 491px;
+    height: 39px;
+    padding: 8px 0 0 16px;
+    background-color: #1e384e;
+    cursor: pointer;
+}
+
+.group-field, .group-count {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.open-close-icon {
+    margin-right: 16px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.group-name {
+    font-size: 18px;
+    color: #73eaed;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.group-count {
+    font-size: 18px;
+    color: #7493af;
+    margin: 8px 0 0 28px;  
+}
+
+.check-box {
+    display: inline-block;
+    vertical-align: top;
+    width: 16px;
+    height: 16px;
+    border: 2px solid;
+    border-radius: 5px;
+    padding-top: 1px;
+    line-height: 1;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.group-header .check-box {
+    border-color: #ffffff;
+    background-color: #1e384e;
+    color: #7493af;
+    margin-top: 4px;
+}
+
+.group-header .check-box.checked {
+    background-color: #ffffff;
+}
+
+.group-option .check-box {
+    border-color: #979797;
+    color: #4a4a4a;
+    margin-top: 6px;
+    padding-left: 1px;
+}
+
+.check-box-label {
+    display: inline-block;
+    vertical-align: top;
+    color: #d8d8d8;
+    margin: 0 20px 0 8px;
+}
+
+.group-options-container {
+    width: 491px;
+    background-color: #ffffff;
+    font-size: 18px;
+    line-height: 1.5; /* comp says 1.22 but looks more like 1.5 */
+    color: #4a4a4a;
+    transition: all .65s ease-in-out; /* TODO in the even that the user already has a list open, should really wait until current list closes (i.e., its animation is done) before opening next list */
+    overflow-y: hidden;
+    margin: 0 0 0 0; /* note group-container already has 2px margin-bottom */
+    padding: 0 44px 0 16px;
+    border: solid 0px #979797;
+    max-height: 0;
+}
+
+.group-container.open .group-options-container {
+    margin: 5px 0 4px 0; /* note group-container already has 2px margin-bottom */
+    padding: 11px 44px 11px 16px;
+    border: solid 1px #979797;
+    max-height: 600px;
+}

@@ -1,0 +1,33 @@
+-r common.txt
+
+################################################################################
+# shared
+################################################################################
+
+# pandas
+pandas==0.17.1
+
+# box downloads
+pyopenssl==16.2.0
+ndg-httpsclient==0.4.2
+pyasn1==0.1.9
+
+################################################################################
+# for mmbdb
+################################################################################
+# note we also have non-python dependencies installed in docker images via apt-get:
+# pkg-config libpng-dev libfreetype6-dev libblas-dev liblapack-dev gfortran
+matplotlib==2.0.2
+IPython==5.3.0
+scikit-bio==0.4.2
+
+#biom-format for reading tornado output. also needs non-python deps for
+#scikit-bio above as well as libhdf5-dev. biom-format and h5py had
+#to be moved to Dockerfile-nest_jobs and Dockerfile-nest_ops
+Cython==0.23.5
+#numpy==1.11.3 #moved to dockerfiles
+
+################################################################################
+# for knoweng
+################################################################################
+pyyaml==3.11

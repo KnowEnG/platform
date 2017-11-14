@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <base href="/static/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HELLO_WORLD</title>
+
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="img/favicon.ico" rel="shortcut icon">
+
+    <!-- for @angular's use of System; TODO needed beyond alpha? -->
+    <script>baseElement = document.querySelector('base');baseElement.attr = baseElement.getAttribute;</script>
+
+    <!-- Polyfill(s) for older browsers -->
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/rxjs/bundles/Rx.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/systemjs-cachebuster/src/system.cachebuster.js"></script>
+    <script>
+        SystemCacheBuster.config({ baseUrl: '/static/', jsonFileName: 'static/system.cachebuster.json' });
+    </script>
+</head>
+
+<body>
+	<h1>Hello World App</h1>
+    <!-- Configure System.js, our module loader -->
+    <script src="systemjs.config.js"></script> 
+    <script>
+      System.import('dist/components/hello_world/HelloWorldApp')
+            .then(null, console.error.bind(console));
+    </script>
+
+    <hello-world>Loading...</hello-world>
+</body>
+</html>

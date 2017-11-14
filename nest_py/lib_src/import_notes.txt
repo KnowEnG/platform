@@ -1,0 +1,9 @@
+git info:
+
+latest git commit from fst_pipeline repo:
+
+commit 9ad30effae813ce738213e01d482618111c73b64 (HEAD, origin/master, origin/HEAD, master)
+Author: Matt Berry <mjberry@illinois.edu>
+Date:   Fri Jul 29 12:23:15 2016 -0500
+
+    supported shadowless mode and minimum terminal node size

@@ -1,0 +1,22 @@
+<div class="header full-fixed-width">
+    <div class="left-side job-name-area">
+        <span class="job-label">Job:</span><span class="job-name">{{ job.name }}</span>
+    </div><!-- no whitespace
+ --><div class="right-side">
+        <div class="tab" [class.active]="activeTab == 'visualizations'" (click)="activeTab = 'visualizations'">Visualization</div>
+        <div class="tab disabled" [class.active]="activeTab == 'spreadsheet'">Spreadsheet</div>
+        <div class="tab" [class.active]="activeTab == 'job'" (click)="activeTab = 'job'">Job Stats</div>
+    </div>
+</div>
+<div class="tab-body full-fixed-width">
+    <div [ngSwitch]="activeTab">
+        <div *ngSwitchCase="'visualizations'">
+            <div class="left-side"><heatmap-pane [result]="result"></heatmap-pane></div><!-- no whitespace
+         --><div class="right-side"><stats-pane [result]="result"></stats-pane></div>
+        </div>
+    
+        <job-summary *ngSwitchCase="'job'" [job]="job" [result]="result" orientation="horizontal"></job-summary>
+        
+        <p *ngSwitchDefault>Something went wrong... Please contact technical support.</p>
+    </div>
+</div>

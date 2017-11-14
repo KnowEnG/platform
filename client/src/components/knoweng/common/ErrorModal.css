@@ -1,0 +1,48 @@
+.modal-dialog {
+	width: 545px;
+	white-space: normal;
+}
+
+.modal-content {
+	color: #FFFFFF;
+	font-family: 'Lato', sans-serif;
+	text-align: center;
+	border-radius: 7px;
+	border: 1px solid #B1B1B1;
+	box-shadow: 0 4px 7px 0 rgba(0,0,0,0.19);
+}
+
+.modal-header {
+	background-color: #E05869;
+	border-radius: 7px 7px 0 0;
+	padding: 13px 13px 45px 13px;
+}
+
+button.close {
+	font-size: 34px; /* to achieve 20px width */
+	color: #FFFFFF;
+	text-shadow: none;
+	opacity: 0.7;
+}
+
+button.close:hover {
+	opacity: 1.0;
+}
+
+.eek {
+	stroke-width: 2px;
+	stroke: #FFFFFF;
+	fill: none;
+	margin: 7px 0 15px 20px; /* 7px top to make 20 w/ .modal-header padding; 20px left b/c of button.close offset */
+}
+
+.header-text {
+	font-size: 36px;
+	line-height: 36px;
+}
+
+.modal-body {
+	color: #4F6579;
+	font-size: 18px;
+	line-height: 22px;
+}

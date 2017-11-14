@@ -1,0 +1,28 @@
+<div class="body-container full-fixed-width">
+    <div *ngIf="submittedJobId">
+        <div [ngSwitch]="submittedJobStatus">
+            <div *ngSwitchCase="'completed'">
+                <div class="spinner"><i class="fa fa-check-square"></i></div>
+                <div class="job-state">Completed !</div>
+                <!-- space between word and exclamation appears in comp -->
+                <div class="job-status">{{ form.jobName }}<br>{{submittedJobStatus}}</div>
+            </div>
+            <div *ngSwitchCase="'failed'">
+                <div class="spinner"><i class="fa fa-exclamation-triangle"></i></div>
+                <div class="job-state">Failed !</div>
+                <!-- space between word and exclamation appears in comp -->
+                <div class="job-status">{{ form.jobName }}<br>{{submittedJobStatus}}</div>
+            </div>
+            <div *ngSwitchDefault>
+                <div class="spinner"><i class="fa fa-spinner fa-pulse"></i></div>
+                <div class="job-state">Running !</div>
+                <!-- space between word and exclamation appears in comp -->
+                <div class="job-status">{{ form.jobName }}<br>{{submittedJobStatus}}</div>
+            </div>
+        </div>
+        <div class="button-area">
+            <button class="btn huge" routerLink="/pipelines">Start New Pipeline</button>
+            <button class="btn huge" (click)="onClickResults()">Go to Results Page</button>
+        </div>
+    </div>
+</div>

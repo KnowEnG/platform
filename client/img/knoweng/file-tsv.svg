@@ -1,0 +1,11 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="77.4px"
+	 height="103.6px" viewBox="0 0 77.4 103.6" enable-background="new 0 0 77.4 103.6" xml:space="preserve">
+	<g>
+		<polygon fill="#FFFFFF" points="47.7,2.3 74.7,29.3 74.7,101.3 2.7,101.3 2.7,2.3 		"/>
+		<polygon fill="none" stroke="#BCBEC0" points="47.7,2.3 74.7,29.3 74.7,101.3 2.7,101.3 2.7,2.3 		"/>
+		<polygon fill="#1C75BC" points="47.7,2.3 74.7,29.3 47.7,29.3 		"/>
+		<path fill="#1C75BC" d="M34.5,46.8l-12.6,5l12.6,5v4l-17.5-6.9v-4.1l17.5-6.9V46.8z M42.9,56.8l12.6-5l-12.6-5v-4l17.5,6.9v4.1
+			l-17.5,6.9V56.8z"/>
+		<text transform="matrix(1 0 0 1 21.1997 92.3898)" fill="#1C75BC" font-family="'ArialMT'" font-size="18">TSV</text>
+	</g>
+</svg>

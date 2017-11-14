@@ -1,0 +1,33 @@
+.text-container {
+    white-space: normal;
+    font-family: 'Lato', sans-serif;
+    padding-bottom: 30px;
+}
+
+.section {
+    color: #E5F0F2;
+    padding: 0 23px 18px 23px;
+}
+
+.section .btn {
+    border-radius: 5px;
+    background-color: #07ABAF;
+    color: #FFFFFF;
+    font-size: 22px;
+    text-align: center;
+    padding: 9px 16px 7px 16px;
+    margin-bottom: 11px;
+}
+
+.section .btn:hover {
+    border: 1px solid #50F1F5;
+}
+
+.intro a, .section a {
+    color: #50F1F5;
+}
+
+hr {
+    border-top: 1px solid #1e384e;
+    margin: 0;
+}

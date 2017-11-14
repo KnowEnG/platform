@@ -1,0 +1,39 @@
+.filters {
+    display: table-row;
+}
+
+.filter {
+    padding-top: 12px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.filter .btn {
+    height: 29px;
+    width: 91px;
+    margin-right: 4px;
+    border-radius: 5px;
+    border: solid 1px #7493af;
+    font-size: 14px;
+    color: #7493af;
+    background-color: #152a3c;
+    cursor: not-allowed;
+}
+
+.filter .btn.selected {
+    color: #ffffff;
+    background-color: #7493af;
+}
+
+.templates {
+    margin: 23px 0 0 8px;
+}
+
+.template {
+    font-size: 12px;
+    line-height: 2.08;
+}
+
+.template:not(:hover) {
+    color: #ffffff;
+}

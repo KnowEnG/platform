@@ -1,0 +1,10 @@
+svg {
+    display: block;
+    transform: rotate(-90deg);
+    border-radius: 50%;
+}
+
+circle {
+    fill: none;
+    stroke-width: 32;
+}

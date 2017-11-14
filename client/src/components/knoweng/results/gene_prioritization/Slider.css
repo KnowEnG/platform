@@ -1,0 +1,53 @@
+.slider-container {
+    margin-top: 5px;
+    white-space: nowrap;
+}
+
+.label-container, .svg-container {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.svg-container {
+    margin-top: 3px;
+}
+
+svg {
+    display: block;
+}
+
+.background {
+    stroke: #eeeeee;
+    stroke-linecap: round;
+}
+
+.control {
+    cursor: ew-resize;
+    fill: #73eaed;
+    stroke: #29465f;
+    stroke-width: 1px
+}
+
+.label-container {
+    width: 39px;
+}
+
+.label-units {
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    color: #a2c3e2;
+}
+
+.label-number {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e5f0f2;
+}
+
+.scale-label-container {
+    font-size: 12px;
+    font-weight: 700;
+    color: #e5f0f2;
+    margin-top: 2px;
+    white-space: normal;
+}

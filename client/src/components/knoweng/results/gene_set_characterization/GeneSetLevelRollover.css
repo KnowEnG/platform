@@ -1,0 +1,144 @@
+.rollover {
+    width: 568px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border: solid 1px #d8d8d8;
+    padding: 10px 10px 28px 14px;
+    line-height: 1;
+}
+
+.title {
+    font-size: 18px;
+    color: #29465f;
+}
+
+.close {
+    font-size: 13px;
+    color: #7493af;
+}
+
+.counts-area {
+    white-space: nowrap;
+}
+
+.counts-text-area, .counts-chart-area {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.set-counts {
+    margin-top: 16px;
+}
+.set-counts-supercollection, .set-counts-label-area, .set-counts-number-area {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.set-counts-supercollection {
+    width: 6px;
+    height: 46px;
+    margin-right: 8px;
+}
+
+.set-name {
+    height: 18px;
+    font-size: 18px;
+    color: #000000;
+}
+
+.collection-name {
+    height: 10px;
+    font-size: 10px;
+    font-style: italic;
+    color: #7493af;
+    margin-top: 3px;
+}
+
+.set-counts-supercollection.user {
+    height: 32px;
+    background-color: #29465f;    
+}
+
+.set-counts-label-area {
+    width: 270px;
+}
+
+.set-counts-number-area {
+    width: 132px;
+}
+
+.counts-chart-area {
+    padding-top: 16px;
+}
+
+pie-chart, .pie-chart-label {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.pie-chart-label {
+    opacity: 0.8;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000000;
+    margin: 13px 0 0 11px;
+}
+
+.score-area {
+    margin: 12px 4px 0 0;
+    border-top: solid 2px #c7d8e8;
+    padding-top: 17px;
+}
+
+.score-label, .score-info-icon, .score-graph {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.score-label {
+    width: 45px;
+    font-size: 14px;
+    color: #1e384e;
+}
+
+.score-info-icon {
+    width: 64px;
+    font-size: 11px;
+    color: #c7c7c7;
+    line-height: 15px;
+    cursor: pointer;
+}
+
+.score-graph svg {
+    display: block;
+}
+
+.overlaps-area {
+    margin-top: 19px;
+}
+
+.overlaps-area .show-control {
+    font-size: 14px;
+    color: #1e384e;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.primary-count {
+    font-size: 18px;
+    color: #000000;
+}
+
+.secondary-count {
+    font-size: 18px;
+    color: #c7c7c7;
+    margin-left: 8px;
+}
+
+.primary-count-label {
+    font-size: 10px;
+    font-style: italic;
+    color: #7493af;
+    margin-left: 8px;
+}

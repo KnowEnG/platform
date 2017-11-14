@@ -1,0 +1,24 @@
+<!-- FIXME: Adding slimScroll here causing the contents of the HelpPanel to fail to render -->
+<div class="help-container" [class.collapsed]="collapsed" [style.height.px]="height">
+    <div class="controls">
+        <i class="fa fa-question-circle help-icon" (click)="onExpand()"></i>
+        <svg *ngIf="!collapsed" class="collapse-icon" width="16" height="16" (click)="onCollapse()">
+            <line x1="0" y1="16" x2="16" y2="0"/>
+
+            <line x1="1" y1="16" x2="1" y2="9"/>
+            <line x1="0" y1="15" x2="7" y2="15"/>
+            
+            <line x1="9" y1="1" x2="16" y2="1"/>
+            <line x1="15" y1="7" x2="15" y2="0"/>
+        </svg>
+    </div>
+    <div *ngIf="!collapsed && content" class="content">
+        <!-- enumerating all classes here is ugly but spares us some change-detection effort -->
+        <div *ngFor="let group of content.groups; let i=index" class="group-container" [class.open]="openGroupIndex == i" >
+            <div class="group-header" (click)="toggleOpenGroup(i)" [innerHTML]="group.text"></div>
+            <div class="group-body">
+                <div *ngFor="let element of group.elements" [ngClass]="{heading: element.type == heading, body: element.type == body}" [innerHTML]="element.text"></div>
+            </div>
+        </div>
+    </div>
+</div>

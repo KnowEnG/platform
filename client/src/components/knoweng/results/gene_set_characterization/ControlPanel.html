@@ -1,0 +1,25 @@
+<div class="control-panel-container">
+    <div class="user-gene-set-selector-area">
+        <div class="control-label">GENE SETS OF INTEREST</div>
+        <user-gene-set-selector [jobName]="job.name" [userGeneSets]="userGeneSets" (selectedUserGeneSets)="updateSelectedUserGeneSets($event)"></user-gene-set-selector>
+    </div>
+    <div class="method-area">
+        <div class="pull-left">
+            <div class="control-label">METHOD</div><!-- no whitespace
+         --><div class="method-label">{{ job.parameters.method }}</div><!-- no whitespace
+     --></div><!-- no whitespace
+     --><div class="method-info-icon pull-right"><i class="fa fa-info-circle"></i></div>
+    </div>
+    <div class="filter-area">
+        <div class="filter-header">
+            <div class="control-label">FILTER MATCHES BY SCORE</div><!-- no whitespace
+         --><div class="filter-info-icon"><i class="fa fa-info-circle"></i></div><!-- no whitespace
+         --><div class="filter-range">{{ gradientMaxThreshold | numFormatter: true:(1 != gradientMaxThreshold) }} &ndash; {{ gradientCurrentThreshold | numFormatter: true:(1 != gradientCurrentThreshold && 0 != gradientCurrentThreshold) }}</div>
+        </div>
+        <gradient-filter [leftColor]="gradientMaxColor" [rightColor]="gradientMinColor" [leftValue]="gradientMaxThreshold" [rightValue]="gradientMinThreshold" [initialValue]="gradientCurrentThreshold" (currentValue)="updateGradientCurrentThreshold($event)"></gradient-filter>
+    </div>
+    <div class="comparison-set-selector-area">
+        <div class="control-label">COLLECTION MEMBERSHIP</div>
+        <comparison-gene-set-selector [comparisonGeneSets]="candidateComparisonGeneSets" (selectedComparisonGeneSets)="updateSelectedComparisonGeneSets($event)"></comparison-gene-set-selector>
+    </div>
+</div>

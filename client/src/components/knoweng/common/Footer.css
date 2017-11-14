@@ -1,0 +1,24 @@
+.footer-container {
+    white-space: nowrap;
+}
+
+.left, .right {
+    font-size: 10px;
+    color: #7493af;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.right {
+    margin-left: 24px;
+}
+
+.right .symbol {
+    font-size: 18px;
+    position: relative;
+    top: -5px;
+}
+
+.right .text {
+    vertical-align: top;
+}

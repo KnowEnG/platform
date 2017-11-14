@@ -1,0 +1,23 @@
+<div class="activator" [class.open]="open" (click)="open = !open">
+    <div class="job-name pull-left" [title]="jobName">{{ jobName | truncator:25 }}</div>
+    <div class="all-checkbox pull-right" (click)="onAllClicked(); $event.stopPropagation()"><i class="fa fa-fw" [ngClass]="{'fa-check': getSelectedStates().length == states.length, 'fa-minus': getSelectedStates().length > 0 && getSelectedStates().length < states.length}"></i></div>
+    <div class="count pull-right">{{ getSelectedStates().length }}/{{ states.length }}</div>
+</div>
+<div class="body" [class.open]="open">
+    <table class="body-table">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>GENE SET</th>
+                <th># OF GENES</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let state of states">
+                <td class="single-checkbox"><i class="fa" [ngClass]="{'fa-check-square': state.selected, 'fa-square': !state.selected}" (click)="onOneClicked(state)"></i></td>
+                <td class="set-name">{{ state.userGeneSet.name }}</td>
+                <td class="set-count">{{ state.userGeneSet.geneIds.length }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

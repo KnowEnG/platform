@@ -1,0 +1,133 @@
+.file-panel-container {
+    width: 301px;
+    height: 566px;
+    border-radius: 8px;
+    background-color: #c6d8e8;
+    padding: 10px 16px 16px 16px;
+}
+
+.file-name {
+    font-size: 18px;
+    line-height: 1.22;
+    color: #4a4a4a;;
+}
+
+.spreadsheet-area, .notes-area, .project-area, .tags-area, .icons-area, .button-area {
+    border-top: solid 1px #b5d1eb;
+}
+
+.filesystem-area, .spreadsheet-area, .notes-area, .project-area, .tags-area {
+    padding: 9px 0 16px 0;
+}
+
+.value-label { /* plain old .label is used by bootstrap */
+    font-size: 12px;
+    color: #1d609e;
+}
+
+.value {
+    font-size: 12px;
+    line-height: 1.17;
+    color: #000000;
+}
+
+.file-item {
+    line-height: .3;
+    white-space: nowrap;
+}
+
+.file-item .value-label, .file-item .value {
+    display: inline-block;
+}
+
+.file-item .value-label {
+    width: 69px;
+}
+
+.note {
+    white-space: normal;
+    font-style: italic;
+}
+
+.tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 0px 7px 2px 7px;
+    border-radius: 16px;
+    background-color: #4f6579;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.icons-area {
+    text-align: center;
+    padding: 10px 0 11px 0;
+}
+
+.icon-item {
+    color: #7493af;
+    stroke: #7493af;
+    display: inline-block;
+    width: 50px;
+    cursor: pointer;
+}
+
+.icon-item:hover {
+    color: #1d609e;
+    stroke: #1d609e;
+}
+
+.icon-item .fa {
+    font-size: 26px;
+}
+
+.icon-text {
+    font-size: 10px;
+}
+
+.button-area {
+    text-align: center;
+    padding: 17px 0 0 0;
+}
+
+.fa-pencil {
+    color: #7493af;
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+.fa-pencil:hover {
+    color: #1d609e;
+}
+
+.start-pipeline {
+    border-radius: 5px;
+    width: 250px;
+    height: 38px;
+    background-color: #07abaf;
+    font-size: 18px;
+    text-align: center;
+    color: #ffffff; 
+}
+
+.modal-container {
+    position: fixed;
+    z-index: 104;
+}
+
+.icon-item.not-yet-allowed {
+    cursor: not-allowed !important;
+}
+
+.favstar {
+    stroke-width: 5px;
+    fill: none;
+    display: inline-block;
+    height: 22px;
+    width: 22px;
+}
+
+.favstar.favorite {
+    fill: #fcc905;
+}

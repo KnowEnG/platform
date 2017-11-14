@@ -1,0 +1,86 @@
+FROM ubuntu:14.04
+
+ENV HOME=/home/dockeruser
+RUN mkdir /home/dockeruser && \
+    chmod 777 /home/dockeruser && \
+    apt-get -qq update && \
+    apt-get -qq install --no-install-recommends \
+      lxc \
+      git \
+      python2.7 \
+      python2.7-dev \
+      python-pip \
+      ssh \
+      curl && \
+    apt-get -qq autoremove && \
+    apt-get -qq autoclean && \
+    apt-get -qq clean all && \
+    rm -rf /var/lib/apt/lists/*
+
+# add chrome apt repo
+# install google chrome 
+# install libraries for jobs
+# install deps for downloading from Box
+# install deps for postgres/python interop for wix jobs
+RUN curl -sL https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/chrome_linux_signing_key.pub && \
+    apt-key add /tmp/chrome_linux_signing_key.pub && \
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
+    curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get -qq update && \
+    apt-get -qq install --no-install-recommends \
+      google-chrome-stable \
+      xvfb \
+      pkg-config \
+      libpng-dev \
+      libfreetype6-dev \
+      libblas-dev \
+      liblapack-dev \
+      gfortran \
+      libatlas-base-dev \
+      libhdf5-dev \
+      python-tk \
+      libffi-dev \
+      libssl-dev \
+      libpq-dev \
+      libltdl7 \
+      python-dev \
+      r-base \
+      r-base-dev \
+      libevent-dev \
+      nodejs && \
+    ln -s /usr/local/bin/node /usr/local/bin/nodejs && \
+    apt-get -qq autoremove && \
+    apt-get -qq autoclean && \
+    apt-get -qq clean all && \
+    rm -rf /var/lib/apt/lists/* 
+
+# add just the requirements files so that only changes to
+# these files will invalidate the docker image cache
+COPY ./requirements /code_buildtime_tmp/requirements
+WORKDIR /code_buildtime_tmp
+
+# force setuptools v33; newer versions will fail https://github.com/pypa/setuptools/issues/937
+# alternative is to update pip, but that requires updating python (otherwise we
+# hit security errors), and that's complicated, because ubuntu 14.04 locks in
+# 2.7.6
+RUN pip install -q setuptools==33.1.1 numpy==1.11.3
+      
+# install dependencies for nest_flask and nest_jobs so we can run their unit tests
+RUN pip install -q -r requirements/nest_flask.txt
+RUN pip install -q -r requirements/nest_jobs.txt
+RUN pip install -q -r requirements/nest_ops.txt
+
+#see Dockerfile-nest_jobs for explanation of why these can't be in a
+#requirements file
+RUN pip install -q biom-format==2.1.5 h5py==2.5.0 && \
+    python -c "import skbio"   #this prevents a "caching fonts" message on every command
+
+#FST support
+COPY ./nest_py/lib_src/fst_pipeline/  /code_buildtime_tmp/lib_src/fst_pipeline
+RUN pip install -q -r lib_src/fst_pipeline/requirements.txt
+
+#installs R packages for FST
+WORKDIR /code_buildtime_tmp/lib_src/fst_pipeline
+RUN ./fst.py setup
+
+COPY . /code_buildtime_snapshot

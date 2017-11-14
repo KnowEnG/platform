@@ -1,0 +1,24 @@
+-r common.txt
+# even though nest_ops needs the nest_flask and nest_jobs dependencies in order
+# to run their unit tests, don't include nest_flask.txt or nest_jobs.txt here,
+# because those files also include common.txt, and pip currently fails when any
+# single library is included twice in the same pip invocation
+# see https://github.com/pypa/pip/issues/56
+# the nest_ops Dockerfile will install the nest_flask and nest_job dependencies
+
+# Testing
+pytest==2.6.3
+webtest==2.0.23
+factory-boy==2.5.1
+pytest-cov==2.0.0
+pyvirtualdisplay==0.1.5
+six==1.9.0
+mock==1.3.0
+
+# Linting
+pylint==1.7.1
+
+# Docs
+Sphinx==1.3.1
+sphinxcontrib-httpdomain==1.3.0
+

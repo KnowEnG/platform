@@ -1,0 +1,18 @@
+<div class="gene-paste-modal" ngDraggable>
+    <form (ngSubmit)="onDone()" #genePasteForm="ngForm">
+        <div class="form-group file-name-area">
+            <input type="text" [ngClass]="fileNameChanged? 'form-control file-name-input' : 'form-control file-name-hint'" (mousedown)="onMouseEnter($event)" [(ngModel)]="geneFileModel.fileName" name="fileName" #fileName="ngModel" required/>
+            <div [hidden]="fileName.valid" class="alert alert-danger">File name is required</div>
+        </div>
+       
+        <div class="form-group gene-paste-area">
+            <textarea class="form-control gene-paste-input" [(ngModel)]="geneFileModel.geneList" placeholder="Paste gene IDs here to create a Gene List File" name="geneList" #geneList="ngModel" required></textarea>
+            <div [hidden]="geneList.valid || geneList.pristine" class="alert alert-danger">Gene IDs are required</div>
+        </div>
+       
+        <div class="button-area">
+            <button type="button" class="btn cancel-btn" (click)="onCancel()">Cancel</button>
+            <button type="submit" [ngClass]="genePasteForm.form.valid? 'btn done-btn enabled-btn' : 'btn done-btn disabled-btn'"  [disabled]="!genePasteForm.form.valid">Done</button>
+        </div>
+    </form>
+</div>

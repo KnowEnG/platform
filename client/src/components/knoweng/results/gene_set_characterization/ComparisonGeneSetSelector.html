@@ -1,0 +1,26 @@
+<div class="comparison-gene-set-selector-container">
+    <div *ngFor="let supercollectionState of supercollectionStates" class="supercollection-container">
+        <div class="supercollection-header noselect" (click)="toggleSupercollectionOpen(supercollectionState)">
+            <div class="supercollection-icon pull-left" [style.background-color]="supercollectionState.supercollection.displayData.color"><img [src]="'img/knoweng/'+supercollectionState.supercollection.displayData.icon+'.svg'"></div><!-- no whitespace
+         --><div class="supercollection-name pull-left">{{ supercollectionState.supercollection.name }}</div>
+            <div class="supercollection-checkbox pull-right" (click)="onSupercollectionChecked(supercollectionState); $event.stopPropagation()"><i class="fa fa-fw" [ngClass]="{'fa-check': supercollectionState.getSelectedCount() == supercollectionState.getTotalCount(), 'fa-minus': supercollectionState.getSelectedCount() > 0 && supercollectionState.getSelectedCount() < supercollectionState.getTotalCount()}"></i></div>
+            <div class="supercollection-count pull-right">{{ supercollectionState.getSelectedCount() }}/{{ supercollectionState.getTotalCount() }}</div>
+        </div>
+        <div class="supercollection-body" [class.open]="supercollectionState.open">
+            <div *ngFor="let collectionState of supercollectionState.collectionStates" class="collection-container">
+                <div class="collection-header noselect" (click)="toggleCollectionOpen(collectionState)">
+                    <div class="collection-caret pull-left"><i class="fa fa-fw" [ngClass]="{'fa-caret-down': collectionState.open, 'fa-caret-right': !collectionState.open}"></i></div><!-- no whitespace
+                 --><div class="collection-name pull-left" [attr.title]="collectionState.collection.name">{{ collectionState.collection.name | truncator:25}}</div>
+                    <div class="collection-checkbox pull-right" (click)="onCollectionChecked(collectionState); $event.stopPropagation()"><i class="fa fa-fw" [ngClass]="{'fa-check': collectionState.getSelectedCount() == collectionState.getTotalCount(), 'fa-minus': collectionState.getSelectedCount() > 0 && collectionState.getSelectedCount() < collectionState.getTotalCount()}"></i></div>
+                    <div class="collection-count pull-right">{{ collectionState.getTotalCount() }}</div>
+                </div>
+                <div class="collection-body" [class.open]="collectionState.open">
+                    <div *ngFor="let geneSetState of collectionState.geneSetStates" class="gene-set-container noselect" (click)="toggleGeneSetSelected(geneSetState)">
+                        <div class="gene-set-name" [attr.title]="geneSetState.geneSet.knId">{{ geneSetState.geneSet.name | truncator:25 }}</div><!-- no whitespace
+                     --><div class="gene-set-checkbox pull-right"><i class="fa fa-fw fa-square" [ngClass]="{'fa-check-square': geneSetState.selected, 'fa-square': !geneSetState.selected}"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

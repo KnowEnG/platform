@@ -1,0 +1,17 @@
+.results-browser-container {
+  white-space: nowrap; /* keep panels side by side */
+  margin-top: 35px;
+}
+
+results-table-panel, result-panel {
+  display: inline-block;
+  vertical-align: top;
+}
+
+results-table-panel {
+  width: 879px;
+}
+
+result-panel {
+  width: 301px;
+}

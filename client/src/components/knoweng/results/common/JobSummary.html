@@ -1,0 +1,76 @@
+<div class="left-side" [style.width]="orientation == 'horizontal' ? '59%': '100%'">
+    <div class="header" [style.margin]="orientation == 'horizontal' ? '0 -55px 0 -50px' : ''">
+        Pipeline Settings
+    </div>
+    <div class="job-summary-container" [style.padding-left]="orientation == 'horizontal' ?  '' : '52px'">
+        <!-- Display our FormField Summaries -->
+        <div class="table-container">
+            <table>
+                <thead></thead>
+                <tbody>
+                    <!-- Display the pipeline name -->
+                    <tr>
+                        <td class="summary-label">Pipeline</td>
+                        <td class="summary-value" [ngSwitch]="job.pipeline">
+                            <span *ngSwitchCase="'gene_prioritization'">Gene Prioritization</span>
+                            <span *ngSwitchCase="'gene_set_characterization'">Gene Set Characterization</span>
+                            <span *ngSwitchCase="'sample_clustering'">Sample Clustering</span>
+                            <span *ngSwitchDefault>Unknown</span>
+                        </td>
+                    </tr>
+                    <tr><td class="line-break">&nbsp;</td><td class="line-break">&nbsp;</td></tr>
+                    
+                    <!-- List our formatted parameters -->
+                    <template ngFor let-summary [ngForOf]="summaries">
+                        <tr *ngIf="summary && summary.value != null && summary.value !== ''">
+                            <td class="summary-label">{{ summary.label }}</td>
+                            <td class="summary-value" trunctip maxLength="75" [tooltipText]="summary.value"></td>
+                        </tr>
+                        <tr *ngIf="!summary">
+                            <td class="line-break">&nbsp;</td><td class="line-break">&nbsp;</td>
+                        </tr>
+                    </template>
+                    <tr *ngIf="job">
+                        <td class="summary-label">Date/Time</td>
+                        <td class="summary-value">{{ job.getCreatedDate() | date:'MM/dd/yyyy hh:mm:ss a' | lowercase}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="right-side" [style.width]="orientation == 'horizontal' ? '40%' : '100%'">
+    <hr class="horizontal-divider" *ngIf="orientation == 'vertical'" />
+    <div class="body-container">
+        <div class="header" *ngIf="orientation == 'horizontal'" [style.margin]="'0 -58.5px 0 0'">
+            <!-- This was blank in the comp...? -->
+        </div>
+        <div class="editor-container" *ngIf="form" [style.padding-left]="orientation == 'horizontal' ? '0 52px' : ''">
+            <div class="job-name-container">
+                <div class="meta-label">Job Name</div>
+                <input class="job-name-input" type="text" [value]="job.name">
+            </div>
+            <div class="project-container">
+                <div class="meta-label">Project</div>
+                <select class="project-input" (change)="onChangeProjectId($event.target.value)">
+                    <option *ngFor="let project of projectList" [attr.value]="project._id" [attr.selected]="project._id == currentProject?._id ? true : null">{{ project.name }}</option>
+                </select>
+            </div>
+            <div class="tags-container hidden">
+                <div class="meta-label">Tags<i class="fa fa-pencil" (click)="openModal($event, 'tags')"></i></div>
+                <div class="tag-area">
+                    <div class="tag">Experiment 1</div>
+                </div>
+            </div>
+            <div class="notes-container">
+                <div class="meta-label">Notes<i class="fa fa-pencil" (click)="openModal($event, 'notes')"></i></div>
+                <div class="notes-value">{{ job.notes }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div [ngSwitch]="modal" class="modal-container" [style.bottom.px]="modalBottom" [style.right.px]="modalRight">
+    <textbox-editor-modal *ngSwitchCase="'notes'" (save)="updateNotes($event)" (cancel)="closeModal()" [initialValue]="job.notes"></textbox-editor-modal>
+    <tag-editor-modal *ngSwitchCase="'tags'" [initialTags]="[{name: 'Experiment 1', applied: true}, {name: 'Experiment 2', applied: false}, {name: 'Curated', applied: false}, {name: 'Uncurated', applied: false}]" (done)="closeModal()"></tag-editor-modal>
+</div>

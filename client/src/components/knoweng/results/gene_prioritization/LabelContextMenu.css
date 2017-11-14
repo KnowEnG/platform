@@ -1,0 +1,53 @@
+.menu {
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border: solid 1px #d8d8d8;
+    padding: 10px 0 13px 0;
+    line-height: 1;
+}
+
+.header {
+    white-space: nowrap;
+    border-bottom: solid 1px #c7d8e8;
+    margin: 0 13px 0 12px;
+}
+
+/* leaving this in case a sibling comes along */
+.title-area {
+    display: inline-block;
+    vertical-align: top;
+    padding-bottom: 8px;
+}
+
+.title-area {
+    padding-right: 95px;
+}
+
+.title {
+    font-size: 18px;
+    line-height: 1.61;
+    color: #000000;
+}
+
+.menu-options-area {
+    padding-top: 16px;
+}
+
+.menu-option {
+    font-size: 14px;
+    line-height: 2.07;
+    color: #000000;
+    cursor: pointer;
+    padding-left: 11px;
+}
+
+.menu-option:hover {
+    background-color: #c6d8e8;
+}
+
+/* TODO FIXME remove this--it's just a placeholder until hiding is implemented */
+.menu-option.disabled {
+    cursor: not-allowed;
+    color: #a7a7a7;
+}

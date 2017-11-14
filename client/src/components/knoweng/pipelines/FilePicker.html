@@ -1,0 +1,112 @@
+<div class="file-picker-container">
+    <div class="data-upload-area">
+        <button class="btn use-demo-data" (click)="useDemoData()" [disabled]="uploadingDemoFile">
+            <span *ngIf="!uploadingDemoFile">Use Demo Data</span>
+            <span *ngIf="uploadingDemoFile">
+                <i class="fa fa-fw fa-spinner fa-pulse"></i> 
+                Importing...
+            </span>
+        </button>
+        <button class="btn upload-new-data" [class.hidden]="!modeIsSelect" (click)="setModeIsSelect(false)">Upload New Data</button>
+        <div class="upload-new-data-x" [class.hidden]="modeIsSelect">Upload New Data   <i class="fa fa-times close-upload" (click)="setModeIsSelect(true)"></i></div>
+        <div class="header-area">
+            <table *ngIf="modeIsSelect">
+                <thead>
+                    <tr>
+                        <th class="project">PROJECT</th>
+                        <th class="tags">FILTER BY</th>
+                        <th class="search">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="project">
+                            <select class="project-selector">
+                                <option *ngFor="let project of projectList" value="{{ project._id }}">{{ project.name }}</option>
+                            </select>
+                        </td>
+                        <td class="tags">
+                            <div class="tag">Recent</div>
+                            <div class="tag">Favorites</div>
+                        </td>
+                        <td class="search"><i class="fa fa-search hidden"></i></td>
+                        <!-- hiding for now, to match comp -->
+                    </tr>
+                </tbody>
+            </table>
+            <div class="upload-new-data-area" [class.hidden]="modeIsSelect">
+                <div class="drop-browse-url-area">
+                    <!-- TODO consider moving ng2FileDrop higher in the DOM; consider handling fileOver event w/ color change or similar -->
+                    <div ng2FileDrop [uploader]="uploader" class="drop-browse">
+                        <div class="drop-text">
+                            Drop files here or
+                            <label for="file-browse" class="browse-text">BROWSE</label>
+                            <input id="file-browse" type="file" ng2FileSelect [uploader]="uploader" multiple/>
+                        </div>
+                    </div><!-- no whitespace
+                 --><div class="enter-url hidden"><input #url type="text" class="url-input" placeholder="Paste URL here" (keyup)="setUrl($event.target.value)"><button class="btn get-button" [disabled]="!isUrlValid()">Get Data</button></div>
+                </div><!-- no whitespace 
+                        TODO: show/hide gene-paste-btn depending on pipeline type
+             --><div *ngIf="showGenePasteArea" class="gene-paste-btn-area">
+                    <button class="gene-paste-btn" (click)="openGenePasteModal($event)">Paste a Gene List</button>
+                </div>
+            </div>
+            <div *ngIf="showGenePasteModal" class="modal-container">
+                <gene-paste-modal [defaultProjectId]="projectList[0]._id" [userName]="userName" (close)="closeGenePasteModal($event)"></gene-paste-modal>
+            </div>
+        </div>
+    </div>
+    <!--TODO: sort files by date -->
+    <div class="sort-by-date"></div>
+    <div class="file-list" slimScroll [options]="slimScrollOpts">
+        <div *ngFor="let item of uploaderQueue" class="file">
+                <div class="file-icon">
+                    <img src="img/knoweng/file-unknown.svg">
+                </div><!-- no whitespace
+            ---><div class="file-info">
+                    <div class="file-name">{{ item?.file?.name }}</div>
+                    <div class="progress" style="margin-bottom: 0;">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                    </div><!--
+                 --><div class="progress-percent">{{ item.progress }} %</div>
+                </div>
+        </div>
+        <div *ngFor="let file of allFileList; let i=index" class="file">
+            <div class="file-icon">
+                <img src="{{file.getFileIcon(file.filetype)}}">
+            </div><!-- no whitespace
+                TODO: get user name from file, not from session in next line
+                TODO: add file size after user name: &nbsp;&nbsp;&nbsp;455k
+         --><div class="file-info">
+                <div class="file-name">{{ file.filename || '' }}</div>
+                <div class="file-attributes">Uploaded {{ getDateForFile(file) | date:'longDate' }} by {{ file.uploadername }}</div><!-- no whitespace
+             --><div class="file-size">{{ file.getPrettySize() }}</div>
+            </div><!-- no whitespace
+         --><div class="demo-label-container" *ngIf="demoFiles[pipeline.slug] && isDemoFile(file.filename)">
+                <span class="label label-primary demo-file-label">Demo File</span>
+            </div><!-- no whitespace
+         --><div class="file-saved" *ngIf="!demoFiles[pipeline.slug] || !isDemoFile(file.filename)">Saved to Project:
+                <div class="btn-group" dropdown>
+                    <a class="btn project-button dropdown-toggle" dropdownToggle>{{ _projectService.getProject(file.project_id) ? _projectService.getProject(file.project_id).name : 'Default Project' }} <span class="fa fa-angle-down" title="Toggle dropdown menu"></span></a>
+                    <ul *dropdownMenu class="dropdown-menu" role="menu">
+                        <div *ngFor="let project of projectList; let i=index">
+                            <li role="menuitem" class="project-name-list"><span class="dropdown-item">{{ project.name }}</span></li>
+                        </div>
+                        <!-- TODO: Uncomment when user projects have been fleshed out
+                        <li class="divider"></li>
+                        <li><a class="create-new-project"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Create a New Project</a></li>
+                        -->
+                    </ul>
+                </div>
+            </div><!-- no whitespace
+                  TODO: select button in new style
+         --><div class="file-check" [class.selected]="file._id === selectedId">
+                <div class="file-check-label noselect">Selected</div>
+                <div class="file-check-box" (click)="toggleItem(file)"><i class="fa fa-fw" [ngClass]="{'fa-square-o': file._id !== selectedId, 'fa-check-square': file._id === selectedId}"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div bsModal #errModal="bs-modal" class="modal fade" tabindex="-1">
+    <error-modal [header]="'Upload Failed'" [body]="errorMessage" (closeMe)="errModal.hide()"></error-modal>
+</div>

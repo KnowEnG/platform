@@ -1,0 +1,11 @@
+#An ssh config file that will be mounted into
+#nest_ops container at /ssh/config .
+#This is needed to disable the prompt when connecting
+#to the host for the first time that asks about
+#the ssh id being unknown. This is the only way to
+#disable it. (And there is no way to 'remember' it
+#as there is not state in the nest_ops container.
+Host *
+	StrictHostKeyChecking  no
+
+

@@ -1,0 +1,91 @@
+/* div containing entire tree */
+.tree-explorer-row {
+  background-color: white;
+  white-space: nowrap; /* keep table next to tree */
+}
+
+/* vertical lines marking taxonomy levels */
+line.level {
+  stroke: #c7c7c7;
+  stroke-width: 1;
+}
+
+/* text labeling taxonomy levels */
+text.level {
+  font-weight: 700;
+  font-size: 14px;
+  font-family: 'Lato', sans-serif;
+  fill: #46607e;
+}
+
+/* text containing node name */
+text.node-name {
+  font-weight: 700;
+  font-size: 12px;
+  font-family: 'Lato', sans-serif;
+  fill: #273847;
+  pointer-events: none;
+}
+
+/* circle containing count of "top" or otherwise special features */
+circle.feature-count {
+  fill: #e05869;
+  stroke: #fff;
+  stroke-width: 1.5px;
+  cursor: pointer;
+}
+
+/* text count of "top" or otherwise special features */
+text.feature-count {
+  font-weight: 700;
+  font-size: 10px;
+  font-family: 'Lato', sans-serif;
+  fill: #ffffff;
+  cursor: pointer;
+}
+
+/* all rectangles representing relative abundance for a cohort at a node */
+rect.cohort {
+  cursor: pointer;
+  opacity: 0.2;
+}
+
+/* expanded rectangles or hovered rectangles */
+g.node.expanded rect.cohort, g.node:hover rect.cohort {
+  opacity: 1;
+}
+
+/* rectangles for cohortN */
+rect.cohort0 {
+  fill: #6182a9;
+}
+rect.cohort1 {
+  fill: #c5b9a6;
+}
+rect.cohort2 {
+  fill: #96b570;
+}
+
+/* paths connecting cohort rectangles at one level to their parents in previous level */
+path.link {
+  fill: none;
+  stroke-opacity: .2;
+}
+
+/* paths for cohortN */
+path.cohort0 {
+  stroke: #6182a9;
+}
+path.cohort1 {
+  stroke: #c5b9a6;
+}
+path.cohort2 {
+  stroke: #96b570;
+}
+
+/* div containing detail table */
+.table-container {
+  display: inline-block;
+  vertical-align: top;
+  padding-right: 158px;
+}

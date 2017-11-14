@@ -1,0 +1,14 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="77.4px"
+	 height="103.6px" viewBox="0 0 77.4 103.6" enable-background="new 0 0 77.4 103.6" xml:space="preserve">
+	<g>
+		<polygon fill="#FFFFFF" stroke="#BCBEC0" points="47.7,2.3 74.7,29.3 74.7,101.3 2.7,101.3 2.7,2.3 		"/>
+		<polygon fill="#E2C134" points="47.7,2.3 74.7,29.3 47.7,29.3 		"/>
+		<path fill="#E2C134" d="M40.7,17.3h-8.5v-5h8.5V17.3z M40.7,26.3h-8.5v5h8.5V26.3z M40.7,5.3h-8.5v5h8.5V5.3z M40.7,19.3h-8.5v5
+			h8.5V19.3z M40.7,33.3h-8.5v5h8.5V33.3z M41.5,58.1c0,2.8-2.3,5.1-5.1,5.1c-2.8,0-5.1-2.3-5.1-5.1c0-0.2,0-0.3,0-0.5h0L33,42.9
+			c0-1.9,1.5-3.4,3.4-3.4c1.8,0,3.3,1.5,3.4,3.3h0l1.6,14.5C41.5,57.6,41.5,57.8,41.5,58.1z M39.9,57.9c0-1.9-1.6-3.5-3.5-3.5
+			c-1.9,0-3.5,1.6-3.5,3.5c0,1.9,1.6,3.5,3.5,3.5C38.3,61.4,39.9,59.8,39.9,57.9z"/>
+		<polygon fill="#FFFFFF" points="35.2,43.3 33,38.8 33,36.5 35.2,34.3 37.5,34.3 39.7,36.5 39.7,38.8 37.5,43.3 		"/>
+		<text transform="matrix(1 0 0 1 22.5112 92.3898)"><tspan x="0" y="0" fill="#BBA130" font-family="'ArialMT'" font-size="18">ZIP</tspan></text>
+	</g>
+</svg>
+

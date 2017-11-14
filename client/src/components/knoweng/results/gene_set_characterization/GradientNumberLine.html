@@ -1,0 +1,16 @@
+<svg [attr.width]="lineWidth + paddingLeft + paddingRight" height="57">
+    <defs>
+        <!-- TODO make id unique for multiple GradientFilters in the same DOM -->
+        <linearGradient id="gradient-number-line-gradient">
+            <stop offset="0%" [attr.stop-color]="leftColor"/>
+            <stop offset="100%" [attr.stop-color]="rightColor"/>
+        </linearGradient>
+    </defs>
+    <g [attr.transform]="'translate(' + paddingLeft + ',0)'">
+        <rect x="0" [attr.y]="tickSpillTop" [attr.width]="lineWidth" [attr.height]="lineHeight" fill="url(#gradient-number-line-gradient)"/>
+        <line [attr.x1]="currentX" y1="0" [attr.x2]="currentX" [attr.y2]="tickSpillTop + lineHeight + tickSpillBottom"/>
+        <text class="label-min-max" text-anchor="start" dy=".75em" x="0" [attr.y]="tickSpillTop + lineHeight + 2">{{ leftValue | numFormatter: true:(1 != leftValue) }}</text>
+        <text class="label-min-max" text-anchor="end" dy=".75em" [attr.x]="lineWidth" [attr.y]="tickSpillTop + lineHeight + 2">{{ rightValue | numFormatter: true:(0 != rightValue) }}</text>
+        <text class="label-tick" text-anchor="middle" dy=".75em" [attr.x]="currentX" [attr.y]="tickSpillTop + lineHeight + tickSpillBottom + 3">{{ currentValue | numFormatter }}</text>
+    </g>
+</svg>

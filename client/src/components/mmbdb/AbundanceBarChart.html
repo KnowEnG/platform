@@ -1,0 +1,4 @@
+<svg class="chart" [attr.width]="width" [attr.height]="height">
+    <rect x="0" y="0" [attr.width]="width" [attr.height]="height" class="background"></rect>
+    <rect *ngFor="let datum of data; let i=index" [attr.width]="datum.width" [attr.height]="barHeight" [ngClass]="datum.style" [attr.y]="i*barHeight+1"></rect>
+</svg>

@@ -1,0 +1,6 @@
+svg {
+  display: block; /* so it fits in table cells without padding */
+}
+.background {
+  fill: #f2f4f5;
+}

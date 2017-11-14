@@ -1,0 +1,38 @@
+.textbox-modal {
+    border-radius: 5px;
+    background-color: #eeeeee;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+    border: solid 1px #d8d8d8;
+    padding: 8px 9px 10px 9px;
+    white-space: nowrap;
+}
+
+textarea, .save, .cancel {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.save {
+    background-color: #1d609e;
+    color: #FFFFFF;
+}
+
+.cancel {
+    background-color: #C6D8E8;
+    color: #4F6579;
+    margin: 0 5px 0 23px;
+}
+
+.save, .cancel {
+    font-size: 14px;
+}
+
+textarea {
+    background-color: #ffffff;
+    border: solid 1px #7493af;
+    font-family: Lato;
+    font-size: 12px;
+    line-height: 1.17;
+    color: #4a4a4a;
+}
+

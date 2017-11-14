@@ -1,0 +1,95 @@
+<div class="sort-area">
+    <div class="sort-group">
+        <div class="sort-label">SORT ROWS BY</div>
+        <div class="sort-button-area">
+            <select #sortRowsBySelect class="sort-button" (change)="onSortRowsByOther($event.target.value)" [class.active]="sortRowsBy == 'Alphabet' || sortRowsBy == 'Score' || sortRowsBy == 'Similarity'">
+                <option value="Alphabet" [attr.selected]="sortRowsBy == 'Alphabet' ? true : null">Alphabet</option>
+                <option value="Score" [attr.selected]="sortRowsBy == 'Score' ? true : null">Score</option>
+                <option value="Similarity" [attr.selected]="sortRowsBy == 'Similarity' ? true : null" disabled>Similarity</option>
+            </select><!-- no whitespace
+         --><button *ngIf="sortRowsBy != 'Alphabet' && sortRowsBy != 'Score' && sortRowsBy != 'Similarity'" class="btn sort-button active" [attr.title]="sortRowsBy.name">
+                {{ sortRowsBy.name | truncator:10 }}
+                <i class="fa fa-close pull-right" (click)="onSortRowsByOther(sortRowsBySelect.value)"></i>
+            </button>
+        </div>
+    </div><!-- no whitespace
+ --><div class="sort-group-divider"></div><!-- no whitespace
+ --><div class="sort-group">
+        <div class="sort-label">SORT COLUMNS BY</div>
+        <div class="sort-button-area">
+            <select #sortColumnsBySelect class="sort-button" (change)="onSortColumnsByOther($event.target.value)" [class.active]="sortColumnsBy == 'Alphabet' || sortColumnsBy == 'Score' || sortColumnsBy == 'Similarity'">
+                <option value="Alphabet" [attr.selected]="sortColumnsBy == 'Alphabet' ? true : null">Alphabet</option>
+                <option value="Score" [attr.selected]="sortColumnsBy == 'Score' ? true : null">Score</option>
+                <option value="Similarity" [attr.selected]="sortColumnsBy == 'Similarity' ? true : null" disabled>Similarity</option>
+            </select><!-- no whitespace
+         --><button *ngIf="sortColumnsBy != 'Alphabet' && sortColumnsBy != 'Score' && sortColumnsBy != 'Similarity'" class="btn sort-button active" [attr.title]="sortColumnsBy.name">
+                {{ sortColumnsBy.name | truncator:10 }}
+                <i class="fa fa-close pull-right" (click)="onSortColumnsByOther(sortColumnsBySelect.value)"></i>
+            </button>
+        </div>
+    </div><!-- no whitespace
+ --><div class="sort-group-divider"></div><!-- no whitespace
+ --><div class="sort-help">
+        Right-click row/column label<br>
+        to sort by single row or column
+    </div>
+</div>
+    
+<!-- Show a spinner until "loading" is complete -->
+<div *ngIf="!comparisonGeneSets || !comparisonGeneSets.length" class="loading brand-text">
+    <i class="fa fa-fw fa-spinner fa-pulse"></i>
+    Loading...
+</div>
+
+<div class="column-label-area" *ngIf="comparisonGeneSets && comparisonGeneSets.length > 0">
+    <div class="dimension-title">{{ selectedComparisonGeneSets.length | i18nPlural: comparisonGeneSetsCountMessageMapping }}</div>
+    <div class="column-color-row">
+        <div *ngFor="let cgs of selectedComparisonGeneSets; let colIndex = index" class="supercollection-color" [style.background-color]="displayDataRegistry[cgs.supercollectionName].color" [class.merged]="columnSupercollectionMerged[colIndex]">&nbsp;</div>
+    </div>
+    <div class="column-score-row">
+        <div class="column-score-title">Column Score</div><!-- no whitespace
+     --><div *ngFor="let cgs of selectedComparisonGeneSets; let colIndex = index" class="dimension-score"><div class="rotated-text">{{ columnScores[colIndex] | numFormatter: false }}</div></div>
+    </div>
+    <div class="column-label-row">
+        <div class="column-label-corner">
+            <div class="dimension-title">{{ selectedUserGeneSets.length | i18nPlural: userGeneSetsCountMessageMapping }}</div>
+        </div><!-- no whitespace
+     --><div class="row-score-title"><div class="rotated-text">Row Score</div></div><!-- no whitespace
+     --><div *ngFor="let cgs of selectedComparisonGeneSets; let colIndex = index" class="dimension-label" [attr.title]="cgs.name" [ngClass]="{selected: colIndex == geneSetLevelHoverColumnIndex, sorted: cgs.knId == sortRowsBy.knId}" (contextmenu)="onColumnLabelContextMenu(colIndex, $event)"><div class="rotated-text">{{ cgs.name | truncator:20 }}</div></div>
+    </div>
+</div>
+<div class="row-label-heatmap-area" *ngIf="comparisonGeneSets && comparisonGeneSets.length > 0">
+    <div class="row-label-column">
+        <div *ngFor="let ugs of selectedUserGeneSets; let rowIndex = index" class="dimension-label" [attr.title]="ugs.name" [ngClass]="{selected: rowIndex == geneSetLevelHoverRowIndex, sorted: ugs.name == sortColumnsBy.name}" (contextmenu)="onRowLabelContextMenu(rowIndex, $event)">{{ ugs.name | truncator:12 }}</div>
+    </div><!-- no whitespace
+ --><div class="row-score-column">
+        <div *ngFor="let ugs of selectedUserGeneSets; let rowIndex = index" class="dimension-score" [class.selected]="rowIndex == geneSetLevelHoverRowIndex">{{ rowScores[rowIndex] | numFormatter: false }}</div>
+    </div><!-- no whitespace
+ --><cell-heatmap
+        [cellWidth]="12"
+        [cellHeight]="12"
+        [borderThickness]="1"
+        [selectedBorderThicknessMultiplier]="3"
+        [selectedBorderColor]="0"
+        [highlightColor]="hexToDec('0xc6d8e8')"
+        [rowsOfColumns]="rowsOfColumns"
+        [updateHighlight]="!showGeneSetLevelRollover && !showGeneLevelRollover"
+        (cellClicked)="onCellClicked($event)"
+        (cellMousedOver)="onCellMousedOver($event)">
+    </cell-heatmap>
+</div>
+
+<div *ngIf="showGeneSetLevelRollover || showGeneLevelRollover || showRowLabelContextMenu || showColumnLabelContextMenu" class="rollover-container" [style.bottom.px]="rolloverBottom" [style.right.px]="rolloverRight">
+    <gene-set-level-rollover *ngIf="showGeneSetLevelRollover"
+        (close)="closeRollover()"
+        [gradientMaxColor]="gradientMaxColor"
+        [gradientMinColor]="gradientMinColor"
+        [gradientMaxThreshold]="gradientMaxThreshold"
+        [gradientMinThreshold]="gradientMinThreshold"
+        [comparisonGeneSet]="selectedComparisonGeneSets[geneSetLevelRolloverColumnIndex]"
+        [userGeneSet]="selectedUserGeneSets[geneSetLevelRolloverRowIndex]"
+        [geneSetLevelScore]="geneSetLevelRolloverScore">
+    </gene-set-level-rollover>
+    <row-label-context-menu *ngIf="showRowLabelContextMenu" [userGeneSet]="selectedUserGeneSets[rowContextMenuIndex]" (mouseleave)="closeRollover()" (sort)="onSortColumnsByRow($event)"></row-label-context-menu>
+    <column-label-context-menu *ngIf="showColumnLabelContextMenu" [comparisonGeneSet]="selectedComparisonGeneSets[columnContextMenuIndex]" (mouseleave)="closeRollover()" (sort)="onSortRowsByColumn($event)"></column-label-context-menu>
+</div>

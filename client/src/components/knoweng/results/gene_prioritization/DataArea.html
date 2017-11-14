@@ -1,0 +1,23 @@
+<div class="tab-header">
+    <div class="tab" [class.active]="activeTab == 'heatmap'" (click)="activeTab = 'heatmap'">Heatmap</div>
+    <div class="tab disabled" [class.active]="activeTab == 'spreadsheet'">Spreadsheet</div>
+    <div class="tab" [class.active]="activeTab == 'job'" (click)="activeTab = 'job'">Job Stats</div>
+</div>
+<div class="tab-body">
+    <div [ngSwitch]="activeTab">
+        <clustergram *ngSwitchCase="'heatmap'"
+            [gradientMaxColor]="gradientMaxColor"
+            [gradientMinColor]="gradientMinColor"
+            [gradientMaxValue]="gradientMaxValue"
+            [gradientMinValue]="gradientMinValue"
+            [currentNumTopGenes]="currentNumTopGenes"
+            [selectedResponses]="selectedResponses"
+            [scores]="scores"
+            [geneIdToNameMap]="geneIdToNameMap">
+        </clustergram>
+        
+        <job-summary *ngSwitchCase="'job'" [job]="job" [result]="result"></job-summary>
+        
+        <p *ngSwitchDefault>Something went wrong... Please contact technical support.</p>
+    </div>
+</div>

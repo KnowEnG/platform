@@ -1,0 +1,13 @@
+<!-- Show a spinner until "job" is populated -->
+<div *ngIf="!job" class="loading white-text">
+    <i class="fa fa-fw fa-spinner fa-pulse"></i>
+    Loading...
+</div>
+
+<div *ngIf="job && job.pipeline">
+    <!-- TODO ngSwitch or better -->
+    <gp-visualization *ngIf="job.pipeline == 'gene_prioritization'" [job]="job"></gp-visualization>
+    <gsc-visualization *ngIf="job.pipeline == 'gene_set_characterization'" [job]="job"></gsc-visualization>
+    <sc-visualization *ngIf="job.pipeline == 'sample_clustering'" [job]="job"></sc-visualization>
+    <ss-visualization *ngIf="job.pipeline == 'spreadsheet_visualization'" [job]="job"></ss-visualization>
+</div>

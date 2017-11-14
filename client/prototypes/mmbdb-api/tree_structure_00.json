@@ -1,0 +1,18 @@
+[
+  {
+    node_id: "aaaaa",
+    children: [
+      { node_id: "bbbbb", children: [] },
+      { node_id: "ccccc", children: [] },
+      { node_id: "ddddd", children: [] },
+    ]
+  },
+  {
+    node_id: "eeeee",
+    children: [
+      { node_id: "fffff", children: [] },
+      { node_id: "ggggg", children: [] },
+      { node_id: "hhhhh", children: [] },
+    ]
+  }
+]

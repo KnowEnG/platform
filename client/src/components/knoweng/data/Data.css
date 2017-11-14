@@ -1,0 +1,17 @@
+.files-container {
+  white-space: nowrap; /* keep panels side by side */
+  margin-top: 35px;
+}
+
+files-table-panel, file-panel {
+  display: inline-block;
+  vertical-align: top;
+}
+
+files-table-panel {
+  width: 879px;
+}
+
+file-panel {
+  width: 301px;
+}

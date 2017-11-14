@@ -1,0 +1,100 @@
+.help-container {
+    width: 305px;
+    border-radius: 21px;
+    padding: 4px 7px 17px 9px;
+    color: #b5d1eb;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.help-container:not(.collapsed) {
+    background-color: #1e384e;
+}
+
+.controls {
+    font-size: 31px;
+    padding-left: 8px;
+}
+
+.help-icon {
+    position: relative;
+    transition: all .65s ease-in-out;
+    left: 0;
+}
+
+.help-container.collapsed .help-icon {
+    cursor: pointer;
+    left: 244px;
+}
+
+.help-container.collapsed .help-icon:hover {
+    color: #73eaed;
+}
+
+.collapse-icon {
+    position: relative;
+    top: -2px;
+    left: 220px;
+    cursor: pointer;
+}
+
+.collapse-icon line {
+    stroke: #b5d1eb;
+    stroke-width: 2px;
+}
+
+.collapse-icon:hover line {
+    stroke: #73eaed;
+}
+
+.content {
+    white-space: normal; /* pre-line would've been nice, but ng2 inserts an extra line break before and after each string. fixed in later ng2? */
+    margin-top: 14px;
+}
+
+.group-container {
+    margin-bottom: 4px;
+}
+
+.group-header {
+    width: 289px;
+    padding: 3.5px 8px;
+    line-height: 1.1;
+    border-radius: 3px;
+    background-color: #35516a;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all .65s ease-in-out;
+    color: #b5d1eb;
+}
+
+.group-container.open .group-header {
+    color: #ffffff;
+}
+
+.group-body {
+    padding: 0 8px 0 8px;
+    transition: all .65s ease-in-out;
+    overflow-y: hidden;
+    max-height: 0;
+}
+
+.group-container.open .group-body {
+    padding: 0 8px 9px 8px;
+    max-height: 600px;
+}
+
+.group-body .heading {
+    padding-top: 8px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.group-body .body {
+    padding-top: 3px;
+    font-size: 12px;
+    color: #b5d1eb;
+}
+
+/* see also ".group-body .body a" rule in style.css */
+/* TODO move it here; need to work around innerHTML and view encapsulation */

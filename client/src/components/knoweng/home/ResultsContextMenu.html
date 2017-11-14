@@ -1,0 +1,32 @@
+<div class="menu">
+    <div class="item" (click)="updateFavorite()">
+        <svg class="icon favstar fa-fw" [class.favorite]="job?.favorite" viewBox="0 0 51 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+        </svg>
+        {{job?.favorite ? 'Unfavorite' : 'Favorite' }}
+    </div>
+    <div class="item hidden">
+        <i class="icon fa fa-fw fa-tag"></i>
+        Tags
+    </div>
+    <div class="item hidden">
+        <i class="icon fa fa-fw fa-pencil"></i>
+        Notes
+    </div>
+    <div class="item hidden">
+        <i class="icon fa fa-fw fa-share-square-o"></i>
+        Share
+    </div>
+    <div class="item" (click)="downloadJob()" [style.cursor]="(job.status === 'completed' && downloadStatus !== 'start') ? '' : 'not-allowed'" >
+        <i [ngClass]="downloadStatus == 'start' ? 'icon fa fa-spinner fa-spin' : 'icon fa fa-download'"></i>
+        Download
+    </div>
+    <div class="item hidden">
+        <i class="icon fa fa-fw fa-lock"></i>
+        Lock File
+    </div>
+    <div class="item" (click)="deleteJob()">
+        <i class="icon fa fa-fw fa-times"></i>
+        Delete
+    </div>
+</div>

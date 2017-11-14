@@ -1,0 +1,41 @@
+<table>
+    <thead>
+        <tr>
+            <!-- TODO could make a smarter sortable table class -->
+            <th class="name sortable noselect" (click)="sort('name')">
+                NAME
+                <i *ngIf="sortColumn == 'name'" [ngClass]="{'fa-caret-down': !sortReverse, 'fa-caret-up': sortReverse}" class="fa sort-caret"></i>
+            </th>
+            <th class="start sortable noselect" (click)="sort('start')">
+                START TIME
+                <i *ngIf="sortColumn == 'start'" [ngClass]="{'fa-caret-down': !sortReverse, 'fa-caret-up': sortReverse}" class="fa sort-caret"></i>
+            </th>
+            <th class="pipeline sortable noselect" (click)="sort('pipeline')">
+                PIPELINE/METHOD
+                <i *ngIf="sortColumn == 'pipeline'" [ngClass]="{'fa-caret-down': !sortReverse, 'fa-caret-up': sortReverse}" class="fa sort-caret"></i>
+            </th>
+            <th class="status sortable noselect" (click)="sort('status')">
+                STATUS
+                <i *ngIf="sortColumn == 'status'" [ngClass]="{'fa-caret-down': !sortReverse, 'fa-caret-up': sortReverse}" class="fa sort-caret"></i>
+            </th>
+            <th class="actions unsortable noselect">
+                ACTIONS
+            </th>
+        </tr>
+        <tr class="spacer"><th colspan="5">&nbsp;</th></tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let job of jobs | slice:0:maxResults; let i=index" [class.selected]="i == selectedRowIndex" (dblclick)="viewResult(i)">
+            <td class="name">{{ job.name }}</td>
+            <td class="start">{{ job.getCreatedDate() | date:'short' }}</td>
+            <td class="pipeline">{{ job.getPrettyPipelineAndMethod() }}</td>
+            <td class="status"><i class="fa" [ngClass]="{'fa-refresh': job.status == 'running', 'fa-check-square': job.status == 'completed', 'fa-exclamation-triangle': job.status == 'failed'}"></i></td>
+            <!-- the fa-ellipsis-h is a poor match for the comp -->
+            <td class="actions" (click)="openContextMenu($event, i)"><i class="fa fa-circle"></i> <i class="fa fa-circle"></i> <i class="fa fa-circle"></i></td>
+        </tr>
+    </tbody>
+</table>
+
+<div *ngIf="showContextMenu" (mouseleave)="closePopupMenu()" class="context-menu-container" [style.bottom.px]="contextMenuBottom" [style.right.px]="contextMenuRight">
+    <results-context-menu [job]=selectedJob (closeMe)="closeContextMenu($event)"></results-context-menu>
+</div>

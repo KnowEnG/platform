@@ -1,0 +1,116 @@
+<div class="app-container" [class.sidenav-collapsed]="sidenavCollapsed || isRouteActive('/login')">
+    <div class="omix-header" [class.login]="isRouteActive('/login')">
+        <span><a class="omix" href="/">O miX</a></span>
+        <div class="account">
+            <i class="fa fa-circle account-dot"></i>
+            <span class="account-name">{{ userDisplayName }}</span>
+        </div>
+    </div>
+    <div class="line-separator"></div>
+    <div class="sidenav-container">
+        <div class="sidenav-menu" [class.sidenav-disabled]="isRouteActive('/login')">
+
+            <button class="sidenav-control pull-right" (click)="toggleSidenavCollapsed()">
+                <svg width="27" height="19">
+                    <g *ngIf="sidenavCollapsed">
+                        <line x1="0" x2="27" y1="1" y2="1"/>
+                        <line x1="0" x2="27" y1="9" y2="9"/>
+                        <line x1="0" x2="27" y1="17" y2="17"/>
+                    </g>
+                    <g *ngIf="!sidenavCollapsed">
+                        <line x1="8" x2="18" y1="9" y2="1"/>
+                        <line x1="8" x2="18" y1="9" y2="17"/>
+                    </g>
+                </svg>
+            </button>
+
+            <div class="side-menu-content" *ngIf="!sidenavCollapsed">
+
+                <div class="side-menu-item" [class.collapsed]="cohortsCollapsed">
+                    <div class="side-menu-item-header" (click)="cohortsCollapsed = !cohortsCollapsed">
+                        <span class="side-menu-text noselect">Cohorts</span>
+                        <svg class="side-menu-icon" width="21" height="21">
+                            <g transform="translate(10.5, 10.5)">
+                                <circle x="0" y="0" r="10"/>
+                                <line x1="0" x2="0" y1="-6" y2="6"/>
+                                <line x1="-6" x2="6" y1="0" y2="0"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="side-menu-item-body">
+                        <div class="instructions">
+                            <span class="instructions-text">Drag cohorts to build a comparison</span>
+                            <svg width="50" height="23">
+                                <g transform="scale(.5,.5),translate(0,10)">
+                                    <path d="M18.033,21.351v-5.389H8.707C3.898,15.962,0,19.857,0,24.667v-9.12c0-4.809,3.898-8.706,8.707-8.706h9.326V2.695 l9.328,9.328L18.033,21.351z"/>
+                                </g>
+                                <rect x="7" y="1" width="41" height="21" rx="3" ry="3"/>
+                            </svg>
+                        </div>
+                        <ul *ngIf="cohorts">
+                            <a *ngFor=" let cohort of cohorts" [routerLink]="['/cohorts']"><li><span class="side-menu-sub-item">{{cohort.display_name_short}}</span><span class="side-menu-sub-item-count">{{cohort.num_samples}}</span></li></a>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="side-menu-item" [class.collapsed]="individualsCollapsed">
+                    <div class="side-menu-item-header" (click)="individualsCollapsed = !individualsCollapsed">
+                        <span class="side-menu-text noselect">Individuals</span>
+                        <svg class="side-menu-icon" width="21" height="21">
+                            <g transform="translate(10.5, 10.5)">
+                                <circle x="0" y="0" r="10"/>
+                                <line x1="0" x2="0" y1="-6" y2="6"/>
+                                <line x1="-6" x2="6" y1="0" y2="0"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="side-menu-item-body">
+                        <ul *ngIf="individuals">
+                            <a *ngFor="let individual of individuals" [routerLink]="['/individuals']"><li><span class="side-menu-sub-item">{{individual.display_name_short}}</span></li></a>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="side-menu-item" [class.collapsed]="comparisonsCollapsed">
+                    <div class="side-menu-item-header" (click)="comparisonsCollapsed = !comparisonsCollapsed">
+                        <span class="side-menu-text noselect">Comparisons</span>
+                        <svg class="side-menu-icon" width="21" height="21">
+                            <g transform="translate(10.5, 10.5)">
+                                <circle x="0" y="0" r="10"/>
+                                <line x1="0" x2="0" y1="-6" y2="6"/>
+                                <line x1="-6" x2="6" y1="0" y2="0"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="side-menu-item-body">
+                        <ul *ngIf="comparisons">
+                            <a *ngFor="let comparison of comparisons" [routerLink]="['/compare', comparison._id]"><li><span class="side-menu-sub-item">{{comparison.display_name}}</span></li></a>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="side-menu-item" [class.collapsed]="reportsCollapsed">
+                    <div class="side-menu-item-header" (click)="reportsCollapsed = !reportsCollapsed">
+                        <span class="side-menu-text noselect">Reports</span>
+                        <svg class="side-menu-icon" width="21" height="21">
+                            <g transform="translate(10.5, 10.5)">
+                                <circle x="0" y="0" r="10"/>
+                                <line x1="0" x2="0" y1="-6" y2="6"/>
+                                <line x1="-6" x2="6" y1="0" y2="0"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="side-menu-item-body">
+                        <ul>
+                            <a [routerLink]="['/create-reports']"><li><span class="side-menu-sub-item">Report One</span></li></a>
+                            <a [routerLink]="['/create-reports']"><li><span class="side-menu-sub-item">Report Two</span></li></a>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div><!-- no whitespace outside of comments between these divs here so there's no gap between them in the rendered page
+     --><div class="sidenav-main">
+            <router-outlet></router-outlet>
+        </div>
+
+    </div>

@@ -1,0 +1,19 @@
+<div class="modal-dialog" ngDraggable>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close pull-right" (click)="closeMe.emit(null)" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <svg class="eek" width="50" height="50">
+                <circle cx="25" cy="25" r="23"/>
+                <circle cx="15.5" cy="16" r="3"/>
+                <circle cx="35.5" cy="16" r="3"/>
+                <circle cx="25" cy="34" r="6"/>
+            </svg>
+            <div class="header-text">{{header}}</div>
+        </div>
+        <div class="modal-body">
+            {{body}}
+        </div>
+    </div>
+</div>

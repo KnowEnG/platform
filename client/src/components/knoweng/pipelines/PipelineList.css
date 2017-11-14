@@ -1,0 +1,56 @@
+.list-container {
+    white-space: nowrap;
+}
+
+.list, help-panel {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.list {
+    width: 557px;
+    margin-top: 16px;
+}
+
+.list td {
+    padding: 12px 0 11px 0;
+}
+
+.hover-content {
+    height: 52px;
+    cursor: pointer;
+}
+
+tr:hover .hover-content, tr.selected .hover-content {
+    background-color: #4f6579;
+}
+
+.pipeline-title {
+    width: 377px;
+    font-size: 28px;
+    color: #ffffff;
+    padding: 4px 0 0 21px;
+}
+
+.pipeline-button {
+    width: 153px;
+    padding-top: 8px;
+}
+
+.pipeline-button .btn {
+    height: 32px;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #07abaf;
+    padding: 4px 12px 8px 12px;
+    display: none;
+}
+
+tr:hover .pipeline-button .btn, tr.selected .pipeline-button .btn {
+    display: inline-block;
+}
+
+help-panel {
+    position: relative;
+    top: -50px;
+}

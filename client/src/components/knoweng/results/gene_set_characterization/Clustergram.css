@@ -1,0 +1,246 @@
+.sort-area {
+    padding-left: 23px;
+    width: 100%;
+    border-bottom: solid 1px #d8d8d8;
+    white-space: nowrap;
+}
+
+.sort-group, .sort-group-divider, .sort-help {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.sort-group {
+    margin-top: 12px;
+}
+
+.sort-group-divider {
+    margin: 14px 14px 2px 14px;
+    height: 51px;
+    width: 0;
+    border-left: solid 1px #c7c7c7;
+}
+
+.sort-label {
+    font-size: 12px;
+    color: #1d609e;
+}
+
+.sort-help {
+    margin-top: 25px;
+    font-size: 12px;
+    font-style: italic;
+    color: #7493af;
+}
+
+.sort-button {
+    display: inline-block;
+    vertical-align: top;
+    width: 156px;
+    height: 20px;
+    border-radius: 4px;
+    background-color: #b6d2eb;
+    margin: 8px 8px 0 0;
+    padding: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    color: #ffffff;
+    border: none;
+}
+
+.sort-button.active {
+    background-color: #35516a;
+}
+
+select.sort-button {
+    text-align-last: center;
+}
+
+.sort-button:last-child {
+    margin-right: 0;
+}
+
+select.sort-button option {
+    font-size: 14px;
+    line-height: 2.07;
+    /* color: #000000; TODO not until we create our own widget */
+}
+
+.sort-button .fa-close {
+    cursor: pointer;
+    padding: 2px 2px 0 0;
+}
+
+.column-label-area {
+    margin: 16px 0 0 22px;
+    white-space: nowrap;
+}
+
+.column-color-row {
+    padding-left: 145px;
+    height: 18px;
+}
+
+.column-color-row > * {
+    display: inline-block;
+    vertical-align: top;
+    height: 18px;
+}
+
+.column-score-row > * {
+    display: inline-block;
+    vertical-align: top;
+    height: 28px; /* taller than comp to accommodate three-digit scores */
+}
+
+.column-score-title {
+    padding: 5px 5px 0 0;
+    text-align: right;
+    width: 145px;
+}
+
+.column-score-title, .column-score-row > .dimension-score {
+    border-top: 2px solid #d8d8d8;
+    border-bottom: 2px solid #d8d8d8;
+}
+
+.column-score-row > .dimension-score {
+    width: 13px;
+}
+
+.column-score-row > .dimension-score > .rotated-text {
+    width: 28px;
+    text-align: right;
+    transform: translateY(-13px) translateX(-14.5px) rotate(270deg);
+    transform-origin: bottom right;
+    cursor: vertical-text;
+}
+
+.supercollection-color.merged {
+    border-left-color: transparent;
+}
+
+.column-label-row > * {
+    display: inline-block;
+    vertical-align: top;
+    height: 161px; /* taller than comp to show longer set names */
+}
+
+.column-label-corner {
+    width: 117px;
+    background-color: #E5F0F2;
+}
+
+.row-score-title {
+    width: 28px; /* wider than comp to accommodate three-digit scores */
+}
+
+.column-label-row > .dimension-label {
+    width: 13px;
+}
+
+.row-score-title > .rotated-text {
+    transform: translateY(138px) translateX(22px) rotate(270deg);
+    transform-origin: bottom left;
+    cursor: vertical-text;
+}
+
+.column-label-row > .dimension-label > .rotated-text {
+    transform: translateY(138px) translateX(14.5px) rotate(270deg);
+    transform-origin: bottom left;
+    cursor: pointer;
+}
+
+.column-label-corner, .row-score-title, .column-label-row > .dimension-label {
+    border-bottom: 2px solid #A2C3E2;
+}
+
+.dimension-score {
+    font-size: 11px;
+}
+
+.dimension-label {
+    font-size: 12px;
+}
+
+.supercollection-color {
+    width: 13px;
+    background-color: #29465f;
+    border-left: 1px solid white;
+}
+
+.dimension-label.sorted {
+    color: #ffffff;
+    background-color: #35516a;
+    font-weight: 700;
+}
+
+.dimension-label.selected, .dimension-label:hover {
+    background-color: #c6d8e8;
+    font-weight: 700;
+}
+
+.row-label-heatmap-area {
+    margin: 0 190px 0 22px;
+    white-space: nowrap;
+}
+
+.row-label-heatmap-area > * {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.row-label-column {
+    width: 117px;
+    background-color: #E5F0F2;
+}
+
+.row-label-column > .dimension-label {
+    height: 13px;
+    line-height: 13px;
+    text-align: right;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+.row-score-column > .dimension-score {
+    height: 13px;
+    line-height: 13px;
+    text-align: right;
+    padding-right: 4px;
+}
+
+.row-score-column {
+    width: 28px;
+}
+
+.dimension-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1d609e;
+}
+
+.column-label-area > .dimension-title {
+    padding-left: 146px;
+}
+
+.column-label-corner .dimension-title {
+    margin: 140px 5px 0 0;
+    text-align: right;
+}
+
+.column-score-title, .row-score-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #29465f;
+}
+
+.rollover-container {
+    position: fixed;
+    padding: 15px;
+}
+
+cell-heatmap {
+    cursor: pointer;
+}

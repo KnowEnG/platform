@@ -1,0 +1,67 @@
+.user-gene-set-selector-area {
+    padding-top: 6px;
+    height: 69.5px;
+    border-bottom: solid 1px #4f6579;
+}
+
+.method-area {
+    padding-top: 16px;
+    width: 324px;
+}
+
+.method-area .control-label, .method-label, .method-info-icon {
+    display: inline-block;
+    vertical-align: bottom;
+    line-height: 1;
+}
+
+.method-label {
+    font-size: 18px;
+    color: #ffffff;
+    margin-left: 16px;
+}
+
+.method-info-icon {
+    font-size: 11px;
+    color: #b5d1eb;
+    padding-top: 8px;
+    cursor: pointer;
+}
+
+.filter-area {
+    padding-top: 40px;
+}
+
+.comparison-set-selector-area {
+    padding-top: 15px;
+}
+
+.control-label {
+    padding-left: 49px;
+    font-size: 12px;
+    letter-spacing: 0.7px;
+    color: #a2c3e2;
+}
+
+.filter-header {
+    white-space: nowrap;
+}
+
+.filter-header .control-label, .filter-info-icon, .filter-range {
+    display: inline-block;
+    vertical-align: bottom;
+    line-height: 1;
+}
+
+.filter-info-icon {
+    font-size: 11px;
+    color: #b5d1eb;
+    margin: 0 22px 0 12px;
+    cursor: pointer;
+}
+
+.filter-range {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e5f0f2;
+}
