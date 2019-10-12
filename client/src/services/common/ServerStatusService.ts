@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/share';
 
 import {LogService} from '../../services/common/LogService';
 
@@ -13,7 +14,7 @@ export class ServerStatus {
     constructor(
         public sha: string,
         public runlevel: string,
-        public hzHost: string,
+        public cilogonLoginUrl: string,
         maxUploadSize: string) {
             this.maxUploadSize = parseInt(maxUploadSize, 10) || null;
     }
@@ -22,7 +23,7 @@ export class ServerStatus {
 @Injectable()
 export class ServerStatusService {
   public status: ServerStatus;                   // Model to store cached status
-  private statusUrl = '/static/dist/status.json';     // URL to poll for status
+  private statusUrl = '/api/v2/status';          // URL to poll for status
   private initialDelayMs = 1800000;              // How long before we start polling
   private pollIntervalMs = 3600000;              // How often to poll, once we start
   

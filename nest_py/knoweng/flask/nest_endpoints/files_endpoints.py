@@ -1,6 +1,7 @@
 """This module defines a set of hooks for the file endpoint.
 """
 import os
+from shutil import copyfile
 import flask
 from werkzeug.exceptions import UnsupportedMediaType, RequestEntityTooLarge
 from werkzeug.utils import secure_filename
@@ -10,9 +11,7 @@ from nest_py.knoweng.data_types.files import FileDTO
 from nest_py.core.flask.nest_endpoints.crud_endpoints import NestCrudEntryEndpoint
 from nest_py.core.flask.nest_endpoints.crud_endpoints import NestCrudCollectionEndpoint
 from nest_py.core.flask.nest_endpoints.nest_endpoint_set import NestEndpointSet
-from nest_py.core.data_types.tablelike_entry import TablelikeEntry
 from nest_py.core.data_types.nest_id import NestId
-from nest_py.core.data_types.nest_date import NestDate
 
 def get_endpoint_set(files_db_client, authenticator):
 
@@ -183,33 +182,17 @@ class FileCollectionEndpoint(NestCrudCollectionEndpoint):
                     'tab-separated files.')
             else:
                 # save file to disk
-                project_raw = form_data['project']
+                project_raw = form_data['project_id']
                 project_id = NestId(int(project_raw))
-                files_dir = files.files_dirpath(self.userfiles_dir, project_id)
-                if not os.path.exists(files_dir):
-                    os.makedirs(files_dir)
-                original_path = os.path.join(files_dir, filename)
+                files.prepare_files_dirpath(self.userfiles_dir, project_id)
+                original_path = os.path.join(\
+                    files.files_dirpath(self.userfiles_dir, project_id), \
+                    filename)
                 upload.save(original_path)
 
-                # extract file info to save to db
-                statinfo = os.stat(original_path).st_size
-                extension = os.path.splitext(original_path)[-1].lower()
-                uploader_name = requesting_user.get_username()
-
-                file_tle = TablelikeEntry(self.files_schema)
-                file_tle.set_value('filesize', str(statinfo))
-                file_tle.set_value('filetype', extension)
-                file_tle.set_value('filename', filename)
-                file_tle.set_value('project_id', project_id)
-                file_tle.set_value('uploadername', uploader_name)
-                file_tle.set_value('_created', NestDate.now().to_jdata())
-                file_tle.set_value('notes', '')
-                file_tle.set_value('favorite', False)
-
-                #save to db crud_client
-                file_tle = self.crud_client.create_entry(file_tle, user=requesting_user)
-                if file_tle is None:
-                    raise Exception('Problem writing DB entry')
+                # record the file in the DB
+                file_tle = self._write_file_to_db(original_path, project_id, \
+                    requesting_user)
                 file_dto = FileDTO.from_tablelike_entry(file_tle)
 
                 #The final DTO only knows about the correct, final location
@@ -222,13 +205,63 @@ class FileCollectionEndpoint(NestCrudCollectionEndpoint):
                 resp = self._make_success_json_response(resp_jdata)
         else:
             if has_multipart_header or has_files_key:
-                #if we only had one, it's an error
+                # if we only had one, it's an error
                 raise UnsupportedMediaType(\
                     'expected multipart/form-data Content-Type; ' + \
                     'got ' + request.headers['Content-Type'])
             else:
-                #treat as a normal tablelike entry upload, do
-                #the normal tablelike POST
-                resp = super(FileCollectionEndpoint, self).do_POST(
-                    request, requesting_user)
+                # this is a copy request for a demo file
+                demo_file_dir_path = '/demo_files' # TODO centralize config
+                # create a whitelist of all known demo files in all valid
+                # directories; we'll only honor requests for these files
+                demo_files = []
+                for dirpath, dirnames, filenames in os.walk(demo_file_dir_path):
+                    for filename in filenames:
+                        demo_files.append(os.path.join(dirpath, filename))
+                jdata = dict(request.json)
+                file_relative_path = jdata['file_relative_path']
+                project_raw = jdata['project_id']
+                source_path = os.path.join(\
+                    demo_file_dir_path, file_relative_path)
+                if source_path in demo_files:
+                    project_id = NestId(int(project_raw))
+
+                    file_tle = self._write_file_to_db(source_path, \
+                        project_id, requesting_user)
+                    file_dto = FileDTO.from_tablelike_entry(file_tle)
+
+                    # being careful about sequence of steps here in case user
+                    # sends a burst of requests for the same file
+                    # (want to ensure target file is copied to project dir
+                    # with a unique name)
+                    target_path = file_dto.get_file_path(self.userfiles_dir)
+                    files.prepare_files_dirpath(self.userfiles_dir, project_id)
+                    copyfile(source_path, target_path)
+
+                    resp_jdata = self.format_create_single_jdata(\
+                        request, file_tle)
+                    resp = self._make_success_json_response(resp_jdata)
+                else:
+                    resp = self._make_error_response('Unknown demo file.')
         return resp
+
+    def _write_file_to_db(self, file_path, project_id, requesting_user):
+        """Writes the file info to the database.
+
+        Args:
+            file_path (str): The path where the file is currently stored on
+                disk.
+            project_id (NestId): The project id as a NestId.
+            requesting_user (NestUser): The requesting user.
+
+        Returns:
+            The tablelike entry.
+        """
+        file_tle = files.generate_file_tle_for_local_file(\
+            file_path, project_id, None)
+
+        #save to db crud_client
+        file_tle = self.crud_client.create_entry(file_tle, user=requesting_user)
+        if file_tle is None:
+            raise Exception('Problem writing DB entry')
+        return file_tle

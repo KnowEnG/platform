@@ -43,8 +43,8 @@ export class AlphaDiversityComponent implements OnChanges{
     }
     
     //find the cohort ids to pass to API endpoint to retrieve richness data
-    getComparingCohortIDs(): Array<string> {
-        var cohortIDs: Array<string> = [];
+    getComparingCohortIDs(): Array<number> {
+        var cohortIDs: Array<number> = [];
         for (var i = 0; i < this.comparingCohortsPhylumData.length; i++) {
             cohortIDs.push(this.comparingCohortsPhylumData[i][0].cohort_id);
         }
@@ -52,7 +52,7 @@ export class AlphaDiversityComponent implements OnChanges{
     }
     
     //Call API to read richness and evenness data for all comparing cohorts, currently assuming there are only two cohorts
-    getCohortPhyloTreeRootData(cohortIDs: Array<string>) {
+    getCohortPhyloTreeRootData(cohortIDs: Array<number>) {
         this.cohortComparisonService.getAllComparingCohortsRootData(cohortIDs)
             .subscribe ( 
                 (data: any) => {

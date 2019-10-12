@@ -190,7 +190,8 @@ def _perform_project_stages(project_env, project_root_dir):
     seed_users_project_stage = _perform_stage(stage_name,
             seed_users_ops._run_seed_users_script,
             project_env,
-            RunLevel.development_instance())
+            RunLevel.development_instance(),
+            NestSite.localhost_instance())
     stage_results.append(seed_users_project_stage)
 
     stage_name = project_name + ' smoke_test'

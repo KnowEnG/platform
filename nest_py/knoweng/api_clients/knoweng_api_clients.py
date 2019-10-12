@@ -4,15 +4,23 @@ from nest_py.core.api_clients.smoke_scripts import SmokeTestResult
 from nest_py.core.api_clients.tablelike_api_client_maker import TablelikeApiClientMaker
 from nest_py.knoweng.api_clients.jobs_api_client import JobsApiClientMaker
 from nest_py.knoweng.api_clients.files_api_client import FilesApiClientMaker
+from nest_py.knoweng.api_clients.ssv_api_clients import \
+    SsvizJobsSpreadsheetsClientMaker, SsvizRowCorrelationsClientMaker, \
+    SsvizRowDataClientMaker, SsvizRowVariancesClientMaker, \
+    SsvizSpreadsheetsClientMaker
 
 def get_api_client_makers():
-    client_makers = dict()
 
-    jobs_cm = JobsApiClientMaker()
-    client_makers[jobs_cm.get_collection_name()] = jobs_cm
+    custom_cms = [\
+        JobsApiClientMaker(),
+        FilesApiClientMaker(),
+        SsvizJobsSpreadsheetsClientMaker(),
+        SsvizRowCorrelationsClientMaker(),
+        SsvizRowDataClientMaker(),
+        SsvizRowVariancesClientMaker(),
+        SsvizSpreadsheetsClientMaker()]
 
-    files_cm = FilesApiClientMaker()
-    client_makers[files_cm.get_collection_name()] = files_cm
+    client_makers = {cm.get_collection_name(): cm for cm in custom_cms}
 
     schemas = knoweng_schemas.get_schemas().values()
     for schema in schemas:
@@ -29,8 +37,6 @@ def run_all_smoke_tests(http_client):
     acm_registry = get_api_client_makers()
     smoke_scripts.login_client(http_client, smoke_res)
     for ep_name in acm_registry:
-#    for ep_name in ['files']:
         acm = acm_registry[ep_name]
         acm.run_smoke_scripts(http_client, smoke_res)
     return smoke_res
-

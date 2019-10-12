@@ -1,8 +1,6 @@
-import os
 from nest_py.core.jobs.jobs_logger import log
 from nest_py.core.jobs.checkpoint import CheckpointTimer
 import nest_py.ops.container_users as container_users
-import nest_py.core.jobs.box_downloads as box_downloads
 import nest_py.core.jobs.jobs_auth as jobs_auth
 import nest_py.core.db.nest_db as nest_db
 
@@ -18,8 +16,14 @@ import nest_py.omix.jobs.comparison_analysis as comparison_analysis
 import nest_py.omix.jobs.client_registry as client_registry
 
 import nest_py.omix.jobs.seed_data as mmbdb_seed_data
-from nest_py.omix.jobs.klumpp_data import KlumppSeedData
+from nest_py.omix.jobs.klumpp_ic1_data import KlumppIC1SeedData
+from nest_py.omix.jobs.klumpp_ic2_data import LizzieSeedData
+from nest_py.omix.jobs.klumpp_ic2_data import WenbinFecalSeedData
+from nest_py.omix.jobs.klumpp_ic2_data import WenbinCecumSeedData
+from nest_py.omix.jobs.klumpp_ic2_data import WenbinCombinedSeedData
 from nest_py.omix.jobs.mayo_mar16_data import MayoMar16SeedData
+from nest_py.omix.jobs.mayo_microbiome_report_sample_data import \
+    MayoMicrobiomeReportSampleSeedData
 
 
 #num quantiles used for relative abundance,richness, and evenness.
@@ -28,7 +32,7 @@ from nest_py.omix.jobs.mayo_mar16_data import MayoMar16SeedData
 NUM_QUANTILES = 4 #only use even numbers or the 'median' values will be wrong
 
 #used by all histograms
-NUM_BINS=20
+NUM_BINS = 20
 
 #if true, populates the cohort_phylo_tree_nodes and comparison_phylo_tree_nodes
 #with analytics output for all defined chorts and comparisons. if false,
@@ -42,25 +46,29 @@ def run(http_client, db_engine, data_dir, subsample, data_flavor_key):
     """
     db_engine, sqla_md (sqlalchemy.Engine): a postgres hook to the
         db we will use. Tables must already exist in the db.
-    data_dir (string): location to write data files 
-    subsample (bool) if true, only load a 100 samples from the biom_table 
-        and process. results will not be valid but all api endpoints will 
+    data_dir (string): location to write data files
+    subsample (bool) if true, only load a 100 samples from the biom_table
+        and process. results will not be valid but all api endpoints will
         be populated with data
     """
     timer = CheckpointTimer('mmbdb_seed')
     timer.checkpoint("mmbdb_seed_job: Begin")
     exit_code = 0
 
+    host_user = container_users.make_host_user_container_user()
+    seed_data = get_data_flavor(data_flavor_key, data_dir, host_user, subsample)
     ###############
     ##Connect CRUD clients
     ################
+    nest_username = seed_data.get_username()
+    nest_userpass = seed_data.get_userpass()
     if DB_VS_API:
         sqla_md = nest_db.get_global_sqlalchemy_metadata()
         clients = client_registry.make_db_client_registry(db_engine, sqla_md)
         for client in clients.values():
-            jobs_auth.set_db_user(client)
+            jobs_auth.set_db_user(client, nest_username)
     else:
-        jobs_auth.login_jobs_user(http_client)
+        jobs_auth.login_jobs_user(http_client, nest_username, nest_userpass)
         clients = client_registry.make_api_client_registry(http_client)
 
     ###################
@@ -68,8 +76,6 @@ def run(http_client, db_engine, data_dir, subsample, data_flavor_key):
     ###################
 
     timer.checkpoint("Downloading biom data if necessary")
-    host_user = container_users.make_host_user_container_user()
-    seed_data = get_data_flavor(data_flavor_key, data_dir, host_user, subsample)
     biom_table = seed_data.get_biom_table()
     timer.checkpoint("Download complete.")
     timer.checkpoint("Downloaded/Loaded All Patient Metadata")
@@ -79,18 +85,17 @@ def run(http_client, db_engine, data_dir, subsample, data_flavor_key):
     ####################
 
     timer.checkpoint('uploading tornado_run: Begin')
-    tornado_run_tle = biom_etl.upload_tornado_run(clients, biom_table)
-    tornado_run_nest_id = tornado_run_tle.get_nest_id()
-    tornado_run_id = tornado_run_nest_id.get_value()
+    tornado_cfg = seed_data.get_tornado_config()
+    tornado_run_tle = biom_etl.upload_tornado_run(clients, biom_table, tornado_cfg)
+    tornado_run_id = tornado_run_tle.get_nest_id()
     timer.checkpoint('uploading tornado_run: End')
 
     timer.checkpoint('uploading otu_defs: Begin')
-    otu_defs = biom_etl.upload_otu_defs(clients, biom_table, 
-        tornado_run_id)
+    otu_defs = biom_etl.upload_otu_defs(clients, biom_table, tornado_run_id)
     timer.checkpoint('uploading otu_defs: End')
 
     timer.checkpoint('uploading geno_samples: Begin')
-    geno_samples = biom_etl.upload_geno_samples(clients, biom_table, 
+    geno_samples = biom_etl.upload_geno_samples(clients, biom_table, \
         tornado_run_id, otu_defs)
     timer.checkpoint('uploading geno_samples: End')
 
@@ -108,7 +113,7 @@ def run(http_client, db_engine, data_dir, subsample, data_flavor_key):
             cohort_key)
         sample_ids = cohort_etl.tornado_sample_keys_to_nest_ids(
             tornado_sample_keys, geno_samples)
-        cohort_tle = cohort_etl.upload_cohort(clients, 
+        cohort_tle = cohort_etl.upload_cohort(clients, \
             cohort_config, sample_ids, tornado_run_id)
         all_cohort_tles[cohort_key] = cohort_tle
 
@@ -139,11 +144,11 @@ def run(http_client, db_engine, data_dir, subsample, data_flavor_key):
             geno_samples,
             data_dir,
             host_user)
-        
+
         timer.checkpoint('api upload begin: ' + comparison_key)
         comparison_tle = comparison_etl.upload_comparison(
-            clients, 
-            comparison_config, 
+            clients,
+            comparison_config,
             baseline_cohort_tle,
             variant_cohort_tle,
             patient_cohort_tle,
@@ -158,9 +163,9 @@ def run(http_client, db_engine, data_dir, subsample, data_flavor_key):
         ###Cohort Node Analytics
         ###############
         #this also does the upload asap to reduce memory footprint
-        cohort_analysis.compute_all_for_cohorts(clients, 
-            all_cohort_tles.values(), 
-            geno_samples, otu_defs, num_quantiles=NUM_QUANTILES, 
+        cohort_analysis.compute_all_for_cohorts(clients, \
+            all_cohort_tles.values(), \
+            geno_samples, otu_defs, num_quantiles=NUM_QUANTILES, \
             num_bins=NUM_BINS, timer=timer)
 
         ###############
@@ -187,8 +192,18 @@ def get_data_flavor(data_flavor_key, data_dir, file_owner, subsample):
             seed_data = MayoMar16SeedData(
                 data_dir, file_owner, subsample=subsample)
             seed_data.get_patient_data() #prefetch
-        elif data_flavor_key == 'klumpp':
-            seed_data = KlumppSeedData(data_dir, file_owner)
+        if data_flavor_key == 'mayo_microbiome_report':
+            seed_data = MayoMicrobiomeReportSampleSeedData(data_dir, file_owner)
+        elif data_flavor_key == 'klumpp_ic1':
+            seed_data = KlumppIC1SeedData(data_dir, file_owner)
+        elif data_flavor_key == 'klumpp_ic2_lizzie':
+            seed_data = LizzieSeedData(data_dir, file_owner)
+        elif data_flavor_key == 'klumpp_ic2_wenbin_fecal':
+            seed_data = WenbinFecalSeedData(data_dir, file_owner)
+        elif data_flavor_key == 'klumpp_ic2_wenbin_cecum':
+            seed_data = WenbinCecumSeedData(data_dir, file_owner)
+        elif data_flavor_key == 'klumpp_ic2_wenbin_combined':
+            seed_data = WenbinCombinedSeedData(data_dir, file_owner)
         else:
             raise Exception('this shouldnt happen')
     else:
@@ -205,4 +220,3 @@ def get_data_flavor(data_flavor_key, data_dir, file_owner, subsample):
     for cfg in comps:
         seed_data.get_fst_results_cache_url(cfg['comparison_key'])
     return seed_data
-

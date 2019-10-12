@@ -7,14 +7,14 @@ class CrudApiClient(object):
     """
     Abstraction for Creating, Reading, Updating, and Deleting entries through
     a Rest Api. Assumes the semantics of NestCrudCollectionEndpoint and
-    NestCrudEntryEndpoint for doing operations at the collection level 
-    (create new entry, query the collection) and entry level (read, 
+    NestCrudEntryEndpoint for doing operations at the collection level
+    (create new entry, query the collection) and entry level (read,
     update, delete a particular entry).
 
     The basic pattern: if a call fails for any reason, logs a detailed
     message and returns None.
 
-    If Create/Update commands succeed, normally returns the 
+    If Create/Update commands succeed, normally returns the
     object with it's nest_id set.
 
     If Delete command succeeds, returns the nest_id of what was deleted.
@@ -32,9 +32,9 @@ class CrudApiClient(object):
         json_transcoder(ApiJsonTranscoder) converts the data type of
             entries to/from jdata primitives
 
-        e.g. for http://localhost:8000/api/v1/foo/bar
+        e.g. for http://localhost/api/v1/foo/bar
 
-        the http client is configured for server='localhost', port=8000
+        the http client is configured for server='localhost', port=80
         the relative_url is 'foo/bar',
         """
         self.http_client = http_client
@@ -48,7 +48,7 @@ class CrudApiClient(object):
     def get_collection_name(self):
         #TODO: relative url wasn't meant to carry the name of the collection,
         #but need it here for compatibility with crud_db_client. In practice
-        #this currently is the same thing (collection_name is used as the 
+        #this currently is the same thing (collection_name is used as the
         #relative url everywhere)
         return self.relative_url
 
@@ -64,7 +64,8 @@ class CrudApiClient(object):
         """
         jdata = self.transcoder.object_to_jdata(dto)
         #files_dict = self._dto_to_files_dict(dto)
-        request = NestHttpRequest(self.relative_url,
+        request = NestHttpRequest(\
+            self.relative_url,
             op="POST",
             http_params={'reply': reply},
             data=jdata,
@@ -109,7 +110,8 @@ class CrudApiClient(object):
             jdata.append(self.transcoder.object_to_jdata(dto))
 
         params = {'reply': reply}
-        request = NestHttpRequest(self.relative_url,
+        request = NestHttpRequest(\
+            self.relative_url,
             op="POST",
             http_params=params,
             data=jdata,
@@ -126,14 +128,14 @@ class CrudApiClient(object):
         if len(dto_lst) == 0:
             return list()
 
-        acc_created = list()        
+        acc_created = list()
         batches = self._split_to_batches(dto_lst, batch_size)
         for batch in batches:
             response = self.response_of_bulk_create_entries(
                 batch, timeout_secs=timeout_secs, reply='id')
             if response.did_succeed():
                 try:
-                    #this jdata should be a list of ints, which are 
+                    #this jdata should be a list of ints, which are
                     #nest_ids of the entries just created in the database
                     jdata = response.get_data_payload_as_jdata()
                     num_created = jdata['num_created']
@@ -149,9 +151,9 @@ class CrudApiClient(object):
                     log("bulk_create_entries() error transforming json data to NestId")
                     log("Exception: " + str(e))
                     accs_created = None
-                    break 
+                    break
             else:
-                acc_created =  None
+                acc_created = None
         return acc_created
 
     def bulk_create_entries_async(self, dto_lst, batch_size=100, timeout_secs=60.0):
@@ -167,7 +169,7 @@ class CrudApiClient(object):
                 batch, timeout_secs=timeout_secs, reply='count')
             if response.did_succeed():
                 try:
-                    #this jdata should be a list of ints, which are 
+                    #this jdata should be a list of ints, which are
                     #nest_ids of the entries just created in the database
                     jdata = response.get_data_payload_as_jdata()
                     num_created += jdata['num_created']
@@ -178,7 +180,7 @@ class CrudApiClient(object):
                     num_created = None
                     break
             else:
-                num_created =  None
+                num_created = None
         return num_created
 
 
@@ -195,7 +197,8 @@ class CrudApiClient(object):
         params = dict()
         id_str = str(nest_id.get_value())
         relative_url = self.relative_url + '/' + id_str
-        request = NestHttpRequest(relative_url,
+        request = NestHttpRequest(\
+            relative_url,
             op="GET",
             http_params=params,
             num_tries=num_tries,
@@ -232,7 +235,7 @@ class CrudApiClient(object):
         does a GET for all entries that match the filter_params
 
         filter_params is a dictionary of kvps.
-        all EveEntries at the  endpoint are expected to have
+        all EveEntries at the endpoint are expected to have
         a value for each key being matched (but only some
         will match the filter value)
 
@@ -253,7 +256,8 @@ class CrudApiClient(object):
         if not sort_fields is None:
             final_params['sort'] = ','.join(sort_fields)
 
-        request = NestHttpRequest(relative_url,
+        request = NestHttpRequest(\
+            relative_url,
             op="GET",
             http_params=final_params,
             require_json=True)
@@ -266,8 +270,8 @@ class CrudApiClient(object):
         max_results and page (ints) control pagination. They are only included
         in the request params if they are not None
         """
-        response = self.response_of_simple_filter_query(filter_params, 
-            max_results=max_results, page=page, fields=fields, 
+        response = self.response_of_simple_filter_query(\
+            filter_params,  max_results=max_results, page=page, fields=fields,
             sort_fields=sort_fields)
         if response.did_succeed():
             try:
@@ -314,7 +318,8 @@ class CrudApiClient(object):
         nid = nest_id.get_value()
         jdata['_id'] = nid
         relative_url = self.relative_url + '/' + str(nid)
-        request = NestHttpRequest(relative_url,
+        request = NestHttpRequest(\
+            relative_url,
             op="PATCH",
             http_params=params,
             headers=headers,
@@ -363,7 +368,8 @@ class CrudApiClient(object):
         headers = dict()
         id_str = str(nest_id.get_value())
         relative_url = self.relative_url + '/' + id_str
-        request = NestHttpRequest(relative_url,
+        request = NestHttpRequest(\
+            relative_url,
             op="DELETE",
             http_params=params,
             headers=headers,
@@ -395,7 +401,7 @@ class CrudApiClient(object):
 
     def response_of_delete_all_entries(self):
         """
-        Performs a DELETE call to this client's collection endpoint 
+        Performs a DELETE call to this client's collection endpoint
         and returns the full response object.
 
         This is a dangerous method so there is not a corresponding
@@ -408,8 +414,9 @@ class CrudApiClient(object):
         """
         params = dict()
         headers = dict()
-        collections_url = self.relative_url 
-        request = NestHttpRequest(collections_url,
+        collections_url = self.relative_url
+        request = NestHttpRequest(\
+            collections_url,
             op="DELETE",
             http_params=params,
             headers=headers,

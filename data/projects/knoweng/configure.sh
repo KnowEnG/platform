@@ -35,7 +35,7 @@ ln -s $NETWORK_SHARE_BASE_PATH/$NETID/networks data/projects/knoweng/networks
 # this may all be obsolete)
 echo "Changing configuration in python code (restart nest_jobs_i afterward if it's already running)"
 echo "git status will report that nest_py/knoweng/jobs/chronos_job.py has been changed; don't commit those changes"
-sed -i "s/YOUR_NET_ID/$NETID/g" nest_py/knoweng/jobs/chronos_job.py
+sed -i "s/YOUR_NET_ID/$NETID/g" nest_py/knoweng/jobs/chronos_executor.py
 
 # TODO run a simple chronos job, ideally from the nest_jobs container (to test
 # docker networking), that reads something from userfiles and networks and

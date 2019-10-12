@@ -1,0 +1,74 @@
+<div class="primary-visualization-area" *ngIf="displayedHeatmapData.length">
+    <div class="control-panel">
+        <!-- empty, but retained for consistency with PrimaryVisualization -->
+    </div>
+    <div class="main-heatmap-area">
+        <heatmap-pane
+            [heatmapData]="displayedHeatmapData"
+            [title]="fileId | fileName"
+            [rowLabels]="state.orderedSampleNames"
+            [initialShowLabels]="false"
+            [tooltipContent]="heatmapPopContent"
+            [cellMetadataFetcher]="scopedGetCellMetadata">
+        </heatmap-pane>
+        <ng-template #heatmapPopContent>
+            <div class="heatmap-pop-content">
+                <p>The consensus clustering data shown in this heatmap can be used
+                to understand the performance of the bootstrapping step of the
+                algorithm.
+                </p>
+                <p>The columns in this heatmap represent the samples in the data,
+                and just as in all of the other heatmaps on this screen, the columns
+                are ordered according to the column grouping and column sorting that
+                have been set near the top of the visualization.
+                </p>
+                <p>The rows in this heatmap also represent the samples in the data.
+                They are always ordered to match the ordering of the columns, so
+                that this heatmap easier to interpret. If the column order is
+                changed using the grouping and sorting controls near the top of the
+                visualization, the row order will be updated automatically. Note
+                that this heatmap does not have controls on the left for changing
+                the row order, because the row ordering is automatic.
+                </p>
+                <p>The values in this heatmap represent how frequently, in all of
+                the bootstrap iterations, each possible pairing of samples was
+                assigned to the same cluster. If the <i>i</i>th column
+                represents sample A and the <i>j</i>th row represents sample B,
+                then the cell located at the intersection of the <i>i</i>th column
+                and the <i>j</i>th row contains the proportion of bootstraps in which
+                sample A and sample B were assigned to the same cluster. (This will
+                be equal to the value in the <i>j</i>th column and the <i>i</i>th
+                row.)
+                </p>
+                <p>Patterns in the cell values can reveal how stable the clusters
+                are and whether any clusters might be similar to each other, among
+                other things. It's also possible to change the column grouping near
+                the top of the visualization to a row from your phenotype spreadsheet,
+                if you provided one, to see how often samples from phenotype
+                groups clustered together.
+                </p>
+                <p>Because assessing these patterns requires the full set of samples
+                in at least one dimension, this heatmap will always show every row,
+                even if only a subset of columns is currently visible because a
+                group is expanded or birdseye view is disabled.
+                </p>
+            </div>
+        </ng-template>
+    </div>
+    <div class="color-scale-area" *ngIf="colorScale">
+        <div class="heatmap-colors">
+            <color-gradient-picker
+                [currentGradientScale]="colorScale.gradientScale"
+                (changeTo)="updateColors($event)">
+            </color-gradient-picker>
+            <div>
+                <span class="color-gradient-label pull-left">{{ colorScale.min | numFormatter }}</span>
+                <span class="color-gradient-label pull-right">{{ colorScale.max | numFormatter }}</span>
+            </div>
+        </div>
+        <div class="missing-value">
+            <div class="missing-value-block"></div>
+            <div class="missing-value-label">MV</div>
+        </div>
+    </div>
+</div>

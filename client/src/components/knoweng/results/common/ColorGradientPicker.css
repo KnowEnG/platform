@@ -1,0 +1,36 @@
+.gradient-table {
+	width: 125px;
+	margin-top: 10px;
+	margin-bottom: 16px;
+}
+
+.gradient-row {
+	height: 25px;
+}
+
+.gradient-row:hover {
+    background-color: #D3E3E6;
+}
+
+.gradient-item {
+	height: 12px;
+	width: 81px;
+	margin-left: 22px;
+	margin-right: 22px;
+	cursor: pointer;
+}
+
+.color-gradient {
+    width: 86px;
+    height: 22px;
+    border: none;
+    border-radius: 0px;
+}
+
+.gradients-group-label {
+	height: 12px;
+	color: #1D609E;
+	font-size: 10px;
+	line-height: 12px;
+	text-align: center;
+}

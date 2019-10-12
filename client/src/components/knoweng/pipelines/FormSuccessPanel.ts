@@ -74,6 +74,6 @@ export class FormSuccessPanel implements OnChanges, OnDestroy {
     }
     onClickResults(): void {
         // TODO replace with routerLink in template after ng2 update
-        this._router.navigate( ['/results'] );
+        this._router.navigate( ['/data'] );
     }
 }

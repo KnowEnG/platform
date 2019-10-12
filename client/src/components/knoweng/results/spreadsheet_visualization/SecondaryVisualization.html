@@ -1,0 +1,65 @@
+<div class="secondary-visualization-area">
+    <!-- "Show Rows" Button -->
+    <div class="left-pane">
+        <!-- multiSelect="true" allows user to select multiple values -->
+        <row-selector class="mini-heatmap-row-selector" [job]="job" [state]="state" [types]="'categoric,numeric'"
+                multiSelect="true" (selectionChanged)="selectedRowsChanged($event)">
+            <button activator type="button" class="btn show-rows-btn">
+                <i class="fa fa-fw fa-gear"></i>
+                <span>Show Rows</span>
+            </button>
+            <div class="panel-heading">
+                Single Row Heatmap Display
+                <div class="panel-subheading">Select a spreadsheet then indicate individual rows to add to the visualization.</div>
+            </div>
+        </row-selector>
+    </div>
+
+    <div class="right-pane">
+        <!-- Then one row each for selected row mini heatmap -->
+        <div class="mini-heatmap-container">
+            <div *ngFor="let row of selectedRows; let i=index">
+                <!-- the extensive ngIf-ing below ensures good state but could probably be avoided with some attention upstream -->
+                <div *ngIf="row.getRawRow() && row.getColorScale() && row.getColorRGBValues().length > 0">
+                    <!-- First row: Score label -->
+                    <div class="row" *ngIf="i === 0">
+                        <button type="button"
+                                class="btnd label-score pull-right" *ngIf="selectedRows.length > 0"
+                                [popover]="scoreHelpInfoTemplate"
+                                popoverTitle="About Single-row Heatmap Scores"
+                                placement="bottom"
+                                containerClass="infoClass"
+                                triggers="mouseenter:mouseleave">SCORE
+                        </button>
+                        <ng-template #scoreHelpInfoTemplate>
+                            <div class="help-info-popover">
+                                <div>
+                                    The overall score beside each single-row heatmap reflects the row’s correlation to the “Group By” category that has been selected at the top of the visualization.
+                                    This is also referred to as the “Correlation to Group” score.
+                                </div>
+                                <br>
+                                <div>
+                                    If no “Group By” category is selected, no score is calculated.
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+
+                    <div class="minimap-row-name" trunctip maxLength="30" [tooltipText]="row.getName()"></div>
+
+                    <div class="minimap-area">
+                        <single-row-heatmap
+                            [width]="miniHeatmapWidth" [height]="miniHeatmapHeight" [row]="row" [displayedHeatmapData]="singleHeatmapDictionary[i]" [state]="state">
+                        </single-row-heatmap>
+                    </div>
+                    <div class="minimap-colors">
+                        <mini-distribution-graph [rowDisplayData]="row"></mini-distribution-graph>
+                    </div>
+                    <div class="minimap-row-score">
+                        {{ (row.getScore() || row.getScore() == 0) ? (row.getScore() | numFormatter) : '' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,7 @@ import {Router, ActivatedRoute, Params} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import {ModalDirective} from 'ngx-bootstrap';
 
+import {GoogleAnalyticsService} from '../../../services/common/GoogleAnalyticsService';
 import {Form, FormData} from '../../../models/knoweng/Form';
 import {Job} from '../../../models/knoweng/Job';
 import {Pipeline} from '../../../models/knoweng/Pipeline';
@@ -37,6 +38,7 @@ export class FormContainer implements OnInit, OnDestroy, OnChanges {
     routeSub: Subscription;
 
     constructor(
+        private _googleAnalytics: GoogleAnalyticsService,
         private _changeDetector: ChangeDetectorRef,
         private _jobService: JobService,
         private _pipelineService: PipelineService,
@@ -64,7 +66,7 @@ export class FormContainer implements OnInit, OnDestroy, OnChanges {
         this._changeDetector.detectChanges();
     }
     groupIndexIsEnabled(groupIndex: number): boolean {
-        let returnVal: boolean = true;
+        let returnVal: boolean = !this.submitted;
         let formData: FormData = this.form.getData();
         for (let i: number = 0; i < groupIndex; i++) {
             returnVal = returnVal && this.form.formGroups[i].isValid(formData);
@@ -113,6 +115,8 @@ export class FormContainer implements OnInit, OnDestroy, OnChanges {
                 this.modal.show();
             }
         );
+        
+        this._googleAnalytics.emitEvent('JobSubmitted', this.pipeline.slug);
     }
     onClickSaveTemplate(): void {
         // TODO handle

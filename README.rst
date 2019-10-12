@@ -1,9 +1,9 @@
 ===============================
-Platform
+Nest
 ===============================
 
-This repository contains the codebase implementing the KnowEnG platform's
-web services and client.
+This repository contains the codebase implementing both the Mayo Microbiome 
+Database project and the KnowEnG frontend. 
 
 
 To Install Docker

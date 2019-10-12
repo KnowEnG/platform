@@ -13,6 +13,7 @@ import {Trunctip} from './Trunctip';
 import {ServerStatusService} from '../../services/common/ServerStatusService';
 import {SlimScrollSettings} from '../../services/common/SlimScrollSettings';
 
+import {GoogleAnalyticsService} from '../../services/common/GoogleAnalyticsService';
 import {LogService} from '../../services/common/LogService';
 import {NestErrorHandler} from '../../services/common/NestErrorHandler';
 import {PerfMonService} from '../../services/common/PerfMonService';
@@ -20,7 +21,7 @@ import {PerfMonService} from '../../services/common/PerfMonService';
 @NgModule({
     imports: [CommonModule, FormsModule, TooltipModule.forRoot()],
     declarations: [Login, Logout, Tab, Tabset, ThresholdPicker, Truncator, Trunctip],
-    providers: [ServerStatusService, LogService, NestErrorHandler, PerfMonService, SlimScrollSettings, Truncator, Location],
+    providers: [GoogleAnalyticsService, ServerStatusService, LogService, NestErrorHandler, PerfMonService, SlimScrollSettings, Truncator, Location],
     exports: [Tab, Tabset, ThresholdPicker, Truncator, Trunctip]
 })
 

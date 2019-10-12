@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, OnChanges, SimpleChange, Input, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, OnChanges, SimpleChange, Input, Output, EventEmitter, ElementRef, ViewChild, AfterViewChecked} from '@angular/core';
 import { ISlimScrollOptions } from 'ng2-slimscroll';
 
 import {Observable} from 'rxjs/Observable';
@@ -21,7 +21,7 @@ import {LogService} from '../../../services/common/LogService';
     styleUrls: ['./ResultPanel.css']
 })
 
-export class ResultPanel implements OnInit,OnChanges {
+export class ResultPanel implements OnInit, OnChanges, AfterViewChecked {
     class = 'relative';
 
     public slimScrollOpts: ISlimScrollOptions;
@@ -31,21 +31,21 @@ export class ResultPanel implements OnInit,OnChanges {
     
     @Output()
     jobOpened: EventEmitter<Job> = new EventEmitter<Job>();
+    
+    @ViewChild('newjobnameinput') newjobnameinput: ElementRef;
 
     modal: string = null;
     modalBottom: number = 0;
     modalRight: number = 0;
-
     formSub: Subscription;
-    
     featuresFileName: string = "";
     responseFileName: string = "";
     geneSpreadsheetName: string = "";
     projectName: string = "";
-    
     summaries: FieldSummary[] = [];
-    
     downloadStatus: string = '';
+    isEditable: boolean = false;
+    newJobName: string = null;
 
     constructor(
         private _jobService: JobService,
@@ -126,8 +126,30 @@ export class ResultPanel implements OnInit,OnChanges {
                 if (project) {
                     this.projectName = project.name;
                 }
+                this.newJobName = this.job.name;
             }
         }
+    }
+    /**
+     * After the job renaming input text field is created, highlight the whole text.
+     */
+    ngAfterViewChecked() {
+        if(this.newjobnameinput) {
+            let input = this.newjobnameinput.nativeElement;
+            input.focus();
+            let inputText = input.value;
+            if (inputText == this.job.name) {
+                if(input.setSelectionRange) {
+                    input.setSelectionRange(0, inputText.length);
+                } else if (input.createTextRange) {
+                    var range = input.createTextRange();
+                    range.collapse(true);
+                    range.moveEnd('character', inputText.length);
+                    range.moveStart('character', 0);
+                    range.select();
+                }
+            }
+        } 
     }
     
     deleteJob(): void {
@@ -163,6 +185,20 @@ export class ResultPanel implements OnInit,OnChanges {
                 this.job = job;
             });
         } 
+    }
+    
+    updateJobName(): void {
+        if(this.newJobName && this.newJobName.length > 0) {
+            if (this.newJobName != this.job.name) {
+                this._jobService.updateJobName(this.job, this.newJobName)
+                    .subscribe(job => {
+                        this.job = job;
+                })
+            }  
+        } else {
+            this.newJobName = this.job.name;
+        }
+        this.isEditable = false;
     }
     
     openModal(event: Event, modal: string): void {

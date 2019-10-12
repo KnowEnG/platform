@@ -23,6 +23,10 @@ class FlaskSqlaResources(object):
         self.config = db_config
         return
 
+    def set_config(self, config):
+        self.config = config
+        return
+
     def get_session(self):
         """
         get an sqla Session
@@ -50,7 +54,7 @@ class JobsSqlaResources(object):
     jobs.
     """
 
-    def __init__(self, config): 
+    def __init__(self, config):
         self.config = config
         self.session = None
         self.declarative_base = None
@@ -92,10 +96,9 @@ class JobsSqlaResources(object):
 def get_engine_url(config):
     #http://docs.sqlalchemy.org/en/latest/core/engines.html#sqlalchemy.create_engine
     engine_url = 'postgres://'
-    engine_url += config['user'] 
+    engine_url += config['user']
     if not config['password'] is None:
         engine_url += ':' + config['password']
     engine_url += '@' + config['host']
     engine_url += '/' + config['db_name']
     return engine_url
-

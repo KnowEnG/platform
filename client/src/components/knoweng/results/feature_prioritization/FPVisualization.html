@@ -1,0 +1,31 @@
+<div class="fp-visualization-container">
+    <!-- Show a spinner until "result" is populated -->
+    <div *ngIf="!result" class="loading white-text">
+        <i class="fa fa-fw fa-spinner fa-pulse"></i>
+        Loading...
+    </div>
+    
+    <fp-control-panel *ngIf="result"
+        [job]="job"
+        [gradientMaxColor]="gradientMaxColor"
+        [gradientMinColor]="gradientMinColor"
+        [gradientMaxValue]="gradientMaxValue"
+        [gradientMinValue]="gradientMinValue"
+        [result]="result"
+        [currentNumTopFeatures]="currentNumTopFeatures"
+        [selectedResponses]="selectedResponses"
+        (updatedNumTopFeatures)="updateNumCurrentTopFeatures($event)"
+        (updatedSelectedResponses)="updateSelectedResponses($event)">
+    </fp-control-panel>
+    <fp-data-area *ngIf="result"
+        [job]="job"
+        [gradientMaxColor]="gradientMaxColor"
+        [gradientMinColor]="gradientMinColor"
+        [gradientMaxValue]="gradientMaxValue"
+        [gradientMinValue]="gradientMinValue"
+        [currentNumTopFeatures]="currentNumTopFeatures"
+        [selectedResponses]="selectedResponses"
+        [scores]="result?.scores"
+        [featureIdToNameMap]="result?.featureIdToNameMap">
+    </fp-data-area>
+</div>

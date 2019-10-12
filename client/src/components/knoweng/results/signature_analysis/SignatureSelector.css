@@ -1,0 +1,38 @@
+.header-row, .body-row {
+    white-space: nowrap;
+}
+
+.header-row {
+    margin-top: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #4F6579;
+}
+
+.body-row {
+     margin-top: 34px;
+}
+
+.checkbox-area, .signature-area {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.checkbox-area {
+    width: 43px;
+    color: #ffffff;
+}
+
+.checkbox-area .fa {
+    cursor: pointer;
+}
+
+.header-row .signature-label {
+    font-weight: 400;
+}
+
+.signature-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    color: #ffffff;
+}

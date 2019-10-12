@@ -51,7 +51,7 @@ export class EveUtilities {
                 var meta: any = data._meta;
                 var items: any[] = data._items;
                 var itemStream: Observable<any> = Observable.from(items);
-                if (meta.page * meta.max_results < meta.total) {
+                if (meta.page < meta.last_page) {
                     itemStream = itemStream.concat(EveUtilities.getPagesRecursively(url, page+1, authHttp));
                 }
                 return itemStream;

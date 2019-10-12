@@ -4,17 +4,24 @@ from nest_py.ops.ops_logger import log
 import subprocess
 import os
 
-VALID_NEST_SITE_NAMES = ['localhost', 'demo.hello_world', 'demo.knoweng', 'demo.mmbdb', 'staging.hello_world', 'staging.knoweng', 'staging.mmbdb', 'klumpp.mmbdb']
+VALID_NEST_SITE_NAMES = ['localhost', 'demo.hello_world', 'demo.knoweng', 'demo.mmbdb', 'staging.hello_world', 'staging.knoweng', 'staging.mmbdb', 'vpc.staging.hello_world', 'vpc.staging.mmbdb', 'vpc.demo.hello_world', 'vpc.demo.mmbdb']
+
 DEFAULT_NEST_SITE_NAME = 'localhost'
 
 NEST_SITE_IP = {
-    'staging.hello_world': 'hello-world-staging.visari.org',#141.142.209.151
-    'staging.knoweng': 'knoweng-staging.visari.org',#141.142.209.152
-    'staging.mmbdb': 'omix-staging.visari.org',#141.142.210.103
-    'demo.hello_world': 'hello-world-demo.visari.org',#141.142.209.101
-    'demo.knoweng': 'knoweng-demo.visari.org',#141.142.209.107
-    'demo.mmbdb': 'omix-demo.visari.org',#141.142.210.94
-    'klumpp.mmbdb': 'omix-klumpp.visari.org',#141.142.210.94
+    'staging.hello_world': 'hello-world-staging.visari.org',
+    'staging.knoweng': 'knoweng-staging.visari.org',
+    'staging.mmbdb': 'omix-staging.visari.org',
+    'demo.hello_world': 'hello-world-demo.visari.org',
+    'demo.knoweng': 'knoweng-demo.visari.org',
+    'demo.mmbdb': 'omix-demo.visari.org',
+
+    #these are addresses within the AWS VPC. Using these
+    #avoids the firewall when are within the VPC
+    'vpc.staging.hello_world': 'ip-172-31-62-139.ec2.internal',
+    'vpc.staging.mmbdb': 'ip-172-31-54-129.ec2.internal',
+    'vpc.demo.hello_world': 'ip-172-31-59-228.ec2.internal',
+    'vpc.demo.mmbdb': 'ip-172-31-56-224.ec2.internal',
 }
 
 class NestSite():
@@ -63,7 +70,7 @@ class NestSite():
     def get_server_ip_address(self):
         return self.ip_address
 
-    def build_http_client(self, port=443):
+    def build_http_client(self, port=80):
         """
         build a NestHttpClient pointed at the nest_site server.
         """

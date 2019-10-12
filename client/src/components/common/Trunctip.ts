@@ -10,6 +10,7 @@ import { Truncator } from '../../pipes/common/Truncator';
  *
  * Attributes:
  *     trunctip => enable Truncate + Tooltip behavior
+ *     tooltipText => the full tooltip text (will be truncated in text label, full text in tooltip)
  *     maxLength => override default maxLength
  *
  */

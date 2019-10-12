@@ -1,7 +1,6 @@
 -r common.txt
 
-# Caching
-Flask-Cache==0.13.1
+Flask~=1.0
 
 # Debug toolbar
 Flask-DebugToolbar==0.9.2
@@ -9,10 +8,8 @@ Flask-DebugToolbar==0.9.2
 # Management script
 Flask-Script==2.0.5
 
-# knoweng authentication; note PyMySQL is pure python, so it works under jython, too
-PyMySQL==0.7.2
-
-#database binding
+# database binding
 Flask-SQLAlchemy==2.1
 
-#password hashing
+# status endpoint
+GitPython==2.1.11

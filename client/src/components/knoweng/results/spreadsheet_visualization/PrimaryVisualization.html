@@ -1,0 +1,114 @@
+<div class="primary-visualization-area" *ngIf="displayedHeatmapData.length">
+    <div class="control-panel">
+        <form name="{{ spreadsheet.fileId | fileName }}">
+            <!--div class="control-panel-label">FILTER ROWS BY</div-->
+            <button type="button"
+                    class="btnd control-panel-label"
+                    [popover]="filterRowsTemplate"
+                    popoverTitle="Row Filter Definitions"
+                    placement="bottom"
+                    containerClass="infoClass"
+                    triggers="mouseenter:mouseleave">FILTER ROWS BY
+            </button>
+            <ng-template #filterRowsTemplate>
+                <div class="help-info-popover">
+                    <div class="popover-content-blue">
+                        Row filtering controls the number of rows displayed for a given spreadsheet. By clicking on the number button in "Show Top # Rows" below, you can choose number of rows to display. Rows are filtered by either of two different row scores:
+                    </div>
+                    <div *ngFor="let option of filterOptions">
+                        <h5>{{ option.label }}</h5>
+                        <div>{{ option.description }}</div>
+                    </div>
+                </div>
+            </ng-template>
+            <select name="filterBy" class="filter-rows-dropdown no-whitespace" [(ngModel)]="filterBy" (ngModelChange)="filterByChanged()">
+                <option *ngFor="let option of filterOptions" [ngValue]="option.value" [disabled]="option.isDisabled()">{{ option.label }}</option>
+            </select>
+
+            <div class="top-rows-label">
+                <span>Show Top</span>
+                <button type="button"
+                    class="btnd top-rows-btn"
+                    [popover]="popTemplate"
+                    placement="bottom"
+                    containerClass="customClass"
+                    outsideClick="true"><span class="split-btn">{{ topRows }}</span><span class="caret"></span>
+                </button>
+                <span>
+                    Rows
+                </span>
+            </div>
+            <ng-template #popTemplate>
+                <top-rows-picker
+                    [spreadsheet]="spreadsheet"
+                    [scales]="topRowsPickerScales"
+                    [topRowsCount]="topRows"
+                    [filterBy]="filterBy"
+                    (closeMe)="topRowsChanged($event)">
+                </top-rows-picker>
+            </ng-template>
+            <!-- Divider between filter / sort options -->
+            <hr/>
+            <button type="button"
+                    class="btnd control-panel-label"
+                    [popover]="sortRowsTemplate"
+                    popoverTitle="Row Sort Definitions"
+                    placement="bottom"
+                    containerClass="infoClass"
+                    triggers="mouseenter:mouseleave">SORT ROWS BY
+            </button>
+            <ng-template #sortRowsTemplate>
+                <div class="help-info-popover">
+                    <div class="popover-content-blue">
+                        Row sorting controls the order of rows displayed for a given spreadsheet and is performed on aboved filtered rows. Rows are sorted by either of two different row scores:
+                    </div>
+                    <div *ngFor="let option of sortOptions">
+                        <h5>{{ option.label }}</h5>
+                        <div>{{ option.description }}</div>
+                    </div>
+                </div>
+            </ng-template>
+            <select name="sortBy" class="sort-rows-dropdown no-whitespace" [(ngModel)]="sortBy" (ngModelChange)="sortByChanged()">
+                <option *ngFor="let option of sortOptions" [ngValue]="option.value" [disabled]="option.isDisabled()">{{ option.label }}</option>
+            </select>
+        </form>
+    </div>
+    <div class="main-heatmap-area">
+        <heatmap-pane
+            [heatmapData]="displayedHeatmapData"
+            [title]="spreadsheet.fileId | fileName"
+            [rowLabels]="rowLabels"
+            [initialShowLabels]="true"
+            [tooltipContent]="heatmapPopContent"
+            [cellMetadataFetcher]="scopedGetCellMetadata">
+        </heatmap-pane>
+        <ng-template #heatmapPopContent>
+            <table class="table table-bordered table-condensed">
+                <tbody>
+                    <tr><td class="text-right"># Rows</td><td>{{spreadsheet.rowNames.length}}</td></tr>
+                    <tr><td class="text-right"># Columns</td><td>{{spreadsheet.sampleNames.length}}</td></tr>
+                    <tr><td class="text-right">Total % Missing Values</td><td>{{ getTotalPercentMissingValues() }}</td></tr>
+                    <tr><td class="text-right"># Rows with Missing Values</td><td>{{ spreadsheet.rowNanCounts ? getTotalRowsWithMissingValues() : 'NA' }}</td></tr>
+                    <tr><td class="text-right"># Columns with Missing Values</td><td>{{ spreadsheet.columnNanCounts ? getTotalColumnsWithMissingValues() : 'NA' }}</td></tr>
+                    <tr><td class="text-right">Transposed from Original</td><td>{{spreadsheet.isTransposed ? 'Yes' : 'No'}}</td></tr>
+                </tbody>
+            </table>
+        </ng-template>
+    </div>
+    <div class="color-scale-area" *ngIf="colorScale">
+        <div class="heatmap-colors">
+            <color-gradient-picker
+                [currentGradientScale]="colorScale.gradientScale"
+                (changeTo)="updateColors($event)">
+            </color-gradient-picker>
+            <div>
+                <span class="color-gradient-label pull-left">{{ colorScale.min | numFormatter }}</span>
+                <span class="color-gradient-label pull-right">{{ colorScale.max | numFormatter }}</span>
+            </div>
+        </div>
+        <div class="missing-value">
+            <div class="missing-value-block"></div>
+            <div class="missing-value-label">MV</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,128 @@
+
+
+.primary-visualization-area{
+    color: black;
+    line-height: 12px;
+    padding: 12px 0 8px 15px;
+    margin-left:-50px;
+    margin-right:-50px;
+    border-bottom: 1px solid #d8d8d8;
+}
+
+.primary-visualization-area .control-panel,
+.primary-visualization-area .main-heatmap-area,
+.primary-visualization-area .color-scale-area {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.main-heatmap-area {
+    width: 850px;
+    padding-left: 0px; /* this value changes dynamically when showLabels is toggled on each heatmap */
+}
+
+.top-rows-label {
+    margin-top: 5px;
+    background-color: #ffffff;
+    font-size: 10px;
+    line-height: 15px;
+    color: #29465F;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.top-rows-dropdown {
+    margin-top: 5px;
+    background-color: #ffffff;
+    font-size: 12px;
+    line-height: 15px;
+    color: #29465F;
+    border: 1px solid #C6D8E8;
+    border-radius: 4px;
+}
+
+.no-whitespace {
+    margin: 0;
+    padding: 0;
+}
+
+.heatmap-colors, .missing-value {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 25px;
+}
+
+.color-gradient-label, .missing-value-label {
+    font-size: 8px;
+}
+
+.missing-value {
+    margin-left: 9px;
+}
+
+.missing-value-block {
+	height: 22px;
+	width: 10px;
+	border: 1px solid #7493AF;
+	background-color: #FFFFFF;
+}
+
+.top-rows-btn {
+    height: 20px;
+    padding: 0px;
+	color: #29465F;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 15px;
+	text-align: center;
+	border: 1px solid #C6D8E8;
+	border-radius: 4px;
+	background-color: #FFFFFF;
+}
+
+.split-btn {
+    border-right: solid 1px #C6D8E8;
+    padding: 3px 5px 2px 5px;
+}
+
+.caret {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.filter-rows-dropdown, .sort-rows-dropdown {
+    width: 135px;
+}
+
+.control-panel-label {
+    color: #1D609E;
+    font-size: 10px;
+    line-height: 1;
+    padding-left: 6px;
+    padding-bottom: 2px;
+    border: none;
+    background-color: inherit;
+}
+
+.control-panel-label:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.btnd:active,
+.btnd:focus,
+.btnd.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.control-panel {
+    width: 158px; /* remember, fixed-full-width has 50px padding on each side */
+    padding-left: 15px;
+    padding-top: 5px;
+}

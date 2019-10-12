@@ -1,0 +1,61 @@
+<div class="primary-visualization-header">
+    <div dropdown class="show-spreadsheets-dropdown" [autoClose]="false"
+            [isOpen]="showSpreadsheetsPanel"
+            (isOpenChanged)="toggleSpreadsheetsPanel($event)">
+        <button dropdownToggle type="button"
+                class="btn btn-sm show-spreadsheets-button dropdown-toggle"
+                (click)="toggleSpreadsheetsPanel($event)">
+            <span class="pull-left">Show Spreadsheets</span>
+            <i class="pull-right fa fa-fw fa-chevron-down"></i>
+        </button>
+        <ul *dropdownMenu class="dropdown-menu no-whitespace show-spreadsheets-popout" role="menu">
+            <li role="menuitem" class="no-whitespace">
+                <div class="no-whitespace panel mini-panel panel-default">
+                    <div class="mini-panel-heading">
+                        <span class="pull-left mini-panel-heading-label">Main Heatmap Spreadsheets Display</span>
+                        <i class="mini-panel-close-button pull-right fa fa-fw fa-times" (click)="toggleSpreadsheetsPanel($event)"></i>
+                    </div>
+                    <table class="table borderless table-condensed table-hover no-whitespace">
+                        <thead>
+                            <tr class="mini-panel-table-header">
+                                <th width="15%">SHOW</th>
+                                <th>SPREADSHEET</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="panel-table-row" (click)="toggleSpreadsheet(sps)" *ngFor="let sps of selectablePrimarySpreadsheets">
+                                <td><i class="fa fa-fw" [ngClass]="{ 'fa-check-square': sps.selected, 'fa-square-o': !sps.selected }"></i></td>
+                                <td>{{ sps.fileId | fileName }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- SHOW COLUMNS slider goes here -->
+    <div class="show-columns-slider-container">
+        <span class="show-columns">SHOW COLUMNS</span>
+        <button type="button" class="page-left btnd" (click)="pageLeft()" [disabled]="showBirdseyeView || expandedGroup"><i class="fa fa-fw fa-chevron-left"></i></button>
+        <div class="page-block" [style.width.px]="getTotalPageTurnerWidth()" *ngIf="showBirdseyeView || expandedGroup"></div>
+        <div class="page-turner" *ngIf="!showBirdseyeView && !expandedGroup">
+            <div class="page-turner-left" [style.width.px]="getPageTurnerLeftWidth()"></div><!-- 
+            no white space--><div class="page" [style.width.px]="getPageWidthOnTurner()"></div><!--
+            no white space--><div class="page-turner-right" [style.width.px]="getPageTurnerRightWidth()"></div>
+        </div>
+        <button type="button" class="page-right btnd" (click)="pageRight()" [disabled]="showBirdseyeView || expandedGroup"><i class="fa fa-fw fa-chevron-right"></i></button>
+        <div class="page-count">{{expandedGroup ? expandedGroup.groupStartColumnPos + 1 : displayedColumns.startPos + 1}}<span> - </span>{{expandedGroup ? expandedGroup.groupEndColumnPos + 1 : displayedColumns.endPos + 1}} <span class="total-column-count">/{{totalColumnCount}}</span></div>
+    </div>
+    <!-- SHOW BIRDSEYE VIEW checkbox goes here -->
+    <div *ngIf="!expandedGroup" class="show-birdseye-view-container" (click)="toggleBirdsEyeView()">
+        <i class="show-birdseye-view-checkbox fa fa-fw" [ngClass]="{ 'fa-check-square': showBirdseyeView, 'fa-square-o': !showBirdseyeView }"></i>
+        <span class="show-birdseye-view">SHOW BIRDSEYE VIEW</span>
+    </div>
+    <!-- GROUP EXPANSION control goes here-->
+    <div *ngIf="expandedGroup" class="group-expansion-container">
+        <i class="group-is-expanded-circle fa fa-fw fa-circle"></i>
+        <span class="group-is-expanded">G{{ expandedGroup.groupPosition + 1}} IS EXPANDED | </span>
+        <span class="undo-expansion" (click)="undoExpansion()">UNDO EXPANSION</span>
+    </div>
+</div>

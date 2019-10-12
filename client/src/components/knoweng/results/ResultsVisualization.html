@@ -6,8 +6,9 @@
 
 <div *ngIf="job && job.pipeline">
     <!-- TODO ngSwitch or better -->
-    <gp-visualization *ngIf="job.pipeline == 'gene_prioritization'" [job]="job"></gp-visualization>
+    <fp-visualization *ngIf="job.pipeline == 'feature_prioritization'" [job]="job"></fp-visualization>
     <gsc-visualization *ngIf="job.pipeline == 'gene_set_characterization'" [job]="job"></gsc-visualization>
     <sc-visualization *ngIf="job.pipeline == 'sample_clustering'" [job]="job"></sc-visualization>
+    <sa-visualization *ngIf="job.pipeline == 'signature_analysis'" [job]="job"></sa-visualization>
     <ss-visualization *ngIf="job.pipeline == 'spreadsheet_visualization'" [job]="job"></ss-visualization>
 </div>

@@ -12,16 +12,18 @@
                     <tr>
                         <td class="summary-label">Pipeline</td>
                         <td class="summary-value" [ngSwitch]="job.pipeline">
-                            <span *ngSwitchCase="'gene_prioritization'">Gene Prioritization</span>
+                            <span *ngSwitchCase="'feature_prioritization'">Feature Prioritization</span>
                             <span *ngSwitchCase="'gene_set_characterization'">Gene Set Characterization</span>
                             <span *ngSwitchCase="'sample_clustering'">Sample Clustering</span>
+                            <span *ngSwitchCase="'signature_analysis'">Signature Analysis</span>
+                            <span *ngSwitchCase="'spreadsheet_visualization'">Spreadsheet Visualization</span>
                             <span *ngSwitchDefault>Unknown</span>
                         </td>
                     </tr>
                     <tr><td class="line-break">&nbsp;</td><td class="line-break">&nbsp;</td></tr>
                     
                     <!-- List our formatted parameters -->
-                    <template ngFor let-summary [ngForOf]="summaries">
+                    <ng-template ngFor let-summary [ngForOf]="summaries">
                         <tr *ngIf="summary && summary.value != null && summary.value !== ''">
                             <td class="summary-label">{{ summary.label }}</td>
                             <td class="summary-value" trunctip maxLength="75" [tooltipText]="summary.value"></td>
@@ -29,7 +31,7 @@
                         <tr *ngIf="!summary">
                             <td class="line-break">&nbsp;</td><td class="line-break">&nbsp;</td>
                         </tr>
-                    </template>
+                    </ng-template>
                     <tr *ngIf="job">
                         <td class="summary-label">Date/Time</td>
                         <td class="summary-value">{{ job.getCreatedDate() | date:'MM/dd/yyyy hh:mm:ss a' | lowercase}}</td>

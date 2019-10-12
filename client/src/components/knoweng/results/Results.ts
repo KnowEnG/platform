@@ -1,6 +1,10 @@
 import {Component, ChangeDetectorRef, OnInit, OnDestroy} from '@angular/core';
+import {Router, NavigationEnd} from "@angular/router";
+
+import {GoogleAnalyticsService} from '../../../services/common/GoogleAnalyticsService';
 
 import {Job} from '../../../models/knoweng/Job';
+import {NestFile} from '../../../models/knoweng/NestFile';
 
 @Component({
     moduleId: module.id,
@@ -21,7 +25,20 @@ export class Results implements OnInit, OnDestroy {
      * visualized.
      */
     visualizationId: number = null;
-    constructor(private _changeDetector: ChangeDetectorRef) {
+    /**
+     * In browsing mode, this is the file the user has selected from the list of
+     * files. Its details will be loaded to a panel on the right.
+     */
+    selectedFile: NestFile = null;
+    
+    constructor(private _changeDetector: ChangeDetectorRef,
+                private _router: Router, 
+                private _googleAnalytics: GoogleAnalyticsService) {
+        this._router.events.subscribe(event => {
+          if (event instanceof NavigationEnd) {
+            this._googleAnalytics.emitPageView(event.urlAfterRedirects);
+          }
+        });
     }
     ngOnInit() {
         // this.visualizationId = this._routeParams.get('id'); TODO wait for new router
@@ -34,11 +51,17 @@ export class Results implements OnInit, OnDestroy {
     ngOnDestroy() {
     }
     onJobSelected(job: Job): void {
+        this.selectedFile = null;
         this.selectedJob = job;
         this._changeDetector.detectChanges();
     }
     onJobOpened(job: Job): void {
         this.visualizationId = job._id;
         this._changeDetector.detectChanges();
+    }
+    
+    onFileSelected(file: NestFile): void {
+        this.selectedJob = null;
+        this.selectedFile = file;
     }
 }

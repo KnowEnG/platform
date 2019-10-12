@@ -19,13 +19,13 @@ def upload_comparison(client_registry, comparison_config,
     tle = tablelike_entry.TablelikeEntry(comps_schema)
     tle.set_value('display_name', comparison_config['display_name'])
 
-    baseline_id = baseline_cohort_tle.get_nest_id().get_value()
+    baseline_id = baseline_cohort_tle.get_nest_id()
     tle.set_value('baseline_cohort_id', baseline_id)
 
-    variant_id = variant_cohort_tle.get_nest_id().get_value()
+    variant_id = variant_cohort_tle.get_nest_id()
     tle.set_value('variant_cohort_id', variant_id)
 
-    patient_id = patient_cohort_tle.get_nest_id().get_value()
+    patient_id = patient_cohort_tle.get_nest_id()
     tle.set_value('patient_cohort_id', patient_id)
 
     _set_top_fst_scores(tle, fst_results)
@@ -38,7 +38,7 @@ def _set_top_fst_scores(comp_tle, fst_results):
     ranked_otu_ids = list()
     otu_scores = list()
     for blob in fst_results:
-        otu_id = blob['otu_tle'].get_nest_id().get_value()
+        otu_id = blob['otu_tle'].get_nest_id()
         ranked_otu_ids.append(otu_id)
         score = blob['display_score']
         otu_scores.append(score)

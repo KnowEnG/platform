@@ -10,7 +10,7 @@
         <button class="btn upload-new-data" [class.hidden]="!modeIsSelect" (click)="setModeIsSelect(false)">Upload New Data</button>
         <div class="upload-new-data-x" [class.hidden]="modeIsSelect">Upload New Data   <i class="fa fa-times close-upload" (click)="setModeIsSelect(true)"></i></div>
         <div class="header-area">
-            <table *ngIf="modeIsSelect">
+            <table *ngIf="modeIsSelect" class="header-table">
                 <thead>
                     <tr>
                         <th class="project">PROJECT</th>
@@ -26,8 +26,9 @@
                             </select>
                         </td>
                         <td class="tags">
-                            <div class="tag">Recent</div>
-                            <div class="tag">Favorites</div>
+                            <div class="tag" [class.active]="!selectedTag || selectedTag === 'all'" (click)="selectTag()" placement="bottom" tooltip="Show all data">All</div>
+                            <div class="tag" [class.active]="selectedTag === 'recent'" (click)="selectTag('recent')" placement="bottom" tooltip="Show only data from the past 7 days">Recent</div>
+                            <div class="tag" [class.active]="selectedTag === 'favorites'" (click)="selectTag('favorites')" placement="bottom" tooltip="Show only data marked as favorite">Favorites</div>
                         </td>
                         <td class="search"><i class="fa fa-search hidden"></i></td>
                         <!-- hiding for now, to match comp -->
@@ -56,55 +57,143 @@
             </div>
         </div>
     </div>
-    <!--TODO: sort files by date -->
-    <div class="sort-by-date"></div>
-    <div class="file-list" slimScroll [options]="slimScrollOpts">
-        <div *ngFor="let item of uploaderQueue" class="file">
-                <div class="file-icon">
-                    <img src="img/knoweng/file-unknown.svg">
-                </div><!-- no whitespace
-            ---><div class="file-info">
-                    <div class="file-name">{{ item?.file?.name }}</div>
-                    <div class="progress" style="margin-bottom: 0;">
-                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
-                    </div><!--
-                 --><div class="progress-percent">{{ item.progress }} %</div>
-                </div>
-        </div>
-        <div *ngFor="let file of allFileList; let i=index" class="file">
-            <div class="file-icon">
-                <img src="{{file.getFileIcon(file.filetype)}}">
-            </div><!-- no whitespace
-                TODO: get user name from file, not from session in next line
-                TODO: add file size after user name: &nbsp;&nbsp;&nbsp;455k
-         --><div class="file-info">
-                <div class="file-name">{{ file.filename || '' }}</div>
-                <div class="file-attributes">Uploaded {{ getDateForFile(file) | date:'longDate' }} by {{ file.uploadername }}</div><!-- no whitespace
-             --><div class="file-size">{{ file.getPrettySize() }}</div>
-            </div><!-- no whitespace
-         --><div class="demo-label-container" *ngIf="demoFiles[pipeline.slug] && isDemoFile(file.filename)">
-                <span class="label label-primary demo-file-label">Demo File</span>
-            </div><!-- no whitespace
-         --><div class="file-saved" *ngIf="!demoFiles[pipeline.slug] || !isDemoFile(file.filename)">Saved to Project:
-                <div class="btn-group" dropdown>
-                    <a class="btn project-button dropdown-toggle" dropdownToggle>{{ _projectService.getProject(file.project_id) ? _projectService.getProject(file.project_id).name : 'Default Project' }} <span class="fa fa-angle-down" title="Toggle dropdown menu"></span></a>
-                    <ul *dropdownMenu class="dropdown-menu" role="menu">
-                        <div *ngFor="let project of projectList; let i=index">
-                            <li role="menuitem" class="project-name-list"><span class="dropdown-item">{{ project.name }}</span></li>
+    <div class="file-table-container" slimScroll [options]="slimScrollOpts">
+        <table class="file-table">
+            <colgroup>
+                <col style="width: 70px">
+                <col style="width: 299px">
+                <col style="width: 152px">
+                <col style="width: 104px">
+                <col style="width: 162px">
+                <col style="width: 72px">
+            </colgroup>
+            <thead>
+                <tr class="header">
+                    <th class="select">
+                        SELECT
+                    </th>
+                    <th class="name sortable noselect" (click)="sort('name')">
+                        NAME
+                        <i *ngIf="sortColumn == 'name'" [ngClass]="{'fa-caret-down': !sortReverse, 'fa-caret-up': sortReverse}" class="fa sort-caret"></i>
+                    </th>
+                    <th class="datetime sortable noselect" (click)="sort('datetime')">
+                        DATE/TIME
+                        <i *ngIf="sortColumn == 'datetime'" [ngClass]="{'fa-caret-down': !sortReverse, 'fa-caret-up': sortReverse}" class="fa sort-caret"></i>
+                    </th>
+                    <th class="size sortable noselect" (click)="sort('size')">
+                        SIZE
+                        <i *ngIf="sortColumn == 'size'" [ngClass]="{'fa-caret-down': !sortReverse, 'fa-caret-up': sortReverse}" class="fa sort-caret"></i>
+                    </th>
+                    <th class="projectname">
+                        PROJECT
+                    </th>
+                    <th class="status sortable noselect" (click)="sort('status')">
+                        STATUS
+                        <i *ngIf="sortColumn == 'status'" [ngClass]="{'fa-caret-down': !sortReverse, 'fa-caret-up': sortReverse}" class="fa sort-caret"></i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="file-list">
+                <tr *ngFor="let item of uploaderQueue" class="new-file">
+                    <td class="select"></td>
+                    <td class="name file-name" trunctip maxLength="30" [tooltipText]="item?.file?.name"></td>
+                    <td rowspan="1" colspan="3">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
                         </div>
-                        <!-- TODO: Uncomment when user projects have been fleshed out
-                        <li class="divider"></li>
-                        <li><a class="create-new-project"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Create a New Project</a></li>
-                        -->
-                    </ul>
-                </div>
-            </div><!-- no whitespace
-                  TODO: select button in new style
-         --><div class="file-check" [class.selected]="file._id === selectedId">
-                <div class="file-check-label noselect">Selected</div>
-                <div class="file-check-box" (click)="toggleItem(file)"><i class="fa fa-fw" [ngClass]="{'fa-square-o': file._id !== selectedId, 'fa-check-square': file._id === selectedId}"></i></div>
-            </div>
-        </div>
+                    </td>
+                    <td><div class="progress-percent">{{ item.progress }} %</div></td>
+                </tr>
+                <tr *ngFor="let file of regularFiles; let i=index" class="existing-file">
+                    <td class="select">
+                        <div *ngIf="!isSelectedFile(file)" class="to-be-selected" (click)="toggleItem(file)">Select</div>
+                        <div *ngIf="isSelectedFile(file)" class="selected-box" (click)="toggleItem(file)"><i class="fa fa-check"></i></div>
+                    </td>
+                    <td class="name file-name" trunctip maxLength="30" [tooltipText]="file.filename">
+                    </td> 
+                    <td class="datetime">
+                        {{ file._created | date:'short' }}
+                    </td>
+                    <td class="size">
+                        {{ file.getPrettySize() }}
+                    </td>
+                    <td class="demo-label-container" *ngIf="demoFiles[pipeline.slug] && isDemoFile(file.filename)">
+                            <span class="label demo-file-label">Demo File</span>
+                    </td>
+                    <td class="projectname" *ngIf="!demoFiles[pipeline.slug] || !isDemoFile(file.filename)">
+                        <div class="btn-group" dropdown>
+                            <a class="btn project-button dropdown-toggle" dropdownToggle>{{ _projectService.getProject(file.project_id) ? _projectService.getProject(file.project_id).name : 'Default Project' }} <span class="fa fa-angle-down" title="Toggle dropdown menu"></span></a>
+                            <ul *dropdownMenu class="dropdown-menu" role="menu">
+                                <div *ngFor="let project of projectList; let i=index">
+                                    <li role="menuitem" class="project-name-list"><span class="dropdown-item">{{ project.name }}</span></li>
+                                </div>
+                                <!-- TODO: Uncomment when user projects have been fleshed out
+                                <li class="divider"></li>
+                                <li><a class="create-new-project"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Create a New Project</a></li>
+                                -->
+                            </ul>
+                        </div>
+                    </td>
+                    <td class="status">
+                        
+                    </td>
+                </tr>
+                <ng-template ngFor let-job [ngForOf]= "jobs" let-i="index">
+                    <tr class="job-item"> <!--*ngFor="let job of jobs; let i=index; trackBy: jobTracker" class="existing-file"-->
+                        <td class="select"></td>
+                        <td class="name">
+                            <i class="fa" [ngClass]="{'fa-caret-down': jobFolderStates.get(job._id), 'fa-caret-right': !jobFolderStates.get(job._id)}" [ngStyle]="{'color':job.getColor()}" (click)="toggleJobFolderState(job._id)"></i><!-- no whitespace
+                            --><div class="job-name" trunctip maxLength="30" [tooltipText]="job.name"></div>
+                        </td>
+                        <td class="datetime">{{ job._created | date:'short' }}</td>
+                        <td class="size"></td>
+                        <td class="projectname">
+                            <div class="btn-group" dropdown>
+                                <a class="btn project-button dropdown-toggle" type="button" dropdownToggle>{{ _projectService.getProject(job.project_id) ? _projectService.getProject(job.project_id).name : 'Default Project' }} <span class="fa fa-angle-down" title="Toggle dropdown menu"></span></a>
+                                <ul *dropdownMenu class="dropdown-menu" role="menu">
+                                    <div *ngFor="let project of projectList; let i=index">
+                                        <li role="menuitem" class="project-name-list"><span class="dropdown-item">{{ project.name }}</span></li>
+                                    </div>
+                                </ul>
+                            </div>
+                        </td>
+                        <td class="status">
+                            <i class="fa fa-fw help-cursor"  tooltip="{{ job.status | uppercase }}" placement="bottom"
+                                [ngClass]="{'fa-refresh': job.status == 'running', 'hidden': job.status == 'completed', 'fa-exclamation-triangle': job.status == 'failed'}"></i>
+                        </td>
+                    </tr> 
+                    <ng-container *ngIf="jobFolderStates.get(job._id)">
+                        <tr *ngFor="let ofile of jobOutputFiles.get(job._id)" class="output-file">
+                            <td class="select">
+                                <div *ngIf="!isSelectedFile(ofile)" class="to-be-selected" (click)="toggleItem(ofile)">Select</div>
+                                <div *ngIf="isSelectedFile(ofile)" class="selected-box" (click)="toggleItem(ofile)"><i class="fa fa-check"></i></div>
+                            </td>
+                            <td class="name file-name" trunctip maxLength="26" [tooltipText]="ofile.filename">
+                            </td> 
+                            <td class="datetime">
+                                {{ ofile._created | date:'short' }}
+                            </td>
+                            <td class="size">
+                                {{ ofile.getPrettySize() }}
+                            </td>
+                            <td class="projectname">
+                                <div class="btn-group" dropdown>
+                                    <a class="btn project-button dropdown-toggle" dropdownToggle>{{ _projectService.getProject(ofile.project_id) ? _projectService.getProject(ofile.project_id).name : 'Default Project' }} <span class="fa fa-angle-down" title="Toggle dropdown menu"></span></a>
+                                    <ul *dropdownMenu class="dropdown-menu" role="menu">
+                                        <div *ngFor="let project of projectList; let p=index">
+                                            <li role="menuitem" class="project-name-list"><span class="dropdown-item">{{ project.name }}</span></li>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="status">
+                                                
+                            </td>
+                        </tr>
+                    </ng-container>
+                </ng-template>
+            </tbody>
+        </table>
     </div>
 </div>
 <div bsModal #errModal="bs-modal" class="modal fade" tabindex="-1">

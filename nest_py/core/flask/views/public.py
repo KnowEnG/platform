@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
-import importlib
-import flask
 import json
-
-from flask import (
-    Blueprint,
-    redirect,
-    request,
-    Response
-    )
-import traceback
+import flask
+from flask import Blueprint, redirect
 
 BLUEPRINT = Blueprint('public', __name__, static_folder="../static",\
     template_folder="../templates")
@@ -37,5 +29,3 @@ def heartbeat():
     resp = flask.make_response(payload, 200)
     resp.headers['Content-Type'] = 'application/json'
     return resp
-
-

@@ -1,0 +1,87 @@
+.x-axis path.domain, .y-axis path.domain {
+  stroke: #ecf0f4;
+  fill: none;
+  stroke-width: 1px;
+  display: none;
+}
+
+.x-axis text {
+  font-weight: 400;
+  font-size: 10px;
+  text-anchor: middle;
+  font-family: 'Lato', sans-serif;
+  fill: #000000;
+}
+
+.y-axis text.label {
+  text-anchor: middle;
+  font-weight: 400;
+  font-size: 10px;
+  font-family: 'Lato', sans-serif;
+  fill: #ecf0f4;
+}
+
+.y-axis text.minmax {
+  font-weight: 400;
+  font-size: 16px;
+  font-family: 'Lato', sans-serif;
+  fill: #ecf0f4;
+}
+
+.slider {
+  stroke-width: 1px;
+  stroke: #FFFFFF;
+}
+
+.bubble {
+	stroke-width: 1px;
+	stroke: #FFFFFF;
+	fill: #1D609E;
+  cursor: ew-resize;
+}
+
+.plotslider {
+  stroke-width: 2px;
+  stroke: #1D609E;
+}
+
+.x-axis select {
+  float: right;
+  text-align-last: right; /* hack; see note on .x-axis select option */
+}
+
+.x-axis select, select option {
+  border: none;
+  color: #000000;
+  background: none;
+  outline: none;
+  font-weight: 400;
+  font-size: 10px;
+  font-family: 'Lato', sans-serif;
+}
+
+.x-axis select option {
+  outline: #dee4e9;
+  background-color: #5e778e;
+  direction: rtl; /* hack: we want options right-justified, because the current
+                     selection also serves as the label on the right end of the
+                     x axis. unfortunately, there's no great way to do that in
+                     css. see https://stackoverflow.com/questions/7920677/text-align-right-on-select-or-option */
+}
+
+rect.area {
+  stroke: #7493af;
+  stroke-width: 1px;
+}
+
+.foreground.included {
+  fill: #1D609E;
+}
+
+.foreground.excluded {
+  fill: #C7C7C7;
+}
+
+.background.included, .background.excluded {
+  fill: #ffffff;
+}

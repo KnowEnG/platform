@@ -1,6 +1,6 @@
 export class Cohort {
     constructor(
-        public _id: string,
+        public _id: number,
         public display_name_short: string,
         public display_name_long: string,
         public num_samples: number) {
@@ -9,11 +9,11 @@ export class Cohort {
 
 export class Comparison {
     constructor(
-        public _id: string,
+        public _id: number,
         public display_name: string,
-        public baseline_cohort_id: string,
-        public variant_cohort_id: string,
-        public patient_cohort_id: string,
+        public baseline_cohort_id: number,
+        public variant_cohort_id: number,
+        public patient_cohort_id: number,
         public top_fst_ranked_otu_scores: number[]) {
     }
     
@@ -21,8 +21,8 @@ export class Comparison {
 
 //probably we don't need a constructor since we don't modify data in anyway when reading this from API 
 export class CohortPhylumData {
-    _id: string;
-    cohort_id: string;
+    _id: number;
+    cohort_id: number;
     node_name: string;
     
     relative_abundance_mean: number;

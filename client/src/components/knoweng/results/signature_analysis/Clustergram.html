@@ -1,0 +1,81 @@
+<div class="sort-area">
+    <div class="sort-group">
+        <div class="sort-label">SORT ROWS BY</div>
+        <div class="sort-button-area">
+            <select #sortRowsBySelect class="sort-button" (change)="onSortRowsByOther($event.target.value)" [class.active]="sortRowsBy == 'Alphabet' || sortRowsBy == 'Score' || sortRowsBy == 'Similarity'">
+                <option value="Alphabet" [attr.selected]="sortRowsBy == 'Alphabet' ? true : null">Alphabet</option>
+                <option value="Score" [attr.selected]="sortRowsBy == 'Score' ? true : null">Score</option>
+                <option value="Similarity" [attr.selected]="sortRowsBy == 'Similarity' ? true : null" disabled>Similarity</option>
+            </select><!-- no whitespace
+         --><button *ngIf="sortRowsBy != 'Alphabet' && sortRowsBy != 'Score' && sortRowsBy != 'Similarity'" class="btn sort-button active">
+                <span trunctip maxLength="15" [tooltipText]="sortRowsBy"></span>
+                <i class="fa fa-close pull-right" (click)="onSortRowsByOther(sortRowsBySelect.value)"></i>
+            </button>
+        </div>
+    </div><!-- no whitespace
+ --><div class="sort-group-divider"></div><!-- no whitespace
+ --><div class="sort-group">
+        <div class="sort-label">SORT COLUMNS BY</div>
+        <div class="sort-button-area">
+            <select #sortColumnsBySelect class="sort-button" (change)="onSortColumnsByOther($event.target.value)" [class.active]="sortColumnsBy == 'Alphabet' || sortColumnsBy == 'Score' || sortColumnsBy == 'Similarity'">
+                <option value="Alphabet" [attr.selected]="sortColumnsBy == 'Alphabet' ? true : null">Alphabet</option>
+                <option value="Score" [attr.selected]="sortColumnsBy == 'Score' ? true : null">Score</option>
+                <option value="Similarity" [attr.selected]="sortColumnsBy == 'Similarity' ? true : null" disabled>Similarity</option>
+            </select><!-- no whitespace
+         --><button *ngIf="sortColumnsBy != 'Alphabet' && sortColumnsBy != 'Score' && sortColumnsBy != 'Similarity'" class="btn sort-button active">
+                <span trunctip maxLength="15" [tooltipText]="sortColumnsBy"></span>
+                <i class="fa fa-close pull-right" (click)="onSortColumnsByOther(sortColumnsBySelect.value)"></i>
+            </button>
+        </div>
+    </div><!-- no whitespace
+ --><div class="sort-group-divider"></div><!-- no whitespace
+ --><div class="sort-help">
+        Right-click row/column label<br>
+        to sort by single row or column
+    </div>
+</div>
+<div class="column-label-area">
+    <div class="dimension-title">{{ selectedSignatures.length | i18nPlural: signaturesCountMessageMapping }}</div>
+    <div class="column-score-row">
+        <div class="column-score-title">Column Score</div><!-- no whitespace
+     --><div *ngFor="let signature of selectedSignatures; let colIndex = index" class="dimension-score"><div class="rotated-text">{{ columnScores[colIndex] | numFormatter: false }}</div></div>
+    </div>
+    <div class="column-label-row">
+        <div class="column-label-corner">
+            <div class="save-this-list-btn">Save this list</div>
+            <div class="dimension-title">{{ topSampleIds.length | i18nPlural: samplesCountMessageMapping }}</div>
+        </div><!-- no whitespace
+     --><div class="row-score-title"><div class="rotated-text">Row Score</div></div><!-- no whitespace
+     --><div *ngFor="let signature of selectedSignatures; let colIndex = index" class="dimension-label" [ngClass]="{selected: colIndex == hoverColumnIndex, sorted: signature == sortRowsBy}" (contextmenu)="onColumnLabelContextMenu(colIndex, $event)"><div class="rotated-text">{{ signature }}</div></div>
+    </div>
+</div>
+<div class="row-label-heatmap-area">
+    <div class="row-label-column">
+        <div *ngFor="let sampleId of topSampleIds; let rowIndex = index" class="dimension-label"
+            trunctip maxLength="15" [tooltipText]="sampleId"
+            [ngClass]="{selected: rowIndex == hoverRowIndex, sorted: sampleId == sortColumnsBy}"
+            (contextmenu)="onRowLabelContextMenu(rowIndex, $event)"></div> 
+    </div><!-- no whitespace
+ --><div class="row-score-column">
+        <div *ngFor="let sampleId of topSampleIds; let rowIndex = index" class="dimension-score">{{ rowScores[rowIndex] | numFormatter: false }}</div> 
+    </div><!-- no whitespace
+ --><cell-heatmap
+        [cellWidth]="12"
+        [cellHeight]="12"
+        [borderThickness]="1"
+        [borderColor]="'#fff'"
+        [selectedBorderThicknessMultiplier]="3"
+        [selectedBorderColor]="'#000'"
+        [highlightColor]="'#c6d8e8'"
+        [rowsOfColumns]="rowsOfColumns"
+        [freezeHighlight]="showRollover"
+        (cellClicked)="onCellClicked($event)"
+        (cellMousedOver)="onCellMousedOver($event)">
+    </cell-heatmap>
+</div>
+
+<div *ngIf="showRollover || showRowLabelContextMenu || showColumnLabelContextMenu" class="rollover-container" [style.bottom.px]="rolloverBottom" [style.right.px]="rolloverRight" ngDraggable>
+    <cell-rollover *ngIf="showRollover" (close)="closeRollover()" [sampleId]="topSampleIds[rolloverRowIndex]" [signatureId]="selectedSignatures[rolloverColumnIndex]" [finalScore]="rolloverValue"></cell-rollover>
+    <row-label-context-menu *ngIf="showRowLabelContextMenu" [title]="topSampleIds[rowContextMenuIndex]" [value]="topSampleIds[rowContextMenuIndex]" (mouseleave)="closeRollover()" (sort)="onSortColumnsByRow($event)"></row-label-context-menu>
+    <column-label-context-menu *ngIf="showColumnLabelContextMenu" [title]="selectedSignatures[columnContextMenuIndex]" (mouseleave)="closeRollover()" (sort)="onSortRowsByColumn($event)"></column-label-context-menu>
+</div>

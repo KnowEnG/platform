@@ -5,11 +5,11 @@
                 <span class="job-name-label">Pipeline:</span><span class="job-name-value">{{ form.suggestJobName() }}</span>
             </div>
 
-            <template ngFor let-group [ngForOf]="form.formGroups" let-groupIndex="index">
+            <ng-template ngFor let-group [ngForOf]="form.formGroups" let-groupIndex="index">
                 <div class="stage-space"></div>
                 <div class="stage-name" [class.selected]="groupIndex == currentIndex" [class.disabled]="!groupIndexIsEnabled(groupIndex)" (click)="groupIndexIsEnabled(groupIndex) && onClickFormGroup(groupIndex)">{{group.title}}</div>
                 <div class="stage-space"></div>
-            </template>
+            </ng-template>
             <div class="stage-space"></div>
             <div class="stage-name" [class.selected]="form.formGroups.length == currentIndex" [class.disabled]="!groupIndexIsEnabled(form.formGroups.length)" (click)="groupIndexIsEnabled(form.formGroups.length) && onClickFormGroup(form.formGroups.length)">Review &amp; Submission</div>
             

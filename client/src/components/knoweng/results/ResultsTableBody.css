@@ -1,3 +1,9 @@
+.scrollable-area {
+    height: 484px;
+    background-color: #FFFFFF;
+    border-radius: 0 0 8px 8px;
+}
+
 table {
     font-size: 14px;
     width: 100%;
@@ -7,6 +13,7 @@ th {
     padding-bottom: 2px;
     font-size: 12px;
     color: #1d609e;
+    border-top: 1px solid #D8D8D8;
     border-bottom: solid 1px #d8d8d8;
 }
 
@@ -25,45 +32,163 @@ th {
 
 td {
     color: #000000;
-    line-height: 1.79;
 }
 
 .name {
     padding-left: 14px;
-    width: 370px;
 }
 
-.start {
-    width: 179px;
-}
-
+.datetime,
+.size,
+.projectname,
 .status {
-    width: 58px;
+    padding-left: 7px;
+}
+
+th.name,
+th.datetime,
+th.size,
+th.projectname {
+    border-right: 1px solid #D8D8D8;
+}
+
+th.status {
     padding-right:10px;
 }
 
-td.status {
-    padding-left: 2px;
+.project-button {
+    box-shadow: none;
+    padding: 0;
+    background-color: transparent;
+    color: inherit;
+    line-height: 1;
 }
 
-.pipeline {
-    width: 237px;
+.project-button .fa-angle-down {
+    color: #1D609E;
+}
+
+.project-name-list {
+    font-size: 14px;
+    line-height: 26px;
+    color: #4A4A4A;
+    padding-left: 24px;
+    text-align: left;
+}
+
+.file-list tr.existing-file:hover .project-button .fa-angle-down,
+.file-list tr.output-file:hover .project-button .fa-angle-down,
+.file-list tr.existing-file:hover .project-button,
+.file-list tr.output-file:hover .project-button,
+.file-list tr.existing-file:hover .name,
+.file-list tr.output-file:hover .name,
+.file-list tr.existing-file:hover .datetime,
+.file-list tr.output-file:hover .datetime,
+.file-list tr.existing-file:hover .size,
+.file-list tr.output-file:hover .size,
+.file-list tr.job-item:hover .project-button .fa-angle-down,
+.file-list tr.job-item:hover .project-button,
+.file-list tr.job-item:hover .name,
+.file-list tr.job-item:hover .datetime,
+.file-list tr.job-item:hover .size,
+tr.selected .project-button .fa-angle-down,
+tr.selected .project-button,
+tr.selected .name,
+tr.selected .datetime,
+tr.selected .size {
+    color: #FFFFFF;
 }
 
 tbody tr {
     cursor: pointer;
 }
 
-tbody tr:hover, tbody tr.selected {
-    background-color: #c6d8e8;
-}
-
 .fa-refresh {
     color: #b5d1eb;
 }
+
+tr.selected .fa-refresh, tr:hover .fa-refresh {
+    color: #FFFFFF;
+}
+
 .fa-check-square {
     color: #7ed321;
 } 
 .fa-exclamation-triangle {
     color: #e05869;
+}
+
+.job-item .fa-caret-down,
+.job-item .fa-caret-right,
+.job-name {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.job-item .fa-caret-down {
+    font-size: 24px;
+    margin-right: 6px;
+    line-height: 22px;
+    cursor: pointer;
+}
+
+.job-item .fa-caret-right {
+    font-size: 24px;
+    margin-right: 11px;
+    line-height: 22px;
+    cursor: pointer;
+}
+
+.existing-file, .output-file, .job-item {
+    height: 22px;
+    border: none;
+}
+
+tr.new-file td.file-name,
+tr.existing-file td.file-name {
+    padding-left: 28px;
+}
+
+tr.output-file td.file-name {
+    padding-left: 50px;
+}
+
+.file-list tr:nth-child(odd) {
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #FFFFFF;
+}
+
+.file-list tr:nth-child(even) {
+    background-color: #F0F6F7;
+    border-top: 1px solid #F0F6F7;
+    border-bottom: 1px solid #F0F6F7;
+}
+
+.file-list tr:hover, .file-list tr.selected {
+   background-color: #1D609E;
+}
+
+.file-list .datetime,
+.file-list .size,
+.file-list .projectname {
+    color: #999;
+}
+
+.file-list .status {
+    text-align: center;
+}
+
+.progress {
+	height: 7px;
+	width: 400px;
+	margin-bottom: auto;
+	margin-left: 7px;
+}
+
+.progress-percent {
+    margin-left: 12px;
+	color: #000000;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 22px;
 }

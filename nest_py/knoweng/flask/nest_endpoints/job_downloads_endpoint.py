@@ -1,15 +1,17 @@
-import flask
 import os
+import flask
 from nest_py.core.flask.nest_endpoints.nest_endpoint import NestEndpoint
 from nest_py.core.data_types.nest_id import NestId
 import nest_py.knoweng.data_types.projects as projects
 
 
 PIPELINE_TO_PREFIX = {
-    'sample_clustering': 'nest_SC_',
-    'gene_prioritization': 'nest_GP_',
-    'gene_set_characterization': 'nest_GSC_',
-    'phenotype_prediction': 'nest_PP_'
+    'sample_clustering': 'nest-sc-',
+    'feature_prioritization': 'nest-fp-',
+    'gene_set_characterization': 'nest-gsc-',
+    'phenotype_prediction': 'nest-pp-',
+    'spreadsheet_visualization': 'nest-ssv-',
+    'signature_analysis': 'nest-sa-'
 }
 
 class JobDownloadsEndpoint(NestEndpoint):
@@ -25,7 +27,7 @@ class JobDownloadsEndpoint(NestEndpoint):
 
     def get_flask_rule(self):
         rule = 'job_downloads/<int:job_id>'
-        return(rule)
+        return rule
 
     def get_flask_endpoint(self):
         return 'job_downloads'
@@ -42,9 +44,9 @@ class JobDownloadsEndpoint(NestEndpoint):
         dir_prefix = PIPELINE_TO_PREFIX[job_dict[u'pipeline']]
         job_slug = NestId(job_id).to_slug()
         job_dir = [d for d in os.listdir(project_path) if d.startswith(dir_prefix)\
-            and job_slug in d][0]
+            and job_slug.lower() in d][0]
         job_path = os.path.join(project_path, job_dir)
         trimmed_jobname = job_dict[u'name'].strip().replace(" ", "_")
         user_filename = trimmed_jobname + '.zip'
-        return flask.send_from_directory(job_path, 'download.zip', 
+        return flask.send_from_directory(job_path, 'download.zip', \
             as_attachment=True, attachment_filename=user_filename)

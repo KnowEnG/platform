@@ -53,11 +53,10 @@ export class ComparisonNodeService {
      *      Observable<ComparisonNode[]> that'll publish a single array
      *      containing all of the matching nodes.
      */
-    getNodesForLevels(comparisonId: string, levels: string[]): Observable<ComparisonNode[]> {
+    getNodesForLevels(comparisonId: number, levels: string[]): Observable<ComparisonNode[]> {
         var url: string = this.comparisonNodesUrl + '?' +
                 'comparison_id=' + comparisonId + '&' +
-                levels.map((level) => 'node_level=' + level + '&').join();
-		url = url.substring(0, url.length - 1)
+                'node_level=' + levels.join(',')
         return this.getPagedItems(url);
     }
 
@@ -71,9 +70,21 @@ export class ComparisonNodeService {
      *      Observable<ComparisonNode[]> that'll publish a single array
      *      containing all of the child nodes.
      */
-    getChildren(parents: ComparisonNode[]): Observable<ComparisonNode[]> {
-        var orTerms: String[] = parents.map((parent) => '{"comparison_id" : "' + parent.comparisonId + '", "parent_node_idx": ' + parent.nodeIdx + '}');
-        var url: string = this.comparisonNodesUrl + '?where={"$or": [' + orTerms.join() + ']}';
-        return this.getPagedItems(url);
+    getChildren(parents: ComparisonNode[]): Observable<ComparisonNode[][]> {
+        var parentIdxs = new Set()
+        for (var i = 0; i < parents.length; i++){
+            parentIdxs.add(parents[i].nodeIdx);
+        }
+        var allChildrenObs: Array<Observable<ComparisonNode[]>> = new Array<Observable<ComparisonNode[]>>();
+        parentIdxs.forEach((parentNodeIdx) => {
+            var comparisons: ComparisonNode[] = parents.filter((parent) => parent.nodeIdx == parentNodeIdx);
+            var url: string = this.comparisonNodesUrl + '?comparison_id=' + 
+                comparisons.map((comp) => comp.comparisonId).join(',') +
+                '&parent_node_idx=' + parentNodeIdx + '&max_results=1000'
+            var children : Observable<ComparisonNode[]> = this.getPagedItems(url);
+            allChildrenObs.push(children)
+        });
+        var allChildren: Observable<ComparisonNode[][]> = Observable.forkJoin(allChildrenObs);
+        return allChildren;
     }
 }

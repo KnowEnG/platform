@@ -81,6 +81,19 @@ RUN pip install -q -r lib_src/fst_pipeline/requirements.txt
 
 #installs R packages for FST
 WORKDIR /code_buildtime_tmp/lib_src/fst_pipeline
+#can't specify a specific version when installing through rpy2 (as fst.py setup does), so
+#install randomForest directly (newer versions of randomForest don't work with our older version
+#of R)
+RUN wget -q https://cran.r-project.org/src/contrib/Archive/randomForest/randomForest_4.6-12.tar.gz
+RUN R CMD INSTALL randomForest_4.6-12.tar.gz
+RUN wget -q https://cran.r-project.org/src/contrib/Archive/e1071/e1071_1.7-0.tar.gz
+RUN R CMD INSTALL e1071_1.7-0.tar.gz
+RUN wget -q https://cran.r-project.org/src/contrib/Archive/classInt/classInt_0.1-23.tar.gz
+RUN R CMD INSTALL classInt_0.1-23.tar.gz
+# for minerva
+RUN wget -q https://cran.r-project.org/src/contrib/00Archive/Rcpp/Rcpp_1.0.1.tar.gz
+RUN R CMD INSTALL Rcpp_1.0.1.tar.gz
+RUN wget -q https://cran.r-project.org/src/contrib/Archive/minerva/minerva_1.5.tar.gz
+RUN R CMD INSTALL minerva_1.5.tar.gz
 RUN ./fst.py setup
-
 COPY . /code_buildtime_snapshot

@@ -1,6 +1,7 @@
-import flask
 import json
 import traceback
+
+import flask
 
 class NestEndpoint(object):
     """

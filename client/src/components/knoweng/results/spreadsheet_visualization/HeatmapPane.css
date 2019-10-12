@@ -1,0 +1,153 @@
+.heatmap-container {
+    width: 850px;
+    margin-left: 20px;
+}
+
+.heatmap-area {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 5px;
+    border-top: #7493af 1px solid;
+    border-bottom: #7493af 1px solid;
+}
+
+.primary-filename-area {
+    color: #1D609E;
+    font-size: 12pt;
+    line-height: 15px;
+    margin-bottom: 5px;
+}
+
+.dimension-label {
+    font-size: 5pt;
+    line-height: 1;
+    font-weight: 400;
+    text-align: right;
+    height: 12px;
+    /* a silly hack to condense row label text */
+    /*letter-spacing: -1px; */ 
+}
+
+.row-label-column {
+    float: left;
+    width: 60px;
+    margin-top: 3px;
+}
+
+.show-labels-checkbox-area {
+    margin-left: 8px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.show-labels-checkbox {
+    color: #35516A;;
+}
+
+.show-labels-checkbox-label {
+    font-size: 10px;
+    font-weight: 400;
+    color: #1D609E;
+    padding-right: 3px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.file-info-btn {
+    margin-right: 68px;
+    margin-bottom: 3px;
+    padding: 0px;
+    background: none;
+}
+
+.btn:hover .fa-info-circle:before {
+    color: #35516A;
+}
+
+.fa-info-circle {
+    color: #B5D1EB;
+}
+
+.btn:focus,.btn:active {
+   outline: none;
+   box-shadow: none;
+}
+
+.no-whitespace {
+    margin: 0;
+    padding: 0;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.mouse-target {
+    stroke: transparent;
+    fill: transparent;
+    stroke-width: 0;
+    cursor: pointer;
+}
+
+.cell-details-popover.popover {
+    background-color: rgba(21, 42, 60, 0.8);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-family: 10px;
+    line-height: 14px;
+    max-width: none;
+}
+
+.cell-details-label {
+    color: #E5F0F2;
+}
+
+.cell-details-colorbox {
+    margin: 0;
+    padding: 0;
+}
+
+.cell-details-close-btn {
+    color: #FFFFFF !important;
+    line-height: 12px;
+}
+
+.popover {
+    display: block;
+    border: 1px solid #152A3C;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+    padding: 0;
+    min-width: 250px;
+    max-width: 350px;
+}
+
+.popover.right>.arrow {
+    top: 20px;
+}
+
+.popover.right>.arrow:after {
+    border-right-color: #152A3C;
+}
+
+.popover-title {
+    background-color: #152A3C;
+    padding: 5px 6px 7px 6px;
+    min-width: 110px;
+}
+
+.table-borderless td,
+.table-borderless th {
+    border: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.table-condensed>tbody>tr>td, 
+.table-condensed>tbody>tr>th, 
+.table-condensed>tfoot>tr>td, 
+.table-condensed>tfoot>tr>th, 
+.table-condensed>thead>tr>td, 
+.table-condensed>thead>tr>th {
+    padding-top: 0;
+    padding-bottom: 0;
+} 

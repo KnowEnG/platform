@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var git = require('git-rev');
 var fs = require('fs');
 
 var del = require('del');
@@ -110,18 +109,6 @@ gulp.task('ts', function () {
 });
 
 gulp.task('dist', [ /*'css', 'img',*/ 'ts', 'html', 'cachebuster:js', 'cachebuster:html' , 'cachebuster:css'  ], function () {
-    // git-rev expose long or short SHA
-    git.long(function (sha) {
-        // TODO: Add more fields to this, as necessary / helpful
-        var status = {
-            sha: sha,
-            runlevel: process.env.NEST_RUNLEVEL || 'development',
-            hzHost: process.env.HUBZERO_APPLICATION_HOST || '',
-            maxUploadSize: process.env.MAX_CONTENT_LENGTH || ''
-        };
-        fs.writeFileSync('dist/status.json', JSON.stringify(status));
-        console.log('Status Written:', status);
-    });
 });
 
 //run tests once and exit, suitable for testing in build environment like Jenkins

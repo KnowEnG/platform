@@ -1,0 +1,52 @@
+<div class="plot-container">
+    <div class="legend-container">
+        <table class="legend">
+            <tr *ngFor="let scdd of survivalCohortDisplayData">
+                <td class="legend-label" trunctip maxLength="25" [tooltipText]="scdd.cohort.label"></td>
+                <td><div class="legend-swatch" [style.background-color]="scdd.cohort.color"></div></td>
+            </tr>
+        </table>
+        <div class="pvalue">
+            Log-Rank p-Value =
+            <i *ngIf="pValue === undefined || pValue === null" class="fa fa-spinner fa-pulse"></i>
+            <span *ngIf="pValue !== undefined && pValue !== null">{{ pValue.toExponential(2) }}</span>
+        </div>
+    </div>
+    <svg [attr.width]="getSvgWidth()" [attr.height]="getSvgHeight()">
+        <!-- x axis -->
+        <text class="axis-label" [attr.x]=".5 * (getBorderTopLeftX() + getBorderBottomRightX())"
+            [attr.y]="getBorderBottomRightY() + axisLabelMargin" text-anchor="middle" dy="1em">TIME</text>
+        <g *ngFor="let tick of xAxisTicks"
+            [attr.transform]="'translate(' + (getBorderTopLeftX() + padding.left + tick.position) +
+                ',' + getBorderBottomRightY() + ')'">
+            <line x1="0" x2="0" y1="0" [attr.y2]="axisTickHeight" class="axis-tick"/>
+            <text x="0" [attr.y]="axisTickHeight" dy="1em" text-anchor="middle" class="axis-tick-label">{{ tick.value }}</text>
+        </g>
+        <!-- y axis -->
+        <!-- positioning with translate to simplify origin for rotation -->
+        <text class="axis-label" [attr.transform]="'translate(' +
+            (getBorderTopLeftX() - axisLabelMargin) + ',' +
+            .5 * (getBorderTopLeftY() + getBorderBottomRightY()) +
+            ')rotate(-90)'" text-anchor="middle">PROBABILITY</text>
+        <g *ngFor="let tick of yAxisTicks"
+            [attr.transform]="'translate(' + getBorderTopLeftX() +
+                ',' + (getBorderTopLeftY() + padding.top + tick.position) + ')'">
+            <line [attr.x1]="-axisTickHeight" x2="0" y1="0" y2="0" class="axis-tick"/>
+            <!-- positioning with translate to simplify origin for rotation -->
+            <text [attr.transform]="'translate(' + (-axisTickHeight - 5) + ',0)rotate(-90)'"
+                x="0" y="0" text-anchor="middle" class="axis-tick-label">{{ tick.value | number:"1.1-1" }}</text>
+        </g>
+        <!-- plot -->
+        <g [attr.transform]="'translate(' + getBorderTopLeftX() + ',' + getBorderTopLeftY() + ')'">
+            <rect x="0" y="0" [attr.width]="getBorderBottomRightX() - getBorderTopLeftX()"
+                [attr.height]="getBorderBottomRightY() - getBorderTopLeftY()" class="plot-border"/>
+            <g *ngFor="let scdd of survivalCohortDisplayData"
+                [attr.transform]="'translate(' + padding.left + ',' + padding.top + ')'">
+                <path [attr.d]="scdd.path" [attr.stroke]="scdd.cohort.color" class="survival-curve"/>
+                <line *ngFor="let cp of scdd.censorPoints" [attr.stroke]="scdd.cohort.color"
+                    class="censor-tick" [attr.x1]="cp.x" [attr.x2]="cp.x"
+                    [attr.y1]="cp.y - censorTickHeight/2" [attr.y2]="cp.y + censorTickHeight/2"/>
+            </g>
+        </g>
+    </svg>
+</div>

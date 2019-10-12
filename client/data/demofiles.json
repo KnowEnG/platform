@@ -1,28 +1,40 @@
 {
-    "gene_prioritization": {
-        "features": {
-            "filename": "demo_GP.genomic.txt",
-            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_GP.genomic.txt"
-        }, 
-        "response": {
-            "filename": "demo_GP.phenotypic.txt",
-            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_GP.phenotypic.txt"
-        }
+    "feature_prioritization": {
+        "features_file": [{
+            "filename": "demo_FP.genomic.txt"
+        }],
+        "response_file": [{
+            "filename": "demo_FP.phenotypic.txt"
+        }]
     },
     "gene_set_characterization": {
-        "features": {
-            "filename": "demo_GSC.spreadsheet.txt",
-            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_GSC.spreadsheet.txt"
-        }
+        "gene_set_file": [{
+            "filename": "demo_GSC.spreadsheet.txt"
+        }]
     },
     "sample_clustering": {
-        "features": {
-            "filename": "demo_SC.genomic.txt",
-            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_SC.genomic.txt"
-        }, 
-        "response": {
-            "filename": "demo_SC.phenotypic.txt",
-            "url": "https://raw.githubusercontent.com/KnowEnG/quickstart-demos/master/demo_files/demo_SC.phenotypic.txt"
-        }
+        "features_file": [{
+            "filename": "demo_SC.genomic.txt"
+        }],
+        "response_file": [{
+            "filename": "demo_SC.phenotypic.txt"
+        }]
+    },
+    "signature_analysis": {
+        "query_file": [{
+            "filename": "demo_SA.samples.txt"
+        }],
+        "signatures_file": [{
+            "filename": "demo_SA.signatures.mapped.txt"
+        }]
+    },
+    "spreadsheet_visualization": {
+        "spreadsheets": [
+            {
+                "filename": "demo_SSV.genomic.txt"
+            }, {
+                "filename": "demo_SSV.phenotypic.txt"
+            }
+        ]
     }
 }

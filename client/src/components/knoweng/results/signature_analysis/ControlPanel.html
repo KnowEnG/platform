@@ -1,0 +1,27 @@
+<div class="control-panel-container">
+    <div class="job-name-area">
+        <div class="control-label">RESULT</div>
+        <div class="job-name">{{ job.name }}</div>
+    </div>
+    <div class="gradient-area">
+        <div class="gradient-header">
+            <div class="control-label">SCORE</div><!-- no whitespace
+         --><div class="gradient-info-icon"><i class="fa fa-info-circle"></i></div>
+        </div>
+        <gradient-legend [leftColor]="gradientMaxColor" [rightColor]="gradientMinColor" [leftValue]="gradientMaxValue" [rightValue]="gradientMinValue"></gradient-legend>
+    </div>
+    <div class="filter-area">
+        <div class="slider-desc">
+            SELECT NUM. OF TOP SAMPLES PER SIGNATURE
+        </div>
+        <slider [leftValue]="1" [rightValue]="maxNumTopSamples" [initialValue]="currentNumTopSamples" (updatedCurrentValue)="updateCurrentNumTopSamples($event)"></slider>
+    </div>
+    <div class="total-samples-selected-area">
+        <div class="total-samples-count" *ngIf="totalSamplesSelectedCount">{{ totalSamplesSelectedCount }}</div><!-- no whitespace
+     --><div class="total-samples-selected">TOTAL SAMPLES SELECTED</div><!-- no whitespace
+     --><div class="gradient-info-icon"><i class="fa fa-info-circle"></i></div>
+    </div>
+    <div class="signature-selector-area">
+        <signature-selector *ngIf="result" [result]="result" [numTopSamples]="currentNumTopSamples" (selectedSignatures)="updateSelectedSignatures($event)"></signature-selector>
+    </div>
+</div>

@@ -27,6 +27,7 @@ from nest_py.hello_world.data_types.simplest_dto import SimplestDTO
 import nest_py.core.db.nest_db as nest_db
 import nest_py.hello_world.db.hw_db as hw_db
 import nest_py.core.jobs.jobs_auth as jobs_auth
+import nest_py.wix.wix_db as wix_db
 
 def run(jcx):
     """
@@ -87,7 +88,6 @@ def write_and_read_a_db_entry(jcx):
         str(read_entry))
     return
 
-
 def init_db_client_registry(jcx):
     """
     create a dict of database clients for hello_world project's datatypes.
@@ -97,19 +97,7 @@ def init_db_client_registry(jcx):
     #get the 'maker' objects for database tables and clients in
     #the hello_world project
     hw_sqla_makers = hw_db.get_sqla_makers()
-
-
-    sqla_md = nest_db.get_global_sqlalchemy_metadata()
-    engine = nest_db.get_global_sqlalchemy_engine()
-    registry = dict()
-    for maker in hw_sqla_makers.values():
-        nm = maker.get_table_name()
-        client = maker.get_db_client(engine, sqla_md)
-        #need a user to 'own' any data we write. this gives us
-        #the default user for jobs
-        jobs_auth.set_db_user(client)
-        registry[nm] = client
-    jcx.runtime()['db_clients'] = registry
+    wix_db.init_db_clients(jcx, hw_sqla_makers)
     return
 
 def write_and_read_a_csv_file(jcx):
@@ -142,13 +130,9 @@ def write_and_read_a_csv_file(jcx):
     tmp_relative_fn = 'color_table.csv' 
 
     #wix provides access to two data directories through the JobContext:
-    # - 'get_run_local_data_dir' is a directory that only this run of the job
+    # - 'get_run_file_space()' manage's a directory that only this run of the job
     #     can access. It's intended for results files.
-    # - 'get_job_global_data_dir' is a directory that each run of the same type
-    #     of job can access. It's intended for raw data that will be
-    #     processed on multiple runs and results that are cached between
-    #     runs (so they aren't recomputed each run) 
-    data_dir = jcx.get_run_local_data_dir()
+    data_dir = jcx.get_run_file_space().get_dirpath()
 
     #the file goes in the working directory that wix gave us
     tmp_absolute_fn = os.path.join(data_dir, tmp_relative_fn)
@@ -189,7 +173,7 @@ def download_file_from_box(jcx):
     #when downloading from box, we can use the data_dir that is
     #shared across job runs so we don't have to download it every time
     #the box downloader won't download if the file is already there
-    data_dir = jcx.get_job_global_data_dir()
+    data_dir = jcx.get_job_file_space().get_job_global_data_dir()
 
     box_test_fn = os.path.join(data_dir, box_test_relative_fn)
 

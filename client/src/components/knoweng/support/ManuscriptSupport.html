@@ -1,0 +1,11 @@
+<div class="section">
+    <div class="btn-group" dropdown>
+        <button dropdownToggle type="button" class="btn dropdown-toggle select-ms-btn">Select a Manuscript <i class="fa fa-caret-down"></i></button>
+        <ul *dropdownMenu class="dropdown-menu title-menu" role="menu">
+            <li *ngFor="let ms of manuscripts; let i=index" role="menuitem">
+                <a class="dropdown-item" (click)="selectManuscript(i)"><span class="title-item" trunctip maxLength="120" [tooltipText] = "ms.title"></span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+<manuscript-item [uploadedFiles]="uploadedFiles" [selectedManuscript]="selectedManuscript"></manuscript-item>

@@ -5,11 +5,11 @@
 
 #this should make imports work for all nest_ops subcommands that
 #rely on code in other parts of the nest/nest/ package
-import sys
-import os
 import argparse
+import logging
+import os
+import sys
 import traceback
-import cProfile
 
 from nest_py.core.jobs.checkpoint import CheckpointTimer
 
@@ -28,6 +28,8 @@ import nest_py.ops.smoke_test_ops as smoke_test_ops
 import nest_py.ops.wipe_ops as wipe_ops
 import nest_py.ops.wix_ops as wix_ops
 
+logging.basicConfig()
+
 PROFILE = False
 
 CMD_DESCRIPTION = """
@@ -40,7 +42,7 @@ def main(args_from_commandline):
         description=CMD_DESCRIPTION, \
         formatter_class=argparse.RawTextHelpFormatter)
     subparsers = parser.add_subparsers(title='subcommands', \
-        description=None,
+        description=None, \
         help=None)
     compile_ops.register_subcommand(subparsers)
     doc_ops.register_subcommand(subparsers)
@@ -79,7 +81,7 @@ def _run_subcommand(main_parser, args_from_commandline):
     except Exception as e:
         print('command failed with exception: ' + str(e))
         traceback.print_exc()
-        exit_code = 1 
+        exit_code = 1
     return exit_code
 
 def detect_project_root_dir():
@@ -103,7 +105,7 @@ def _print_all_help(arg_map):
     exit_code = 1
     main_parser = arg_map['main_parser']
     #there is no good way to retrieve the list of subcommands from the parser
-    known_subcommands = ['doc', 'compile', 'clienttest', 'pytest', 'docker',
+    known_subcommands = ['doc', 'compile', 'clienttest', 'pytest', 'docker', \
         'ci', 'all_help']
 
     #this is the toplevel help msg of all commands with one-line summaries
@@ -135,19 +137,17 @@ def _prof_main():
     end_time = CheckpointTimer.current_time()
     elapsed_secs = end_time - start_time
     formatted_secs = CheckpointTimer.format_elapsed_secs(elapsed_secs)
-    
+
     print('nest_ops exit_code: ' + str(exit_code) + ' (' + status + '). Took: ' + formatted_secs)
     sys.exit(exit_code)
 
 if __name__ == '__main__':
     if PROFILE:
-        import cProfile, pstats
+        import cProfile
+        import pstats
         cProfile.run("_prof_main()", "{}.profile".format(__file__))
         s = pstats.Stats("{}.profile".format(__file__))
         s.strip_dirs()
         s.sort_stats("time").print_stats(50)
     else:
         _prof_main()
-
-
-

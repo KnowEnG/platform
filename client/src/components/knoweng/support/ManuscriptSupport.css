@@ -1,0 +1,24 @@
+/* note: comp shows .section having more padding on this screen than on other
+         support screens. matching other support screens for now.
+*/
+
+.select-ms-btn {
+    margin-top: 19px;
+	width: 284px;
+	display: flex;
+    justify-content: space-between;
+}
+
+.select-ms-btn .fa-caret-down {
+    margin-top: 5px;
+}
+
+.title-menu {
+    width: 788px;
+}
+
+.title-item {
+	cursor: pointer;
+	color: #1E384E;
+}
+

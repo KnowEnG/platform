@@ -1,0 +1,74 @@
+<svg [attr.width]="plotAreaWidth + rightMargin + leftMargin" [attr.height]="plotAreaHeight + colorBarHeight + topMargin + bottomMargin" [style.margin-bottom.px]="-bottomMargin">
+    <defs>
+        <linearGradient *ngIf="gradientStops" [attr.id]="patternId">
+            <stop *ngFor="let stop of gradientStops"  [attr.stop-color]="stop.color" [attr.offset]="stop.offset"/>
+        </linearGradient>
+        <pattern *ngIf="patternSegments" [attr.id]="patternId" width="1" height="1" patternContentUnits="objectBoundingBox">
+            <rect *ngFor="let segment of patternSegments" [attr.x]="segment.start" y="0" [attr.width]="segment.width" height="1" [attr.fill]="segment.color"/>
+        </pattern>
+    </defs>
+    <!-- group containing y-axis labels -->
+    <g [attr.transform]="'translate(' + (plotAreaWidth + leftMargin) + ',' + topMargin + ')'">
+        <text class="minmax" y="0" dy="1.1em" dx=".35em" text-anchor="start">{{ rowType == 'categoric' ? yMax + " %" : yMax }}</text>
+        <text class="minmax" [attr.y]="plotAreaHeight" dy="-.1em" dx=".35em" text-anchor="start">{{ yMin }}</text>
+    </g>
+    <!-- group containing plot itself -->
+    <g [attr.transform]="'translate(' + leftMargin + ',' + topMargin + ')'">
+        <!-- background color -->
+        <rect class="plot-area-background" x="0" y="0" [attr.width]="plotAreaWidth" [attr.height]="plotAreaHeight + colorBarHeight"/>
+        <!-- color bar -->
+        <rect x="0" [attr.y]="plotAreaHeight" [attr.width]="plotAreaWidth - (rowType == 'categoric' || getMissingValueBin() === null ? 0 : getMissingValueBin().getWidth())" [attr.height]="colorBarHeight" [attr.fill]="'url(#' + patternId + ')'"/>
+        <line *ngIf="rowType == 'categoric' && getMissingValueBin()"
+            [attr.x1]="getMissingValueBin().xMin" [attr.x2]="getMissingValueBin().xMax"
+            [attr.y1]="plotAreaHeight" [attr.y2]="plotAreaHeight" class="color-bar-missing-value-line"/>
+        <!-- group containing x-axis labels if numeric -->
+        <g *ngIf="rowType == 'numeric'" [attr.transform]="'translate(0,' + plotAreaHeight + ')'">
+            <rect class="x-axis-bar" x="0" [attr.y]="-xLegendHeight" [attr.width]="plotAreaWidth - (getMissingValueBin() === null ? 0 : getMissingValueBin().getWidth())" [attr.height]="xLegendHeight"/>
+            <text class="minmax" x="0" dx=".25em" dy="-.15em" text-anchor="start">{{ xMin | numFormatter }}</text>
+            <text class="minmax" [attr.x]="plotAreaWidth - (getMissingValueBin() === null ? 0 : getMissingValueBin().getWidth())" dx="-.15em" dy="-.15em" text-anchor="end">{{ xMax | numFormatter }}</text>
+        </g>
+        <!-- foreground border -->
+        <rect class="plot-area-foreground" x="0" y="0" [attr.width]="plotAreaWidth" [attr.height]="plotAreaHeight + colorBarHeight"/>
+        <line *ngIf="rowType == 'numeric' && getMissingValueBin()" class="missing-value-separator"
+            [attr.x1]="getMissingValueBin().xMin" [attr.x2]="getMissingValueBin().xMin" y1="0" [attr.y2]="plotAreaHeight"/>
+        <!-- current bin highlights -->
+        <g *ngIf="currentBin && rowType =='categoric'">
+            <rect class="bin-fill-categoric" [attr.x]="currentBin.xMin"
+                [attr.width]="currentBin.getWidth()"
+                [attr.y]="yScale(currentBin.count)" [attr.height]="plotAreaHeight-yScale(currentBin.count)" [attr.fill]="currentBin.color"/>
+            <rect class="bin-highlight-categoric" [attr.x]="currentBin.xMin"
+                [attr.width]="currentBin.getWidth()"
+                y="0" [attr.height]="plotAreaHeight + colorBarHeight"/>
+        </g>
+        <g *ngIf="currentBin && rowType =='numeric'">
+            <!-- note: currently identical to rect above except for class and height -->
+            <rect class="bin-highlight-numeric" [attr.x]="currentBin.xMin"
+                [attr.width]="currentBin.getWidth()"
+                y="0" [attr.height]="plotAreaHeight"/>
+            <rect class="bin-highlight-numeric-neighbor" [attr.x]="currentBin.xMin - 2"
+                width="2" [attr.y]="plotAreaHeight" [attr.height]="colorBarHeight"/>
+            <rect class="bin-highlight-numeric-neighbor" [attr.x]="currentBin.xMax"
+                width="2" [attr.y]="plotAreaHeight" [attr.height]="colorBarHeight"/>
+        </g>
+        <!-- path -->
+        <path *ngIf="path" class="dist-path" [attr.d]="path"/>
+        <!-- mouse targets -->
+        <rect *ngFor="let bin of bins" class="mouse-target"
+            (mouseover)="setCurrentBin(bin, $event)" (mouseout)="setCurrentBin(null, $event)"
+            [attr.x]="bin.xMin" y="0" [attr.width]="bin.getWidth()" [attr.height]="plotAreaHeight + colorBarHeight"/>
+    </g>
+</svg>
+<div *ngIf="currentBin" class="popover right" [style.top.px]="popoverTop" [style.left.px]="popoverLeft">
+    <div class="arrow"></div>
+    <div class="popover-title">
+        <div class="row-name">{{ rowDisplayData.getName() }}</div>
+        <div class="bin-label">{{ currentBin.label }}</div>
+    </div>
+    <div class="popover-content">
+        <div class="popover-percentage">{{ (100 * currentBin.count / totalCount).toFixed() }} %</div><!-- no whitespace
+     --><div class="popover-count-area">
+            <div class="popover-count">{{ currentBin.count }}</div>
+            <div class="popover-count-units">Sample{{ currentBin.count == 1 ? "" : "s" }}</div>
+        </div>
+    </div>
+</div>

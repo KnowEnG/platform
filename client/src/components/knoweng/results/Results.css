@@ -8,6 +8,11 @@ results-table-panel, result-panel {
   vertical-align: top;
 }
 
+results-table-panel, file-panel {
+  display: inline-block;
+  vertical-align: top;
+}
+
 results-table-panel {
   width: 879px;
 }

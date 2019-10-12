@@ -1,0 +1,22 @@
+<div *ngIf="spreadsheet" class="top-rows-picker">
+    <threshold-slider
+        [sortedValues]="sortedScores"
+        [scales]="scales"
+        [currentScale]="currentScale"
+        [startNumberValue]="topRowsCount"
+        [totalHeight]="80"
+        [totalWidth]="190"
+        [marginTop]="9"
+        [marginBottom]="30"
+        [marginRight]="19"
+        [marginLeft]="16"
+        [sliderSpilloverTop]="0"
+        [sliderSpilloverBottom]="0"
+        (endNumberValue)="updateRowCount($event)">
+    </threshold-slider>
+</div>
+<div class="threshold-num-area">
+    <input type="text" class="num-box" [class.error]="inputHasError" [value]="topRowsCount" (change)="onTopRowsCountChanged($event.target.value)">
+    <div class="top-label">TOP</div>
+    <div class="rows-label">ROWS</div>
+</div>

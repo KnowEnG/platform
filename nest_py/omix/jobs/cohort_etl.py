@@ -88,11 +88,11 @@ def tornado_sample_keys_to_nest_ids(tornado_sample_keys, all_geno_samples):
             num_found += 1
             at_least_one_found = True
             geno_sample = all_geno_samples[tornado_sample_key]
-            nest_id = geno_sample.get_nest_id().get_value()
+            nest_id = geno_sample.get_nest_id()
             nest_ids.append(nest_id)
     if not at_least_one_found:
         raise Exception("No nest_ids were found for a cohort's geno samples.  Either subsampling is too aggressive and zero samples of the cohort had their genome data loaded, or there is a key matching problem. Either way, cohort construction can't be completed.")
     if not num_found == len(tornado_sample_keys):
-        print('found ' + str(num_found) + ' / ' + str(len(tornado_sample_keys) + ' samples by tornado_sample_key.'))
+        print('found ' + str(num_found) + ' / ' + str(len(tornado_sample_keys)) + ' samples by tornado_sample_key.')
     return nest_ids 
 

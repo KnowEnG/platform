@@ -1,4 +1,4 @@
-FROM bodom0015/uwsgi-nginx-flask:latest
+FROM tiangolo/uwsgi-nginx-flask:python2.7
 RUN mkdir /home/dockeruser
 RUN chmod 777 /home/dockeruser
 ENV HOME=/home/dockeruser
@@ -16,3 +16,8 @@ ADD ./requirements /code_buildtime_tmp/requirements
 WORKDIR /code_buildtime_tmp
 RUN pip install -q -r requirements/nest_flask.txt
 
+# remove the sample app
+RUN rm -rf /app
+
+# skip the ENTRYPOINT defined in the base image, which clobbers much of our config
+ENTRYPOINT ["/code_live/docker/flask_entrypoint.sh"]

@@ -1,7 +1,5 @@
-
-import flask
-import json
 import traceback
+import flask
 from nest_py.core.flask.nest_endpoints.nest_endpoint import NestEndpoint
 from nest_py.core.data_types.nest_id import NestId
 
@@ -134,19 +132,21 @@ class NestCrudCollectionEndpoint(NestEndpoint):
             page = None
         if 'fields' in filter_query:
             raw_fields = filter_query.pop('fields')
-            fields = self._parse_comma_query(raw_fields)
+            fields = self._parse_fields_comma_query(raw_fields)
             print('crud_endpoints: final fields:' + str(fields))
         else:
             fields = None
         if 'sort' in filter_query:
             raw_sort = filter_query.pop('sort')
-            sort_fields = self._parse_comma_query(raw_sort)
+            sort_fields = self._parse_fields_comma_query(raw_sort)
             print('crud_endpoints: final sort_fields:' + str(sort_fields))
         else:
             sort_fields = None
 
         for k in filter_query:
             filter_query[k] = self._parse_comma_query(filter_query[k])
+            if k == '_id':
+                filter_query['id'] = filter_query.pop('_id')
 
         query_res = self.crud_client.paged_filter_query(filter_query,
             user=requesting_user, results_per_page=max_results, 
@@ -157,6 +157,12 @@ class NestCrudCollectionEndpoint(NestEndpoint):
                 jd = self.transcoder.object_to_jdata(dto)
             else:
                 jd = dto #the db client will have just returned a dict
+                #the API Transcoder interface requires the returned json
+                #to have an '_id' field, not an 'id' field as postgres
+                #uses. We have bypassed the transcoder here so we
+                #must enforce the correction here
+                if 'id' in jd:
+                    jd['_id'] = jd.pop('id')
             jdata_items.append(jd)
         jdata_meta = dict()
         jdata_meta['page'] = query_res['page']
@@ -186,6 +192,20 @@ class NestCrudCollectionEndpoint(NestEndpoint):
                 val2 = val.strip()
                 parsed_vals.append(val2)
         return parsed_vals
+
+    def _parse_fields_comma_query(self, list_of_fields):
+        """
+        same as _parse_comma_query, but expect the values to
+        be valid fields for the data_type. Does the conversion
+        of '_id'->'id' that the database layer requires. (Retains
+        field order)
+        """
+        parsed_fields = self._parse_comma_query(list_of_fields)
+        for i in range(len(parsed_fields)):
+            if parsed_fields[i] == '_id':
+                parsed_fields[i] = 'id'
+        return parsed_fields
+
 
     def do_POST(self, request, requesting_user):
         """

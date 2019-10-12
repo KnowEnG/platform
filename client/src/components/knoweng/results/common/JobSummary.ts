@@ -35,7 +35,7 @@ export class JobSummary implements OnInit, OnChanges {
     @Input()
     currentProject: Project = null;
     
-    /* Can be 'vertical' (GP / GSC) or 'horizontal' (SC) */
+    /* Can be 'vertical' (FP / GSC) or 'horizontal' (SC) */
     @Input()
     orientation: string = 'vertical';
     

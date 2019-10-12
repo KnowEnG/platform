@@ -21,7 +21,7 @@ def upload_nodes(client_registry, cohort_def, cohort_tree, timer=None):
     cohort_name = cohort_def.get_value('display_name_short')
     timer.checkpoint('begin cohort tree upload: ' + cohort_name)
     nodes_client = client_registry[cohort_phylo_tree_nodes.COLLECTION_NAME]
-    cohort_id = cohort_def.get_nest_id().get_value()
+    cohort_id = cohort_def.get_nest_id()
     node_tles = _extract_cohort_node_tles(cohort_tree, cohort_id)
     num_uploaded = nodes_client.bulk_create_entries_async(node_tles, batch_size=3000)
     assert(not num_uploaded is None)

@@ -155,7 +155,7 @@ def subset_samples_by_cohort(all_geno_samples, cohort_def):
     for sample_id in geno_sample_ids:
         for tornado_sample_key in all_geno_samples:
             geno_smp = all_geno_samples[tornado_sample_key]
-            if geno_smp.get_nest_id().get_value() == sample_id:
+            if geno_smp.get_nest_id() == sample_id:
                 geno_sample_lst.append(geno_smp)
     assert(len(geno_sample_lst) == len(geno_sample_ids))
     return geno_sample_lst

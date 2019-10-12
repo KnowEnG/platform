@@ -7,6 +7,7 @@ import {LogService} from './LogService';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
+
     constructor(private sessService: SessionService, private router: Router, private logger: LogService) {
     }
     
@@ -28,23 +29,28 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
         if (this.sessService.hasValidSession()) {
             return true;
         } else {
-            let sessionId: string = this.getSessionIdFromUrl(
+            let authCode: string = this.getAuthorizationCodeFromUrl(
                 window.location.search, window.location.hash);
-            if (sessionId !== null) {
+            if (authCode !== null) {
                 let messageStream: Observable<string> = this.sessService.createSession(
                     '',
                     '',
-                    sessionId);
+                    authCode);
 
                 messageStream.subscribe(
                     data => {
-                        // report authentication status to the logger
-                        this.logger.debug("Successful login: " + data);
-                        this.router.navigate( ["/home"] );
+                        // this is just a message with a status update
+                        // successful authentication is announced via stream
+                        // completion
                     },
                     err => {
                         this.logger.info("Failed to check token validity: " + err);
                         this.sessService.redirectToLogin();
+                    },
+                    () => {
+                        // report authentication status to the logger
+                        this.logger.debug("Successful login");
+                        this.router.navigate( ["/home"] );
                     }
                 );
             } else {
@@ -52,31 +58,29 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
                 return false;
             }
         }
-        this.sessService.redirectUrl = url;
-        this.router.navigate( ["/"] );
     }
 
-    getSessionIdFromUrl(searchPortion: string, hashPortion: string): string {
+    getAuthorizationCodeFromUrl(searchPortion: string, hashPortion: string): string {
         // have to do this manually; RouteParams not available outside of routes
 
         // depending on how this page was redirected, the query may end up in the
         // search or the hash
-        var tokenString: string = searchPortion + '&' + hashPortion;
+        var codeString: string = searchPortion + '&' + hashPortion;
 
-        // looking for 'mysession=KEEPTHISPART', optionally followed by
+        // looking for 'code=KEEPTHISPART', optionally followed by
         // '&OTHER-STUFF-WE-CAN-IGNORE'
-        var prefix: string = 'mysession=';
-        var sessionStart: number = tokenString.indexOf(prefix);
-        if (sessionStart > -1) {
-            var sessionEnd: number = tokenString.indexOf('&', sessionStart);
-            if (sessionEnd > -1) {
-                tokenString = tokenString.substring(sessionStart+prefix.length, sessionEnd);
+        var prefix: string = 'code=';
+        var codeStart: number = codeString.indexOf(prefix);
+        if (codeStart > -1) {
+            var codeEnd: number = codeString.indexOf('&', codeStart);
+            if (codeEnd > -1) {
+                codeString = codeString.substring(codeStart+prefix.length, codeEnd);
             } else {
-                tokenString = tokenString.substring(sessionStart+prefix.length);
+                codeString = codeString.substring(codeStart+prefix.length);
             }
         } else {
-            tokenString = null;
+            codeString = null;
         }
-        return tokenString;
+        return codeString;
     }
 }

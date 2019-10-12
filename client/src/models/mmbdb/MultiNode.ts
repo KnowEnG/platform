@@ -182,10 +182,10 @@ export class MultiNode {
         var sharedData: SharedData = nodes[0].sharedData;
         // create calls to fetch the ComparisonNode/CohortNodes and join
         // their streams
-        var comparisonNodeStream: Observable<ComparisonNode[]> =
+        var comparisonNodeStream: Observable<ComparisonNode[][]> =
             sharedData.comparisonNodeService.getChildren(
                 nodes.map((node) => node.comparisonNode));
-        var cohortNodeStream: Observable<CohortNode[]> =
+        var cohortNodeStream: Observable<CohortNode[][]> =
             sharedData.cohortNodeService.getChildren(
                 [].concat.apply([], nodes.map((node) => node.cohortNodes)));
         var joinedNodeStream: Observable<any[]> = Observable.forkJoin(
@@ -195,8 +195,8 @@ export class MultiNode {
             (nodeArray: any[]) => {
                 // first array will be comparison nodes, second array will
                 // be cohort nodes
-                var comparisonNodes: ComparisonNode[] = nodeArray[0];
-                var cohortNodes: CohortNode[] = nodeArray[1];
+                var comparisonNodes: ComparisonNode[] = [].concat.apply([],nodeArray[0]);
+                var cohortNodes: CohortNode[] = [].concat.apply([], nodeArray[1]);
                 // build children
                 nodes.forEach((node) => {
                     node.buildChildren(comparisonNodes, cohortNodes);
@@ -279,15 +279,15 @@ export class MultiNode {
         // find the candidate CohortNodes that match the ComparisonNodes
         // first, group the candidate CohortNodes by cohortId
         var groupedCohortCandidates: any = d3.nest()
-            .key((d: CohortNode) => d.cohortId).entries(cohortCandidates);
+            .key((d: CohortNode) => String(d.cohortId)).entries(cohortCandidates);
         // now, in the same cohort order as our cohortNodes, build arrays of children
         this.cohortNodes.forEach((ourCohortNode) => {
 
             // get all of the candidate child CohortNodes matching this cohortId
-            var cohortId: string = ourCohortNode.cohortId;
+            var cohortId: number = ourCohortNode.cohortId;
             var ourCohortChildren: CohortNode[] = [];
             var candidates: CohortNode[] = groupedCohortCandidates.filter(
-                (group: any) => group.key == cohortId)[0].values;
+                (group: any) => group.key == String(cohortId))[0].values;
 
             // from the candidate child CohortNodes matching this cohortId, grab
             // those that are actually children of the current CohortNode
@@ -330,9 +330,9 @@ export class MultiNode {
      * Returns a stream that publishes the root MultiNode for a tree.
      *
      * Args:
-     *     comparisonId (string): The comparison_id to use when loading
+     *     comparisonId (number): The comparison_id to use when loading
      *         ComparisonNodes.
-     *     cohortIds (string[]): The cohort_id values to use when loading
+     *     cohortIds (number[]): The cohort_id values to use when loading
      *         ComparisonNodes, ordered as they should appear on screen top to
      *         bottom.
      *     fetchedChildLevels (number): The number of tree levels beneath the
@@ -346,8 +346,8 @@ export class MultiNode {
      *     Observable<MultiNode> that publishes the root MultiNode.
      */
     static getRootMultiNode(
-        comparisonId: string,
-        cohortIds: string[],
+        comparisonId: number,
+        cohortIds: number[],
         fetchedChildLevels: number=0,
         comparisonNodeService: ComparisonNodeService,
         cohortNodeService: CohortNodeService): Observable<MultiNode> {

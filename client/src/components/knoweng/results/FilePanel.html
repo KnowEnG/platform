@@ -1,0 +1,71 @@
+<div class="file-panel-container">
+    <div *ngIf="file">
+        <form #fileForm="ngForm">
+            <label *ngIf="!isEditable" (click)="isEditable=true" class="file-name-label file-name" trunctip [tooltipText]="file.filename"></label>
+            <input *ngIf="isEditable" type="text" class="form-control file-name"
+                (keydown.enter)="updateFileName()" 
+                (blur)="updateFileName()" 
+                [(ngModel)]="newFileName" 
+                name="newfilenameinput"
+                #newfilenameinput>
+        </form>
+        <div class="filesystem-area">
+            <div class="value">&nbsp;</div> <!-- serving as line break -->
+            <div class="value">Uploaded {{ getDateForFile(file) | date:'longDate' }}</div>
+            <div class="value" hidden>By {{file.uploadername}}</div> <!-- hide until we know if/how to share files among users -->
+            <div class="value">{{file.getPrettySize()}}</div>
+        </div>
+        <div class="icons-area">
+            <div class="icon-item" (click)="downloadFile()" [style.cursor]="(downloadStatus !== 'start') ? '' : 'not-allowed'">
+                <i [ngClass]="downloadStatus == 'start' ? 'fa fa-spinner fa-spin' : 'fa fa-download'"></i>
+                <div class="icon-text">download</div>
+            </div>
+            <div class="icon-item" (click)="deleteFile()">
+                <i class="fa fa-times-circle"></i>
+                <div class="icon-text">delete</div>
+            </div>
+            <div class="icon-item" (click)="updateFavorite()">
+                <svg class="favstar" [class.favorite]="file?.favorite" viewBox="0 0 51 48" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+                </svg>
+                <div class="icon-text"> {{file.favorite ? 'unfavorite' : 'favorite' }} </div>
+            </div>
+            <div class="icon-item hidden">
+                <i class="fa fa-share-square-o"></i>
+                <div class="icon-text">share</div>
+            </div>
+        </div>
+        <!-- TODO: Restore when metadata available -->
+        <div class="spreadsheet-area hidden">
+            <div class="value-label">ABOUT THIS FILE</div>
+            <div class="value">&nbsp;</div> <!-- serving as line break -->
+            <div class="value">Columns: &mdash;</div>
+            <div class="value">Rows: &mdash;</div>
+            <div class="value">Child of: &mdash;</div>
+        </div>
+        <div class="project-area">
+            <!-- TODO: Uncomment when user projects have been fleshed out -->
+            <div><span class="value-label">PROJECT</span><!--<i class="fa fa-pencil" (click)="openModal($event, 'project')"></i>--></div>
+            <div class="value">{{ projectName }}</div>
+        </div>
+        <div class="tags-area hidden">
+            <div><span class="value-label">TAGS</span><i class="fa fa-pencil" (click)="openModal($event,'tags')"></i></div>
+            <div class="tag">Experiment 1</div>
+        </div>
+        <div class="notes-area">
+            <div><span class="value-label">NOTES</span><i class="fa fa-pencil" (click)="openModal($event, 'notes')"></i></div>
+            <div class="value note">{{ file.notes }}</div>
+        </div>
+        <div class="button-area hidden">
+            <button class="btn start-pipeline" [routerLink]="['/pipelines']">Start Pipeline with this Data</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- use ngSwitch/ngSwitchCase after we update ng2 -->
+<div *ngIf="modal" class="modal-container" [style.bottom.px]="modalBottom" [style.right.px]="modalRight">
+    <textbox-editor-modal *ngIf="modal == 'notes'" (save)="saveCloseNotesModal($event)" (cancel)="closeModal($event)" [initialValue]="file.notes"></textbox-editor-modal>
+    <textbox-editor-modal *ngIf="modal == 'project'" (save)="closeModal()" (cancel)="closeModal()" [initialValue]="'TODO no mockups for project editor yet.'"></textbox-editor-modal>
+    <tag-editor-modal *ngIf="modal == 'tags'" [initialTags]="[{name: 'Experiment 1', applied: true}, {name: 'Experiment 2', applied: false}, {name: 'Curated', applied: false}, {name: 'Uncurated', applied: false}]" (done)="closeModal()"></tag-editor-modal>
+</div>

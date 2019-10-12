@@ -11,7 +11,7 @@ def load_fst_results_from_csv(comparison_key, data_dir):
     results_by_otu_num = file_utils.csv_file_to_nested_dict(fn, key_col)
     return results_by_otu_num
 
-def post_process_fst_results(results_by_otu_num, otu_defs):
+def post_process_fst_results(comparison_key, results_by_otu_num, otu_defs):
     """
     adds ranks and otu ids to results entries
     returns a list of dicts sorted by the rank
@@ -22,6 +22,19 @@ def post_process_fst_results(results_by_otu_num, otu_defs):
             tornado_observation_key: string
         }
     """
+    if comparison_key in ['wenbin_fecal_aoah', 'wenbin_cecum_aoah', 'wenbin_all_aoah']:
+        #I don't want this to happen without it being expected, as it's a
+        #serious sign something is wrong if not
+        print("Giving otus with no scores MAX_SCORE")
+        for otu_def in otu_defs:
+            tornado_obs_key = otu_def.get_value('tornado_observation_key')
+            if not tornado_obs_key in results_by_otu_num:
+                result = dict()
+                result['index'] = tornado_obs_key
+                result['VIM_mean'] = -1.0
+                result['p_value'] = -1
+                result['VIM_var'] =  1.0
+                results_by_otu_num[tornado_obs_key] = result
     #add the otu_tle to the result
     for otu_def in otu_defs:
         tornado_obs_key = otu_def.get_value('tornado_observation_key')

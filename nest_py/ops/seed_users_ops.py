@@ -12,6 +12,8 @@ from nest_py.nest_envs import ProjectEnv
 from nest_py.nest_envs import RunLevel
 
 import nest_py.core.db.nest_db as nest_db
+import nest_py.ops.nest_sites as nest_sites
+from nest_py.ops.nest_sites import NestSite
 import nest_py.core.db.db_ops_utils as db_ops_utils
 
 SEED_USERS_CMD_HELP = """Seed the local database with a \
@@ -45,13 +47,12 @@ def register_subcommand(nest_ops_subparsers):
         default=nest_envs.DEFAULT_RUNLEVEL_NAME, \
         )
 
-#TODO: this might be good to support
-#    parser.add_argument('--site',
-#        help='',
-#        nargs='?',
-#        choices=nest_sites.VALID_NEST_SITE_NAMES,
-#        default=nest_sites.DEFAULT_NEST_SITE_NAME,
-#        )
+    parser.add_argument('--site',
+        help='',
+        nargs='?',
+        choices=nest_sites.VALID_NEST_SITE_NAMES,
+        default=nest_sites.DEFAULT_NEST_SITE_NAME,
+        )
 
     parser.set_defaults(func=_run_seed_users_cmd)
     return
@@ -67,15 +68,15 @@ def _run_seed_users_cmd(arg_map):
     project_env = ProjectEnv.from_string(project_env_name)
     runlevel_name = arg_map['runlevel']
     runlevel = RunLevel.from_string(runlevel_name)
-    #target_site_name = arg_map['site']
-    #target_site = NestSite.from_string(target_site_name)
-    exit_code = _run_seed_users_script(project_env, runlevel)
+    target_site_name = arg_map['site']
+    target_site = NestSite.from_string(target_site_name)
+    exit_code = _run_seed_users_script(project_env, runlevel, target_site)
     return exit_code
 
-def _run_seed_users_script(project_env, runlevel):
+def _run_seed_users_script(project_env, runlevel, target_site):
     """
     """
-    db_engine = _make_db_engine(project_env)
+    _init_db_engine(project_env, target_site)
     try:
         db_ops_utils.seed_users(project_env, runlevel)
         exit_code = 0
@@ -84,11 +85,12 @@ def _run_seed_users_script(project_env, runlevel):
         exit_code = 1
     return exit_code
 
-def _make_db_engine(project_env):
-    db_config = nest_db.generate_db_config(project_env=project_env)
+def _init_db_engine(project_env, target_site):
+    db_config = nest_db.generate_db_config(project_env=project_env, site=target_site)
     db_config['verbose_logging'] = False
     sqla_res = nest_db.GLOBAL_SQLA_RESOURCES
     sqla_res.set_config(db_config)
-    nest_db.set_global_sqla_resources(sqla_res)
+    # see https://visualanalytics.atlassian.net/browse/TOOL-510
+    # nest_db.set_global_sqla_resources(sqla_res)
     db_engine = nest_db.get_global_sqlalchemy_engine().connect()
-    return db_engine 
+    return

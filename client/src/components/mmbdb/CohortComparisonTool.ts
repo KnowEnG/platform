@@ -36,7 +36,7 @@ export class CohortComparisonTool implements OnInit{
     
     displayedComparisonName: string;
 
-    selectedId: string;
+    selectedId: number;
     
     comparison: Comparison;
 
@@ -56,7 +56,6 @@ export class CohortComparisonTool implements OnInit{
 
         this.topOtuThreshold =
             this.thresholdPickerService.numIncludedStream.getValue();
-
         this.thresholdPickerService.numIncludedStream.subscribe(
             (numIncluded: number) => {
                 if (numIncluded != this.topOtuThreshold) {
@@ -84,9 +83,9 @@ export class CohortComparisonTool implements OnInit{
     /**
      * Read comparison from API
      */
-    getComparison(comparisonId: string) {
+    getComparison(comparisonId: number) {
         //read the sample comparison and find compared cohort ids from the comparison from API
-        if (comparisonId && comparisonId != '') {
+        if (comparisonId /*&& comparisonId != ''*/) {
             this.cohortComparisonService.getComparison(comparisonId)
                .subscribe((comparison: Comparison) => {
                     this.comparison = comparison;

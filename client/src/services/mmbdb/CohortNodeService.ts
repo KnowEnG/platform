@@ -4,6 +4,8 @@ import {Observable} from 'rxjs/Observable';
 import {CohortNode} from '../../models/mmbdb/CohortNode';
 import {EveUtilities} from '../common/EveUtilities';
 
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/of';
 /**
  * This class provides methods for working with the cohort_phylo_tree_nodes
  * endpoint.
@@ -70,12 +72,10 @@ export class CohortNodeService {
      *      Observable<CohortNode[]> that'll publish a single array
      *      containing all of the matching nodes.
      */
-    getNodesForLevels(cohortIds: string[], levels: string[]): Observable<CohortNode[]> {
-        var url: string = this.cohortTreeUrl + '?' + 
-			cohortIds.map((cohortId) => 'cohort_id=' + cohortId + '&').join() +
-			levels.map((level) => 'level=' + level + '&').join()
-		//remove trailing '&'
-		url = url.substring(0, url.length-1)
+    getNodesForLevels(cohortIds: number[], levels: string[]): Observable<CohortNode[]> {
+        var url: string = this.cohortTreeUrl + '?' +
+            'cohort_id=' + cohortIds.join(',') +
+            '&node_level=' + levels.join(',')
         return this.getPagedItems(url);
     }
 
@@ -89,9 +89,24 @@ export class CohortNodeService {
      *      Observable<CohortNode[]> that'll publish a single array
      *      containing all of the child nodes.
      */
-    getChildren(parents: CohortNode[]): Observable<CohortNode[]> {
-        var orTerms: String[] = parents.map((parent) => '{"cohort_id" : "' + parent.cohortId + '", "parent_node_idx": ' + parent.nodeIdx + '}');
-        var url: string = this.cohortTreeUrl + '?where={"$or": [' + orTerms.join() + ']}';
-        return this.getPagedItems(url);
+    getChildren(parents: CohortNode[]): Observable<CohortNode[][]> {
+        var parentIdxs = new Set()
+        for (var i = 0; i < parents.length; i++){
+            parentIdxs.add(parents[i].nodeIdx);
+        }
+        //var allChildren: Observable<Array<CohortNode>> = Observable.of(new Array<CohortNode>())
+        var allChildrenObs: Array<Observable<CohortNode[]>> = new Array<Observable<CohortNode[]>>();
+        var baseUrl = this.cohortTreeUrl;
+        parentIdxs.forEach((parentNodeIdx) => {
+            var cohorts : CohortNode[] = parents.filter((parent) => parent.nodeIdx == parentNodeIdx);
+            var cohortIds : Number[] = cohorts.map((cohort) => cohort.cohortId)
+            var url: string =  baseUrl + '?cohort_id=' + cohortIds.join(',') +
+                '&parent_node_idx=' + parentNodeIdx + '&max_results=1000';
+            var children : Observable<CohortNode[]> = this.getPagedItems(url);
+            allChildrenObs.push(children)
+        });
+        var allChildren: Observable<CohortNode[][]> = Observable.forkJoin(allChildrenObs);
+        return allChildren;
     }
+
 }

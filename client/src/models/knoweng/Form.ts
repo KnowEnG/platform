@@ -1,6 +1,8 @@
 import {HelpContent} from './HelpContent';
 import {NestFile} from './NestFile';
+import {Job} from './Job';
 import {FileService} from '../../services/knoweng/FileService';
+import {JobService} from '../../services/knoweng/JobService';
 
 export class Form {
     jobName: string;
@@ -200,8 +202,15 @@ export class SelectFormField extends FormField {
     }
     setData(formData: FormData) {
         if (formData.fieldMap.has(this.dbName)) {
-            var targetValue = formData.fieldMap.get(this.dbName);
-            for (var i = 0; i < this.options.length; i++) {
+            let targetValue = formData.fieldMap.get(this.dbName);
+            // targetValue can be an array or a scalar, depending on the constructor args
+            // to simplify test below, if this is a scalar, convert it to a one-element array
+            // otherwise, if targetValue is a scalar that implements indexOf (e.g., targetValue
+            // is a string), then we get the wrong behavior
+            if (!Array.isArray(targetValue)) {
+                targetValue = [targetValue];
+            }
+            for (let i = 0; i < this.options.length; i++) {
                 this.options[i].selected = (targetValue.indexOf(this.options[i].value) != -1);
             }
         } else {
@@ -235,7 +244,12 @@ export class SelectFormField extends FormField {
         return allGroupNames.filter((element: string, index: number, array: string[]) => array.indexOf(element) == index);
     }
     isGrouped(): boolean {
-        return this.getGroupNames().length > 1;
+        let names = this.getGroupNames();
+        // obviously if we have more than one group, this is grouped
+        // also returning true if we have only one group but that group has a name
+        // we've seen this case when options are determined by DB query or
+        // narrowed by user interactions--e.g., GSC collections per species
+        return names.length > 1 || (names.length == 1 && names[0] !== undefined && names[0] !== null);
     }
     getGroupOptions(groupName: string): SelectOption[] {
         var groupOptions: SelectOption[] = [];
@@ -473,10 +487,12 @@ export class FileFormField extends FormField {
         public required: boolean,
         public defaultValue: string,
         public fileService: FileService,
+        public jobService: JobService,
         public allowUrl: boolean,
         public allowGenePaste: boolean,
         public isValid: ()=>boolean,
-        public isEnabled: FormPredicate) {
+        public isEnabled: FormPredicate,
+        public allowMultiSelect?: boolean) {
         super(isValid, isEnabled);
         this.setDataToDefault(); // note Form from Template will need to call setData() on instance
     }
@@ -498,17 +514,23 @@ export class FileFormField extends FormField {
     }
     getSummary(): FieldSummary[] {
         // summary value is null for no selection, undefined for unrecognized selection
-        let summaryValue: string = null;
+        let summaryValue: string[] = [];
         if (this.currentValue) {
-            let currentId = parseInt(this.currentValue, 10);
-            let match: NestFile = this.fileService.getFileByIdSync(currentId);
-            if (match !== undefined) {
-                summaryValue = match.filename;
-            } else {
-                summaryValue = undefined;
+            let currentIds = this.currentValue.split(",");
+            for (var id  of currentIds) {
+                let currentId = parseInt(id, 10);
+                let match: NestFile = this.fileService.getFileByIdSync(currentId);
+                if (match !== undefined) {
+                    let value: string = match.filename;
+                    if (match.job_id) {
+                        let job: Job = this.jobService.getJobByIdSync(match.job_id);
+                        value = job ? job.name + "/" + value : value;
+                    }
+                    summaryValue.push(value);
+                } 
             }
         }
-        return [new FieldSummary(this.summaryLabel, summaryValue)];
+        return [new FieldSummary(this.summaryLabel, summaryValue.join())];
     }
     getSchemaEntries(): SchemaEntry[] {
         var schemaMap: d3.Map<any> = d3.map<any>();

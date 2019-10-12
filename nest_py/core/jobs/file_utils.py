@@ -6,6 +6,7 @@ need to use ContainerUsers to get permissions right.
 import os
 import csv
 import json
+from jsoncomment import JsonComment
 from nest_py.ops.command_runner import CommandRunnerLocal
 
 import nest_py.core.jobs.jobs_logger as logger
@@ -134,6 +135,19 @@ def ensure_directory_of_file(filename, file_owner=None):
 def load_json_file(filename):
     with open(filename) as data_file:    
         data = json.load(data_file)
+    return data
+
+def load_json_file_with_comments(filename):
+    """
+    load a file of json data but ignore comments:
+     # single line
+     /*
+       multiline
+     */
+    """
+    parser = JsonComment(json)
+    with open(filename) as data_file:
+        data = parser.load(data_file)
     return data
 
 def dump_json_file(filename, jdata, file_owner=None):

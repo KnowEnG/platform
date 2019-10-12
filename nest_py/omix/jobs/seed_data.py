@@ -1,4 +1,6 @@
-VALID_SEED_FLAVORS = ['mayo_mar16', 'klumpp']
+VALID_SEED_FLAVORS = ['mayo_mar16', 'mayo_microbiome_report', 'klumpp_ic1', \
+    'klumpp_ic2_lizzie', 'klumpp_ic2_wenbin_fecal', 'klumpp_ic2_wenbin_cecum', \
+    'klumpp_ic2_wenbin_combined']
 DEFAULT_SEED_FLAVOR = 'mayo_mar16'
 
 class SeedFlavorData(object):
@@ -21,12 +23,11 @@ class SeedFlavorData(object):
         """
         The biom table (http://biom_format.org) contains the
         otu observations per sample. The meta data is expected
-        to contain the taxonomy data per OTU/observation, 
+        to contain the taxonomy data per OTU/observation,
         and often has some minimal metadata per sample that
-        may be used by get_tornado_sample_keys 
+        may be used by get_tornado_sample_keys
         """
         raise Exception('Abstract class. Not implemented')
-        return None
 
     def get_cohort_configs(self):
         """
@@ -41,7 +42,6 @@ class SeedFlavorData(object):
         throughout the codebase as a unique key for every cohort
         """
         raise Exception('Abstract class. Not implemented')
-        return None
 
     def get_comparison_configs(self):
         """
@@ -58,12 +58,11 @@ class SeedFlavorData(object):
         is a 'display_name_short' in get_cohort_configs
         """
         raise Exception('Abstract class. Not implemented')
-        return None
 
     def get_fst_results_cache_url(self, comparison_key):
         """
         given a comparison_key for one of the comparison_configs
-        returned by get_comparison_configs(), this returns 
+        returned by get_comparison_configs(), this returns
         a URL on box of the FeatureSelectionTool output, or None
         if one doesn't exist. (If this returns None, the seed
         job will run the FST analysis, which can take hours
@@ -71,13 +70,12 @@ class SeedFlavorData(object):
 
         """
         raise Exception('Abstract class. Not implemented')
-        return None
-    
+
     def get_tornado_sample_keys(self, cohort_key):
         """
         Given a cohort_key (display_name_short), returns a list
         of strings that are the 'id's of the samples in the
-        biom_table. 
+        biom_table.
 
         This step will eventually be replaced by a query that
         can be saved in the cohort_config itself (there is already
@@ -86,5 +84,9 @@ class SeedFlavorData(object):
         implemented in python code here, for every cohort)
         """
         raise Exception('Abstract class. Not implemented')
-        return None
- 
+
+    def get_username(self):
+        raise Exception('Abstract class. Not implemented')
+
+    def get_userpass(self):
+        raise Exception('Abstract class. Not implemented')

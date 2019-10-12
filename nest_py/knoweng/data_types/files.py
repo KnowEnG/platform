@@ -1,4 +1,5 @@
 import os
+from nest_py.core.data_types.nest_date import NestDate
 from nest_py.core.data_types.tablelike_schema import TablelikeSchema
 from nest_py.core.data_types.tablelike_entry import TablelikeEntry
 import nest_py.knoweng.data_types.projects as projects
@@ -13,28 +14,27 @@ def generate_schema():
     # numeric attribute (TOOL-398)
     schema.add_categoric_attribute('filesize')
     schema.add_categoric_attribute('filetype')
-    schema.add_categoric_attribute('uploadername')
     schema.add_categoric_attribute('_created')
     schema.add_categoric_attribute('notes')
     schema.add_boolean_attribute('favorite')
-    return schema 
+    schema.add_foreignid_attribute('job_id')
+    return schema
 
 class FileDTO(object):
 
-    def __init__(self, project_id, filename, filesize,
-        filetype, uploadername, created, notes, favorite,
-        nest_id=None):
+    def __init__(self, project_id, filename, filesize, filetype, \
+            created, notes, favorite, job_id, nest_id=None):
         self.project_id = project_id
         self.filename = filename
         self.filesize = filesize
         self.filetype = filetype
-        self.uploadername = uploadername
         self.created = created
         self.notes = notes
         self.favorite = favorite
+        self.job_id = job_id
         self.nest_id = nest_id
         return
-    
+
     def get_nest_id(self):
         return self.nest_id
 
@@ -58,10 +58,10 @@ class FileDTO(object):
         tle.set_value('filename', self.filename)
         tle.set_value('filesize', self.filesize)
         tle.set_value('filetype', self.filetype)
-        tle.set_value('uploadername', self.uploadername)
         tle.set_value('_created', self.created)
         tle.set_value('notes', self.notes)
         tle.set_value('favorite', self.favorite)
+        tle.set_value('job_id', self.job_id)
         tle.set_nest_id(self.nest_id)
         return tle
 
@@ -72,41 +72,102 @@ class FileDTO(object):
             tle.get_value('filename'),
             tle.get_value('filesize'),
             tle.get_value('filetype'),
-            tle.get_value('uploadername'),
             tle.get_value('_created'),
             tle.get_value('notes'),
             tle.get_value('favorite'),
+            tle.get_value('job_id'),
             )
-            
+
         fdto.set_nest_id(tle.get_nest_id())
         return fdto
 
 def files_dirpath(userfiles_dir, project_nest_id):
     project_dir = projects.project_dirpath(userfiles_dir, project_nest_id)
-    files_path = os.path.join(project_dir, 'files')     
+    files_path = os.path.join(project_dir, 'files')
     return files_path
-   
+
 def full_file_path(userfiles_dir, project_nest_id, file_nest_id):
     files_dir = files_dirpath(userfiles_dir, project_nest_id)
     file_path = os.path.join(files_dir, file_nest_id.to_slug())
-    return file_path 
+    return file_path
 
+def prepare_files_dirpath(userfiles_dir, project_nest_id):
+    """Ensures the file directory exists.
+
+    Args:
+        userfiles_dir (str): The path to the userfiles directory.
+        project_nest_id (NestId): The project id as a NestId.
+
+    Returns:
+        None
+    """
+    files_dir = files_dirpath(userfiles_dir, project_nest_id)
+    if not os.path.exists(files_dir):
+        try:
+            os.makedirs(files_dir)
+        except OSError as ose:
+            # if this code is running just as the project is being created,
+            # os.path.exists will return False above, but os.makedirs will
+            # discover that the directory in fact exists--maybe a file
+            # system cache issue or a long delay due to the docker volume?
+            # who knows, but surprisingly easy to reproduce
+            # if that's what happened here, recover gracefully
+            # if that's not what happened here, raise the error
+            # TODO do we need any of this, or can we safely assume
+            # the projects endpoint will have prepared everything?
+            if not os.path.exists(files_dir):
+                raise ose
+    return None
+
+def generate_file_tle_for_local_file(file_path, project_id, job_id, \
+    filename=None):
+    """Returns a tablelike entry representing a file on the local filesystem.
+    Does not attempt to store the tablelike entry in the database.
+
+    Args:
+        file_path (str): The path where the file is currently stored on disk.
+        project_id (NestId): The project id as a NestId.
+        job_id (NestId): The job id as a NestId, or None.
+        filename (str): The filename to use in the DB record, or None to use
+            the same name as used on disk.
+
+    Returns:
+        The tablelike entry.
+    """
+    # extract file info to save to db
+    statinfo = os.stat(file_path).st_size
+    extension = os.path.splitext(file_path)[-1].lower()
+    if filename is None:
+        filename = os.path.basename(file_path)
+
+    file_tle = TablelikeEntry(generate_schema())
+    file_tle.set_value('filesize', str(statinfo))
+    file_tle.set_value('filetype', extension)
+    file_tle.set_value('filename', filename)
+    file_tle.set_value('project_id', project_id)
+    file_tle.set_value('_created', NestDate.now().to_jdata())
+    file_tle.set_value('notes', '')
+    file_tle.set_value('favorite', False)
+    file_tle.set_value('job_id', job_id)
+    return file_tle
 
 class FileBytesDTO(object):
     """
-    A container for an actual file to upload to a Nest server. 
+    A container for an actual file to upload to a Nest server.
     The files endpoint can receive this data in a POST and then
     return just the tablelike info in the schema (above) if that
     nest_id is used in a GET.
     """
 
-    def __init__(self, project_id, filelike):
+    def __init__(self, project_id, filelike, filename):
         """
         project_id (NestId)
         filelike (file-like)
+        filename (str)
         """
         self.project_id = project_id
         self.filelike = filelike
+        self.filename = filename
         self.nest_id = None
         return
 
@@ -115,6 +176,9 @@ class FileBytesDTO(object):
 
     def get_file(self):
         return self.filelike
+
+    def get_filename(self):
+        return self.filename
 
     def set_nest_id(self, nest_id):
         """
@@ -127,21 +191,26 @@ class FileBytesDTO(object):
         return self.nest_id
 
     def to_jdata(self):
-        # filelike is part of the files_dict, not the jdata
-        return {'project': self.project_id.get_value()}
+        # the jdata must be None for the Request
+        # see https://stackoverflow.com/questions/12385179/how-to-send-a-multipart-form-data-with-requests-in-python
+        return None
 
     def to_files_dict(self):
-        return {'file': self.filelike}
+        # the dict needs to contain all of the params
+        # see https://stackoverflow.com/questions/12385179/how-to-send-a-multipart-form-data-with-requests-in-python
+        return {
+            'file': (self.filename, self.filelike),
+            'project_id': (None, str(self.project_id.get_value()))}
 
     def __str__(self):
         s = 'FileBytesDTO:[project_id=' + self.project_id + \
-                ',filelike=' + self.filelike + ']'
+                ',filelike=' + self.filelike + \
+                ',filename=' + self.filename + ']'
         return s
 
     @staticmethod
     def from_jdata(jdata):
         # TODO reading from the API, we'll get the file name in jdata but
         # won't get the file data at all
-        fdto = FileBytesDTO(jdata['project'], None)
+        fdto = FileBytesDTO(jdata['project_id'], None, jdata['filename'])
         return fdto
-

@@ -45,7 +45,7 @@ def register_subcommand(nest_ops_subparsers):
 
     parser.add_argument('wix_command',
         help=WIX_COMMAND_HELP,
-        nargs='?',
+        nargs=1,
         choices=wix_commands.valid_job_keys(),
         )
 
@@ -64,7 +64,8 @@ def _run_wix_cmd(arg_map):
     Input is the output from argparse.parse_args(), 
     output is an exit code indicating if the job succeeded.
     """
-    job_key = arg_map['wix_command']
+    #nargs=1 forces our subcommand into a list of size 1
+    job_key = arg_map['wix_command'][0]
     config_file_input = arg_map['config_file']
     project_root_dir = arg_map['project_root_dir']
     wix_data_dir = os.path.join(project_root_dir, WIX_DATA)

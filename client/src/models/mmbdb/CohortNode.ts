@@ -2,10 +2,10 @@
 export class CohortNode {
     [key: string]: any; // allow access to fields using cohortNode[key] (e.g., cohortNode['parentNodeIdx'])
     constructor(
-        public id: string,
+        public id: number,
         public name: string,
         public level: string,
-        public cohortId: string,
+        public cohortId: number,
         public nodeIdx: string,
         public parentNodeIdx: string,
         public relativeAbundanceMean: number,

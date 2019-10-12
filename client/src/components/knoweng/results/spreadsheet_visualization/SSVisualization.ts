@@ -1,12 +1,12 @@
-import {Component, OnInit, OnDestroy, Input} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 
 import {Job} from '../../../../models/knoweng/Job';
-import {Result} from '../../../../models/knoweng/results/SampleClustering';
-import {SpreadsheetVisualizationService} from '../../../../services/knoweng/SpreadsheetVisualizationService';
 import {SessionService} from '../../../../services/common/SessionService';
 import {LogService} from '../../../../services/common/LogService';
+import {SSVState, Spreadsheet, EndJobRequest, SSVStateRequest} from '../../../../models/knoweng/results/SpreadsheetVisualization';
+import {SpreadsheetVisualizationService} from '../../../../services/knoweng/SpreadsheetVisualizationService';
 
 @Component({
     moduleId: module.id,
@@ -20,21 +20,24 @@ export class SSVisualization implements OnInit, OnDestroy {
 
     @Input()
     job: Job;
-
-    result: Result;
-    ssSub: Subscription;
-
+    
+    ssvSub: Subscription;
+    
+    state: SSVState;
+    
     constructor(
-        private _ssService: SpreadsheetVisualizationService,
-        private _router: Router,
+        private _ssvService: SpreadsheetVisualizationService,
         private _sessionService: SessionService,
         private _logger: LogService) {
     }
+    
     ngOnInit() {
-        this.ssSub = this._ssService.getResult(this.job._id)
+        this.ssvSub = this._ssvService.getInitialSSVStateWithoutData(this.job._id)
             .subscribe(
-                (result: Result) => {
-                    this.result = result;
+                (state: SSVState) => {
+                    if (state != null) {
+                        this.state = state;
+                    }
                 },
                 (error: any) => {
                     if (error.status == 401) {
@@ -43,9 +46,14 @@ export class SSVisualization implements OnInit, OnDestroy {
                         alert(`Server error. Try again later`);
                         this._logger.error(error.message, error.stack);
                     }
-                });
+                }
+        );
     }
+    
     ngOnDestroy() {
-        this.ssSub.unsubscribe();
+        let endJobRequest: EndJobRequest = new EndJobRequest(this.job._id);
+        let stateRequest: SSVStateRequest = new SSVStateRequest(null, null, [], [], null, null, null, [], endJobRequest);
+        this._ssvService.updateSSVState(stateRequest)
+        this.ssvSub.unsubscribe();
     }
 }

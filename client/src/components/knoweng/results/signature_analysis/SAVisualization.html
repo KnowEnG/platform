@@ -1,0 +1,30 @@
+<div class="sa-visualization-container">
+    <!-- Show a spinner until "result" is populated -->
+    <div *ngIf="!result" class="loading white-text">
+        <i class="fa fa-fw fa-spinner fa-pulse"></i>
+        Loading...
+    </div>
+    
+    <sa-control-panel *ngIf="result"
+        [job]="job"
+        [gradientMaxColor]="gradientMaxColor"
+        [gradientMinColor]="gradientMinColor"
+        [gradientMaxValue]="gradientMaxValue"
+        [gradientMinValue]="gradientMinValue"
+        [result]="result"
+        [currentNumTopSamples]="currentNumTopSamples"
+        [selectedSignatures]="selectedSignatures"
+        (updatedNumTopSamples)="updateNumCurrentTopSamples($event)"
+        (updatedSelectedSignatures)="updateSelectedSignatures($event)">
+    </sa-control-panel>
+    <sa-data-area *ngIf="result"
+        [job]="job"
+        [gradientMaxColor]="gradientMaxColor"
+        [gradientMinColor]="gradientMinColor"
+        [gradientMaxValue]="gradientMaxValue"
+        [gradientMinValue]="gradientMinValue"
+        [currentNumTopSamples]="currentNumTopSamples"
+        [selectedSignatures]="selectedSignatures"
+        [scores]="result?.scores">
+    </sa-data-area>
+</div>

@@ -1,5 +1,6 @@
 from sqlalchemy import Table, Column, Index
-from sqlalchemy import Integer, Text, Numeric, ARRAY, Enum, Boolean
+from sqlalchemy import Integer, Text, Numeric, ARRAY, Boolean
+from sqlalchemy.dialects.postgresql import JSONB
 from nest_py.core.db.sqla_maker import SqlaMaker
 
 class TablelikeSqlaMaker(SqlaMaker):
@@ -18,13 +19,13 @@ class TablelikeSqlaMaker(SqlaMaker):
 
 def ensure_table(sqla_metadata, tablelike_schema, table_name):
     """
-    create a SQLAlchemy Table object bound to the 
+    create a SQLAlchemy Table object bound to the
     input metadata object, or returns an existing table
     if it's already been registered with sqla_metadata
     (it is safe to call multiple times).
     The SQLA Table will have the given table_name
     and columns appropriate to the schema's attributes.
-    Note that 'array' attributes will be postgres 'array' 
+    Note that 'array' attributes will be postgres 'array'
     columns in the Table.
     Uses 'Text' columns, not 'String' b/c postgres docs say
     there is no difference in effiency between varchar and
@@ -43,80 +44,9 @@ def ensure_table(sqla_metadata, tablelike_schema, table_name):
         owner_id_col = Column('owner_id', Integer)
         columns.append(owner_id_col)
 
-        for att in tablelike_schema.numeric_attributes:
-            nm = att.get_name()
-            col_type = Numeric(precision=12, scale=6)
-            #TODO: think through 'nullable'
-            col = Column(nm, col_type)
+        for att in tablelike_schema.get_attributes():
+            col = make_column_for_attribute(att)
             columns.append(col)
-     
-        for att in tablelike_schema.categoric_attributes:
-            nm = att.get_name()
-            col_type = Text()
-            
-            #removing use of 'Enum' columns b/c you can't
-            #reuse the name (of the column) between tables
-            #if att.valid_values is None:
-            #    col_type = Text()
-            #else:
-            #    enum_name = nm + '_enum'
-            #    col_type = Enum(*att.valid_values, name=enum_name)
-            col = Column(nm, col_type)
-            columns.append(col)
-      
-        for att in tablelike_schema.foreignid_attributes:
-            nm = att.get_name()
-            col_type = Integer()
-            col = Column(nm, col_type)
-            columns.append(col)
-       
-        for att in tablelike_schema.boolean_attributes:
-            nm = att.get_name()
-            col_type = Boolean()
-            col = Column(nm, col_type)
-            columns.append(col)
-        
-        for att in tablelike_schema.json_attributes:
-            nm = att.get_name()
-            col_type = Text()
-            col = Column(nm, col_type)
-            columns.append(col)
- 
-        for att in tablelike_schema.int_attributes:
-            nm = att.get_name()
-            col_type = Integer()
-            col = Column(nm, col_type)
-            columns.append(col)
-                      
-        for att in tablelike_schema.numeric_list_attributes:
-            nm = att.get_name()
-            col_type = ARRAY(Numeric(precision=12, scale=6))
-            col = Column(nm, col_type)
-            columns.append(col)
-     
-        #not using enums in the list for now b/c of this issue:
-        #http://docs.sqlalchemy.org/en/latest/dialects/postgresql.html#using-enum-with-array
-        for att in tablelike_schema.categoric_list_attributes:
-            nm = att.get_name()
-            #TODO: at least make the length as long as the longest possible value
-            col_type = ARRAY(Text())
-            col = Column(nm, col_type)
-            columns.append(col)
-
-        for att in tablelike_schema.foreignid_list_attributes:
-            nm = att.get_name()
-            col_type = ARRAY(Integer())
-            col = Column(nm, col_type)
-            columns.append(col)
-
-        for att in tablelike_schema.int_list_attributes:
-            nm = att.get_name()
-            col_type = ARRAY(Integer())
-            col = Column(nm, col_type)
-            columns.append(col)
-
-        #TODO: put the columns back in order that they were
-        #declared in the schema (follow the developer's intent)
 
         #this is smart enough to return the existing table in
         #sqla_metadata if it already has been declared
@@ -134,4 +64,47 @@ def ensure_table(sqla_metadata, tablelike_schema, table_name):
             Index(index_name, *columns)
 
     return tbl
+
+def make_column_for_attribute(tablelike_attribute):
+    """
+    Given an Attribute of a TablelikeSchema, create a corresponding
+    SQLAlchemy Column object for storing that type of data with
+    the same name and constraints (where applicable)
+    """
+
+    att = tablelike_attribute
+    att_type = att.get_type()
+    att_name = tablelike_attribute.get_name()
+    
+    if 'Numeric'== att_type:
+        col_type = Numeric(precision=att.precision, scale=att.scale)
+    elif 'Categoric' == att_type:
+        col_type = Text()
+    elif 'ForeignId' == att_type:
+        col_type = Integer()
+    elif 'Boolean' == att_type:
+        col_type = Boolean()
+    elif 'Json' == att_type:
+        col_type = Text()
+    elif 'JsonB' == att_type:
+        col_type = JSONB()
+    elif 'Int' == att_type:
+        col_type = Integer()
+    elif 'NumericList' == att_type:
+        col_type = ARRAY(Numeric(precision=att.precision, scale=att.scale))
+    elif 'CategoricList' == att_type:
+        #not using enums in the list for now b/c of this issue:
+        #http://docs.sqlalchemy.org/en/latest/dialects/postgresql.html#using-enum-with-array
+        #TODO: at least make the length as long as the longest possible value
+        col_type = ARRAY(Text())
+    elif 'ForeignIdList' == att_type:
+        col_type = ARRAY(Integer())
+    elif 'IntList' == att_type:
+        col_type = ARRAY(Integer())
+    else:
+        raise Exception("Problem making a column for attribute '" + 
+            str(att_name) + "' of unrecognized type: '" + str(att_type))
+
+    col = Column(att_name, col_type)
+    return col
 

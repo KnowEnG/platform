@@ -16,6 +16,7 @@ from nest_py.nest_envs import ProjectEnv
 from nest_py.core.db.sqla_resources import JobsSqlaResources
 from nest_py.core.data_types.nest_user import NestUser
 from nest_py.core.data_types.nest_id import NestId
+from nest_py.core.data_types.tablelike_schema import TablelikeSchema
 
 def setup_db():
     #FIXME: use an isolated database 'nest_test'.
@@ -24,6 +25,21 @@ def setup_db():
     sqla_md = nest_db.get_global_sqlalchemy_metadata()
     hw_db.register_sqla_bindings(sqla_md)
     db_ops_utils.ensure_tables_in_db()
+    return
+
+
+def test_jdata_roundtrip():
+    """
+    tests schema.to_jdata() and from_jdata(jdata) roundtrip.
+    This is for the schema object itself being serialized 
+    to a json blob
+    """
+    schema = hello_tablelike.generate_schema()
+    print('orig schema: ' + str(schema))
+    jd = schema.to_jdata()
+    rt_schema = TablelikeSchema.from_jdata(jd)
+    print('rt schema: ' + str(rt_schema))
+    assert(schema == rt_schema)
     return
 
 def test_sqla_tablelike_lifecycle():
@@ -46,7 +62,7 @@ def test_sqla_tablelike_lifecycle():
     db_client.delete_all_entries()
 
     print('testing create_entry')
-    tle_orig = HelloTablelikeDTO(1.1, 2.2, 'x', ['a','a'], [0.0, 0.0], NestId(1), [NestId(4), NestId(2)], {'x':'innerx'}, 5, [6, 7]).to_tablelike_entry()
+    tle_orig = HelloTablelikeDTO(1.1, 2.2, 'x', ['a','a'], [0.0, 0.0], NestId(1), [NestId(4), NestId(2)], {'x':'innerx'}, {'xb':'innerxb'}, 5, [6, 7]).to_tablelike_entry()
     print(str(tle_orig))
     tle_updated = db_client.create_entry(tle_orig)
     assert(not tle_updated is None)
@@ -74,9 +90,9 @@ def test_sqla_tablelike_lifecycle():
     assert(fetched_deleted is None)
 
     print('testing bulk_create_entries')
-    t1 = HelloTablelikeDTO(3.0, 3.3, 'y', ['a','a'], [0.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, 5, [6, 7]).to_tablelike_entry()
-    t2 = HelloTablelikeDTO(4.0, 4.4, 'y', ['a','b'], [0.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, 5, [6, 7]).to_tablelike_entry()
-    t3 = HelloTablelikeDTO(5.0, 5.5, 'x', ['b','b'], [0.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, 5, [6, 7]).to_tablelike_entry()
+    t1 = HelloTablelikeDTO(3.0, 3.3, 'y', ['a','a'], [0.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, {'xb':'innerxb'}, 5, [6, 7]).to_tablelike_entry()
+    t2 = HelloTablelikeDTO(4.0, 4.4, 'y', ['a','b'], [0.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, {'xb':'innerxb'}, 5, [6, 7]).to_tablelike_entry()
+    t3 = HelloTablelikeDTO(5.0, 5.5, 'x', ['b','b'], [0.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, {'xb':'innerxb'}, 5, [6, 7]).to_tablelike_entry()
 
     tles = [t1, t2, t3]
     up_tles = db_client.bulk_create_entries(tles, batch_size=2)
@@ -92,9 +108,9 @@ def test_sqla_tablelike_lifecycle():
 
     print('testing bulk_create_entries_async and simple_filter_query')
     db_client.delete_all_entries()
-    t1 = HelloTablelikeDTO(6.0, 6.6, 'x', ['b','b'], [0.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, 5, [6, 7]).to_tablelike_entry()
-    t2 = HelloTablelikeDTO(7.0, 7.7, 'z', ['a','b'], [2.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, 5, [6, 7]).to_tablelike_entry()
-    t3 = HelloTablelikeDTO(8.0, 8.8, 'z', ['b','a'], [0.0, 3.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, 5, [6, 7]).to_tablelike_entry()
+    t1 = HelloTablelikeDTO(6.0, 6.6, 'x', ['b','b'], [0.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, {'xb':'innerxc'}, 5, [6, 7]).to_tablelike_entry()
+    t2 = HelloTablelikeDTO(7.0, 7.7, 'z', ['a','b'], [2.0, 0.0], NestId(5), [NestId(1), NestId(2)], {'x':'innerx'}, {'xb':'innerxb'}, 5, [6, 7]).to_tablelike_entry()
+    t3 = HelloTablelikeDTO(8.0, 8.8, 'z', ['b','a'], [0.0, 3.0], NestId(6), [NestId(1), NestId(2)], {'x':'innerx'}, {'xb':'innerxc', 'y':'y1'}, 5, [6, 7]).to_tablelike_entry()
     tles = [t1, t2, t3]
     print('begin async upload')
     upload_count = db_client.bulk_create_entries_async(tles, batch_size=2)
@@ -118,16 +134,41 @@ def test_sqla_tablelike_lifecycle():
     assert(len(x_tles) == 1)
     assert(t1 in x_tles)
 
+    print("testing filter by foreignid")
+    x_tles = db_client.simple_filter_query({'foreignid_val': NestId(6)})
+    for x_tle in x_tles:
+        nid = x_tle.get_nest_id()
+        assert(not nid is None)
+        x_tle.set_nest_id(None) #so we can test equivalence easier
+    assert(len(x_tles) == 1)
+    assert(t3 in x_tles)
+
+    print("testing filter by list of foreignids")
+    x_tles = db_client.simple_filter_query({'foreignid_val': [NestId(6), NestId(5)]})
+    for x_tle in x_tles:
+        nid = x_tle.get_nest_id()
+        assert(not nid is None)
+        x_tle.set_nest_id(None) #so we can test equivalence easier
+
+    assert(len(x_tles) == 3)
+    assert(t3 in x_tles)
+    assert(t2 in x_tles)
+    assert(t1 in x_tles)
+
+
     print("testing filter by json attribute. should work b/c it's string matching in the db")
     json_tles = db_client.simple_filter_query({'json_val':json.dumps({'x':'innerx'})})
     assert(len(json_tles) == 3)
-#
-#    print('testing ensure_entry')
-#    tK = HelloTablelikeDTO(9.0, 9.9, 'z', ['b','a'], [0.0, 3.0], NestId(5), [NestId(1), NestId(2)], {u'x':u'innerx'}).to_tablelike_entry()
-#    tk2 = db_client.ensure_entry(tK)
-#    tk3 = db_client.ensure_entry(tK)
-#    assert(tk2.get_nest_id() == tk3.get_nest_id())
-#    
+
+    print("testing filter by jsonB attribute.")
+    json_tles = db_client.simple_filter_query({'jsonb_val':{'xb':'innerxc'}})
+    for tle in json_tles:
+        tle.set_nest_id(None)
+    print('json tles: ' + str(json_tles))
+    assert(t1 in json_tles)
+    assert(t3 in json_tles)
+    assert(len(json_tles) == 2)
+    
     db_client.get_sqla_connection().close()
     return
 

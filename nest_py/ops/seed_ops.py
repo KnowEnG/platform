@@ -102,27 +102,32 @@ def _run_seed_script(project_env, target_site, flavor_name, subsample):
     
     data_projects_dir = '/code_live/data/projects/'
 
+    db_engine = _make_db_engine(project_env, target_site)
     if project_env == ProjectEnv.hello_world_instance():
         data_dir = data_projects_dir + 'hello_world/'
         exit_code = hello_world_seed_job.run(http_client, data_dir)
     elif project_env == ProjectEnv.knoweng_instance():
-        db_engine = _make_db_engine(project_env)
         data_dir = data_projects_dir + 'knoweng/'
         exit_code = knoweng_seed_job.run(http_client, db_engine, data_dir, subsample, flavor_name)
     elif project_env == ProjectEnv.mmbdb_instance():
         data_dir = data_projects_dir + 'mmbdb/'
-        db_engine = _make_db_engine(project_env)
         exit_code = mmbdb_seed_job.run(http_client, db_engine, data_dir, subsample, flavor_name)
         pass
     else:
         raise Exception("Project's seed job not implemented")
     return exit_code
 
-def _make_db_engine(project_env):
-    db_config = nest_db.generate_db_config(project_env=project_env)
+def _make_db_engine(project_env, site):
+    """
+    project_env(ProjectEnv): used to determine what tables are expected
+    site(NestSite):machine running the database to write results to
+    """
+    db_config = nest_db.generate_db_config(project_env=project_env, site=site)
     db_config['verbose_logging'] = False
+
     sqla_res = nest_db.GLOBAL_SQLA_RESOURCES
     sqla_res.set_config(db_config)
-    nest_db.set_global_sqla_resources(sqla_res)
+    # see https://visualanalytics.atlassian.net/browse/TOOL-510
+    # nest_db.set_global_sqla_resources(sqla_res)
     db_engine = nest_db.get_global_sqlalchemy_engine().connect()
-    return db_engine 
+    return db_engine

@@ -204,7 +204,7 @@ def smoke_simplest_dto_fields_projection(crud_client, result_acc):
         if not (len(data_set) == len(batch1)):
             result_acc.set_success(False)
         for json_item in batch1:
-            for fn in ['message', 'id']: #the requested field and 'id' should be included
+            for fn in ['message', '_id']: #the requested field and '_id' should be included
                 if not fn in json_item:
                     result_acc.add_report_line('projected obj did not contain field: ' + fn)
                     result_acc.set_success(False)

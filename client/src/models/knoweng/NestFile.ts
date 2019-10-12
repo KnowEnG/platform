@@ -1,14 +1,5 @@
 export class NestFile {
-    _created: string;
-    _id: number;
-    filename: string;
-    project_id: number;
-    filesize: number;
-    filetype: string;
-    uploadername: string;
-    notes: string;
-    favorite: boolean;
-    
+
     // Handle the case of a file that has been deleted
     static getFileNameOrPlaceholder(file: NestFile): string {
         if (!file) {
@@ -17,19 +8,18 @@ export class NestFile {
         return file.filename;
     }
 
-    constructor(created: string, id: number , filename: string, project_id: number, 
-        filesize?: number, filetype?: string, uploadername?: string, notes?: string, favorite?: boolean) {
-        this._created = created;
-        this._id = id;
-        this.filename = filename;
-        this.project_id = project_id;
-        this.filesize = filesize;
-        this.filetype = filetype;
-        this.uploadername = uploadername;
-        this.notes = notes;
-        this.favorite = favorite;
+    constructor(
+        public _created: string,
+        public _id: number,
+        public filename: string,
+        public project_id: number,
+        public filesize: number,
+        public filetype: string,
+        public notes: string,
+        public favorite: boolean,
+        public job_id: number) {
     }
-    
+
     getFileIcon(filetype: string): string {
         let icon: string = null;
         switch(filetype) {
@@ -56,7 +46,7 @@ export class NestFile {
         }
         return icon;
     }
-    
+
     getFileNameOrPlaceholder(): string {
         return NestFile.getFileNameOrPlaceholder(this);
     }
@@ -87,11 +77,18 @@ export class NestFile {
     }
     
     /**
+     * Returns a Date object representing this object's _created string.
+     */
+    getCreatedDate(): Date {
+        return new Date(this._created);
+    }
+
+    /**
      * given the object recovered from the JSON attached to an Eve POST
      * response, merge the Eve attributes into this object
      * TODO figure out how we want to handle this across the board and
      * standardize the implementation
-    */ 
+    */
     /*mergeEveAttributes(evePostResponseJson: any): void {
         this._created = evePostResponseJson._created;
         this._id = evePostResponseJson._id;

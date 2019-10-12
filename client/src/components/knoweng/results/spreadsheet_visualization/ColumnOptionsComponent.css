@@ -1,0 +1,165 @@
+.control-panel-container {
+    margin-left:-50px;
+    margin-right:-50px;
+    padding: 4px 0 10px 15px;
+    background-color: #E5F0F2;
+}
+
+.control-panel {
+    width: 158px; /* remember, fixed-full-width has 50px padding on each side */
+    padding-left: 15px;
+    padding-top: 5px;
+}
+
+.col-control-row .control-panel {
+    width: 218px;
+}
+
+.col-control-row .control-panel,
+.col-control-row .main-heatmap-header-area,
+.col-control-row .color-scale-area {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.col-control-row {
+    padding-bottom: 8px;
+}
+
+.main-heatmap-header-area {
+    width: 788px;
+}
+
+.control-panel-label {
+    color: #1D609E;
+    font-size: 10px;
+    line-height: 1;
+    padding-left: 6px;
+    padding-bottom: 2px;
+    border: none;
+    background-color: inherit;
+}
+
+.control-panel-label:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.btnd:active,
+.btnd:focus,
+.btnd.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.column-group-header-placeholder {
+    margin-top: 20px; /* to match height of group headers added later */
+}
+
+.header-placeholder {
+    width: 750px;
+    margin-left: 10px;
+    padding-left: 10px;
+    line-height: 34px;
+    color: #7493AF;
+    background-color: #EFF7F9;
+    border: 1px solid #C6D8E8;
+}
+
+.column-group-header {
+    padding-left: 10px;
+    padding-top: 3px;
+}
+
+.column-sort-header {
+    padding-left: 10px;
+}
+
+.column-header-arrow-icon {
+    font-weight: bold;
+}
+
+.row-selector-btn {
+    background-color: #35516A;
+    font-size: 14px;
+    line-height: 15px;
+    color: white;
+    padding: 3px 8px 6px 7px;
+    width: 184px;
+}
+
+.row-selector-btn .fa-chevron-down {
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.panel-heading {
+    font-size: 18px;
+    background-color: #29465F;
+    width: 741px;
+    color: #ffffff;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.panel-subheading {
+    font-size: 12px;
+}
+
+.col-label-block {
+    display: inline-block;
+    vertical-align: bottom;
+    height: 14px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 12px;
+    color: #7493AF;
+    background-color: transparent;
+    border-right: 1px solid #7493AF;
+    border-top: 1px solid #7493AF;
+    border-bottom: 1px solid #7493AF;
+    cursor: pointer;
+}
+
+.highlight-box {
+    border: 3px solid #000000;
+}
+
+.highlight-label-block {
+    display: inline-block;
+    vertical-align: bottom;
+	height: 25px;
+	background-color: #7493AF;
+	text-align: center;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    color: #FFFFFF;
+    margin-top: -7px;
+}
+
+.group-expansion {
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1px;
+    margin-right: 3px;
+    padding: 3px;
+    background-color: #35516A;
+    border-radius: 3px;
+}
+
+.group-undo-expansion {
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 3px;
+    margin-right: 3px;
+    padding: 3px;
+    background-color: #35516A;
+    border-radius: 3px;
+}

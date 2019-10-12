@@ -27,7 +27,7 @@
     <tbody>
         <tr *ngFor="let job of jobs | slice:0:maxResults; let i=index" [class.selected]="i == selectedRowIndex" (dblclick)="viewResult(i)">
             <td class="name">{{ job.name }}</td>
-            <td class="start">{{ job.getCreatedDate() | date:'short' }}</td>
+            <td class="start">{{ job._created | date:'short' }}</td>
             <td class="pipeline">{{ job.getPrettyPipelineAndMethod() }}</td>
             <td class="status"><i class="fa" [ngClass]="{'fa-refresh': job.status == 'running', 'fa-check-square': job.status == 'completed', 'fa-exclamation-triangle': job.status == 'failed'}"></i></td>
             <!-- the fa-ellipsis-h is a poor match for the comp -->

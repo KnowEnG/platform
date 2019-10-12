@@ -4,12 +4,9 @@
   /* make radar chart and abundance table overflow instead of wrapping */
 }
 
-.radar-chart-container {
-  float: left;
-}
-
-.abundance-table-container {
+.radar-chart-container, .abundance-table-container {
   display: inline-block;
+  vertical-align: top;
 }
 
 .top-otus-label {

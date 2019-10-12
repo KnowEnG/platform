@@ -19,7 +19,7 @@ export class CohortComparisonService {
     /**
      * Read a single cohort
      */
-    getSingleCohort(cohortId: string): Observable<Cohort> {
+    getSingleCohort(cohortId: number): Observable<Cohort> {
         var endpoint = this.cohortUrl + '/' + cohortId;
         return this.authHttp
             .get(endpoint)
@@ -38,7 +38,7 @@ export class CohortComparisonService {
      /**
      * Read a single comparison
      */
-    getComparison(comparisonId: string): Observable<Comparison> {
+    getComparison(comparisonId: number): Observable<Comparison> {
         var endpoint = this.comparisonUrl + '/' + comparisonId;
         return this.authHttp
             .get(endpoint)
@@ -63,7 +63,7 @@ export class CohortComparisonService {
      * Read multiple cohorts in batch
      * @param: cohortIDs array of cohort ids
      */ 
-    getAllComparingCohorts(cohortIDs: Array<string>) {
+    getAllComparingCohorts(cohortIDs: Array<number>) {
         let observableBatch: any = [];
         for (var i = 0; i < cohortIDs.length; i++) {
             observableBatch.push(this.authHttp.get(this.cohortUrl + "/" + cohortIDs[i]).map(response => <Cohort> response.json()));
@@ -72,7 +72,7 @@ export class CohortComparisonService {
     }
     
     //TODO: need to insert line break in those long cohort names
-    getAllComparingCohortsNew(cohortIDs: Array<string>) {
+    getAllComparingCohortsNew(cohortIDs: Array<number>) {
         let observableBatch: any = [];
         for (var i = 0; i < cohortIDs.length; i++) {
             observableBatch.push(this.authHttp.get(this.cohortUrl + "/" + cohortIDs[i]).map(response => {
@@ -96,7 +96,7 @@ export class CohortComparisonService {
      * Read multiple cohort phylum tree data (including abundance represented by relative_abundance_*, richness represented by num_top_otu_*) in batch
      * @param: cohortIDs array of cohort ids
      */ 
-    getAllComparingCohortPhylumTreeData(cohortIDs: Array<string>) {
+    getAllComparingCohortPhylumTreeData(cohortIDs: Array<number>) {
         let observableBatch: any = [];
         for (var i = 0; i < cohortIDs.length; i++) {
             observableBatch.push(this.authHttp.get(this.cohortPhylumTreeUrl + "?cohort_id=" + cohortIDs[i] + "&node_level=phylum&sort=node_name")
@@ -109,7 +109,7 @@ export class CohortComparisonService {
      * Read multiple cohort root data (mainly to get overall richness data) in batch
      * @param: cohortIDs array of cohort ids
      */ 
-    getAllComparingCohortsRootData(cohortIDs: Array<string>) {
+    getAllComparingCohortsRootData(cohortIDs: Array<number>) {
         let observableBatch: any = [];
         for (var i = 0; i < cohortIDs.length; i++) {
             observableBatch.push(this.authHttp.get(this.cohortPhylumTreeUrl + "?cohort_id=" + cohortIDs[i] + "&node_level=root")

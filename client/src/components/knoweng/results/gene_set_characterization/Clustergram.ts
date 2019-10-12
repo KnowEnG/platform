@@ -1,7 +1,7 @@
 import {Component, OnChanges, SimpleChange, Input, Output, EventEmitter} from '@angular/core';
 
 import {ComparisonGeneSet, UserGeneSet, ComparisonGeneSetScores, UserGeneSetScores, GeneSetLevelScore, Result, DISPLAY_DATA_REGISTRY} from '../../../../models/knoweng/results/GeneSetCharacterization';
-import {hexToDec, CellHeatmapEvent} from '../common/CellHeatmap';
+import {CellHeatmapEvent} from '../common/CellHeatmap';
 
 @Component({
     moduleId: module.id,
@@ -57,9 +57,9 @@ export class Clustergram implements OnChanges {
     rolloverBottom: number = null;
     rolloverRight: number = null;
 
-    defaultColor: number = 0xEEEEEE; // 0x607?
+    defaultColor = '#EEEEEE'; // 0x607?
 
-    rowsOfColumns: number[][] = null;
+    rowsOfColumns: string[][] = null;
 
     displayDataRegistry = DISPLAY_DATA_REGISTRY;
 
@@ -72,9 +72,48 @@ export class Clustergram implements OnChanges {
     /** "Alphabet" or "Score" or "Similarity" or one of the user gene sets */
     sortColumnsBy: string | UserGeneSet = "Score";
 
-    /** create instance method on our class, so we can use it in template */
-    hexToDec = hexToDec;
-
+    // DEBUG ONLY: Set to true to show additional debug 
+    //     buttons in the UI for testing performance
+    DEBUG: boolean = false;
+    
+    // DEBUG ONLY: Trigger our current redraw function manually
+    //     NOTE: this should trigger the same detection as testRedrawFullCopy()
+    testRedrawExisting() {
+        console.time('redraw_current');
+        this.redraw();
+        console.timeEnd('redraw_current');
+    }
+    
+    // DEBUG ONLY: Test ChangeDetection by copying each sub-array within a 
+    //     nested array to a new reference
+    testRedrawLayerCopy() {
+        if (!this.rowsOfColumns) {
+            return;
+        }
+        console.time('redraw_single');
+        
+        // Copy/assign first layer in multi-dimensional array
+        this.rowsOfColumns.forEach(row => {
+            let copy = Object.assign([], row);
+            row = copy;
+        });
+        console.timeEnd('redraw_single');
+    }
+    
+    // DEBUG ONLY: Test ChangeDetection by copying the outer array of a nested
+    //     array into a new reference
+    testRedrawFullCopy() {
+        if (!this.rowsOfColumns) {
+            return;
+        }
+        console.time('redraw_full');
+        
+        // Copy/assign full array over the top of existing one
+        let copy = Object.assign([], this.rowsOfColumns);
+        this.rowsOfColumns = copy;
+        console.timeEnd('redraw_full');
+    }
+    
     comparisonGeneSetsCountMessageMapping: {[k: string]: string} = {
         '=0': 'NO COLLECTIONS',
         '=1': '1 COLLECTION',
@@ -98,15 +137,18 @@ export class Clustergram implements OnChanges {
         let interpolate: any = d3.interpolateRgb(this.gradientMinColor, this.gradientMaxColor);
         let scale: any = d3.scale.linear().domain([this.gradientMinThreshold, this.gradientMaxThreshold]).range([0, 1]);
         let comparisonGeneSetScores: ComparisonGeneSetScores = this.result.setLevelScores;
+        
+        // Since we do this as a single assignment, rather than incrementally, 
+        //    we shouldn't need to worry about excessive ChangeDetection here
         this.rowsOfColumns =
             this.selectedUserGeneSets.map((ugs: UserGeneSet) => {
                 return this.selectedComparisonGeneSets.map((cgs: ComparisonGeneSet) => {
                     let userGeneSetScores: UserGeneSetScores =
                         comparisonGeneSetScores.scoreMap.get(cgs.knId);
-                    var color: number = this.defaultColor;
+                    let color = this.defaultColor;
                     if (userGeneSetScores.scoreMap.has(ugs.name)) {
-                        let score: number = userGeneSetScores.scoreMap.get(ugs.name).shadingScore;
-                        color = this.hexToDec(interpolate(scale(score)));
+                        let score = userGeneSetScores.scoreMap.get(ugs.name).shadingScore;
+                        color = interpolate(scale(score));
                     }
                     return color;
                 });

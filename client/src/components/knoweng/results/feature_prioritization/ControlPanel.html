@@ -1,0 +1,27 @@
+<div class="control-panel-container">
+    <div class="job-name-area">
+        <div class="control-label">RESULT</div>
+        <div class="job-name">{{ job.name }}</div>
+    </div>
+    <div class="gradient-area">
+        <div class="gradient-header">
+            <div class="control-label">SCORE</div><!-- no whitespace
+         --><div class="gradient-info-icon"><i class="fa fa-info-circle"></i></div>
+        </div>
+        <gradient-legend [leftColor]="gradientMaxColor" [rightColor]="gradientMinColor" [leftValue]="gradientMaxValue" [rightValue]="gradientMinValue"></gradient-legend>
+    </div>
+    <div class="filter-area">
+        <div class="slider-desc">
+            SELECT NUM. OF TOP FEATURES PER RESPONSE
+        </div>
+        <slider [leftValue]="1" [rightValue]="100" [initialValue]="currentNumTopFeatures" (updatedCurrentValue)="updateNumCurrentTopFeatures($event)"></slider>
+    </div>
+    <div class="total-features-selected-area">
+        <div class="total-features-count" *ngIf="totalFeaturesSelectedCount">{{ totalFeaturesSelectedCount }}</div><!-- no whitespace
+     --><div class="total-features-selected">TOTAL FEATURES SELECTED</div><!-- no whitespace
+     --><div class="gradient-info-icon"><i class="fa fa-info-circle"></i></div>
+    </div>
+    <div class="response-selector-area">
+        <response-selector *ngIf="result" [result]="result" [numTopFeatures]="currentNumTopFeatures" (selectedResponses)="updateSelectedResponses($event)"></response-selector>
+    </div>
+</div>

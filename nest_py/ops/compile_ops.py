@@ -11,9 +11,9 @@ from nest_py.ops.ops_logger import log
 import nest_py.ops.container_users as container_users
 import nest_py.knoweng.knoweng_config as knoweng_config
 import nest_py.nest_envs as nest_envs
-from nest_py.nest_envs import ProjectEnv,RunLevel
+from nest_py.nest_envs import ProjectEnv, RunLevel
 
-VALID_CODE_TYPES = ['python', 'web_assets', 'web_assets:npm', 'web_assets:ts',
+VALID_CODE_TYPES = ['python', 'web_assets', 'web_assets:npm', 'web_assets:ts', \
     'web_assets:dist', 'all']
 
 #this is the brief comment in the list of subcommands
@@ -41,7 +41,7 @@ def register_subcommand(nest_ops_subparsers):
     parser = nest_ops_subparsers.add_parser('compile', \
         help=COMPILE_CMD_HELP, \
         description=COMPILE_CMD_DESCRIPTION, \
-        formatter_class=argparse.RawTextHelpFormatter )
+        formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('--code_type', \
         choices=VALID_CODE_TYPES, \
@@ -56,10 +56,10 @@ def register_subcommand(nest_ops_subparsers):
         choices=nest_envs.VALID_PROJECT_NAMES, \
         default=nest_envs.DEFAULT_PROJECT_NAME, \
         )
-        
+
     parser.add_argument('--runlevel', \
-        help='Determines the run level for logging, error checking, etc.',
-        choices=nest_envs.VALID_RUNLEVEL_NAMES,
+        help='Determines the run level for logging, error checking, etc.', \
+        choices=nest_envs.VALID_RUNLEVEL_NAMES, \
         default=nest_envs.DEFAULT_RUNLEVEL_NAME, \
         )
 
@@ -72,7 +72,7 @@ def _run_compile_cmd(arg_map):
     translates arguments from commandline to calls
     to python methods. Input is the output from
     argparse.parse_args(), output is an exit code
-    indicating if the compilation succeeded. 
+    indicating if the compilation succeeded.
     """
     code_type = arg_map['code_type']
     project_root_dir = arg_map['project_root_dir']
@@ -106,11 +106,10 @@ def _compile(project_root_dir, code_type, project_env, runlevel):
 
 def _compile_python(project_root_dir):
     try:
-        from pylint.lint import Run
         rcfile = os.path.join(project_root_dir, '.pylintrc')
         cmd = 'pylint '
         cmd += '--errors-only '
-        cmd += '--rcfile ' +  rcfile 
+        cmd += '--rcfile ' +  rcfile
         cmd += ' nest_py'
         cr = container_users.make_host_user_command_runner()
         res = cr.run(cmd, stream_log=True)
@@ -160,16 +159,15 @@ def _compile_web_assets_ts(project_root_dir, runlevel):
     # clean and build
     cr = container_users.make_host_user_command_runner()
     cr.set_working_dir(clientdir)
-    
+
     # Pass runlevel down into gulp
     runlevel.write_to_os()
-    
-    # Pass HUBZERO_APPLICATION_HOST and MAX_CONTENT_LENGTH
+
+    # Pass CILOGON_LOGIN_URL and MAX_CONTENT_LENGTH
     # down into gulp (knoweng only)
     project_params = knoweng_config.generate_project_params(runlevel)
-    hz_host = project_params['HUBZERO_APPLICATION_HOST']
-    if hz_host != 'FIXME':
-        os.environ['HUBZERO_APPLICATION_HOST'] = hz_host
+    if project_params.get('CILOGON_ENABLED', False):
+        os.environ['CILOGON_LOGIN_URL'] = project_params['CILOGON_LOGIN_URL']
     os.environ['MAX_CONTENT_LENGTH'] = str(project_params['MAX_CONTENT_LENGTH'])
 
     cmd = gulppath + " clean"

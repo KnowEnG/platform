@@ -66,20 +66,28 @@
         <div *ngFor="let ugs of selectedUserGeneSets; let rowIndex = index" class="dimension-score" [class.selected]="rowIndex == geneSetLevelHoverRowIndex">{{ rowScores[rowIndex] | numFormatter: false }}</div>
     </div><!-- no whitespace
  --><cell-heatmap
+        [DEBUG]="DEBUG"
         [cellWidth]="12"
         [cellHeight]="12"
         [borderThickness]="1"
+        [borderColor]="'#fff'"
         [selectedBorderThicknessMultiplier]="3"
-        [selectedBorderColor]="0"
-        [highlightColor]="hexToDec('0xc6d8e8')"
+        [selectedBorderColor]="'#000'"
+        [highlightColor]="'#c6d8e8'"
         [rowsOfColumns]="rowsOfColumns"
-        [updateHighlight]="!showGeneSetLevelRollover && !showGeneLevelRollover"
+        [freezeHighlight]="showGeneSetLevelRollover || showGeneLevelRollover"
         (cellClicked)="onCellClicked($event)"
         (cellMousedOver)="onCellMousedOver($event)">
     </cell-heatmap>
 </div>
 
-<div *ngIf="showGeneSetLevelRollover || showGeneLevelRollover || showRowLabelContextMenu || showColumnLabelContextMenu" class="rollover-container" [style.bottom.px]="rolloverBottom" [style.right.px]="rolloverRight">
+<!-- Set DEBUG to "true" to test ChangeDetection between Clustergram / CellHeatmap components -->
+<p *ngIf="DEBUG">Watch the Developer Console to determine which of the following are triggering change detection in CellHeatmap:</p>
+<button *ngIf="DEBUG" class="btn btn-danger" (click)="testRedrawExisting()">Redraw (current implementation)</button>
+<button *ngIf="DEBUG" class="btn btn-danger" (click)="testRedrawLayerCopy()">Assign over single layer</button>
+<button *ngIf="DEBUG" class="btn btn-danger" (click)="testRedrawFullCopy()">Assign over full array</button>
+
+<div *ngIf="showGeneSetLevelRollover || showGeneLevelRollover || showRowLabelContextMenu || showColumnLabelContextMenu" class="rollover-container" [style.bottom.px]="rolloverBottom" [style.right.px]="rolloverRight" ngDraggable>
     <gene-set-level-rollover *ngIf="showGeneSetLevelRollover"
         (close)="closeRollover()"
         [gradientMaxColor]="gradientMaxColor"
@@ -90,6 +98,6 @@
         [userGeneSet]="selectedUserGeneSets[geneSetLevelRolloverRowIndex]"
         [geneSetLevelScore]="geneSetLevelRolloverScore">
     </gene-set-level-rollover>
-    <row-label-context-menu *ngIf="showRowLabelContextMenu" [userGeneSet]="selectedUserGeneSets[rowContextMenuIndex]" (mouseleave)="closeRollover()" (sort)="onSortColumnsByRow($event)"></row-label-context-menu>
-    <column-label-context-menu *ngIf="showColumnLabelContextMenu" [comparisonGeneSet]="selectedComparisonGeneSets[columnContextMenuIndex]" (mouseleave)="closeRollover()" (sort)="onSortRowsByColumn($event)"></column-label-context-menu>
+    <gsc-row-label-context-menu *ngIf="showRowLabelContextMenu" [userGeneSet]="selectedUserGeneSets[rowContextMenuIndex]" (mouseleave)="closeRollover()" (sort)="onSortColumnsByRow($event)"></gsc-row-label-context-menu>
+    <gsc-column-label-context-menu *ngIf="showColumnLabelContextMenu" [comparisonGeneSet]="selectedComparisonGeneSets[columnContextMenuIndex]" (mouseleave)="closeRollover()" (sort)="onSortRowsByColumn($event)"></gsc-column-label-context-menu>
 </div>

@@ -1,0 +1,116 @@
+.control-panel-container {
+    width: 354px;
+    padding-left: 49px;
+    padding-right: 23px;
+}
+
+.job-name-area {
+    padding-top: 11px;
+    height: 69.5px;
+    border-bottom: solid 1px #4f6579;
+}
+
+.control-label {
+    font-size: 12px;
+    letter-spacing: 0.7px;
+    color: #a2c3e2;
+}
+
+.job-name {
+    padding-top: 4px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.gradient-area {
+    padding: 20px 0 21px 0;
+    border-bottom: 1px solid #7493AF;
+}
+
+.gradient-area .control-label, .gradient-info-icon {
+    display: inline-block;
+    vertical-align: bottom;
+    line-height: 1;
+}
+
+.gradient-area .control-label {
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    padding-bottom: 1.5px;
+    color: #a2c3e2;
+}
+
+.gradient-info-icon {
+    font-size: 11px;
+    color: #b5d1eb;
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+.gradient-header {
+    margin-bottom: 5px;
+}
+
+.filter-area {
+    padding: 36px 0 13px 0;
+    border-bottom: solid 1px #4f6579;
+}
+
+.slider-desc {
+	color: #FFFFFF;
+	font-size: 12px;
+	line-height: 15px;
+}
+
+.comparison-set-selector-area {
+    padding-top: 15px;
+}
+
+
+.filter-header {
+    white-space: nowrap;
+}
+
+.filter-header .control-label, .filter-info-icon, .filter-range {
+    display: inline-block;
+    vertical-align: bottom;
+    line-height: 1;
+}
+
+.filter-info-icon {
+    font-size: 11px;
+    color: #b5d1eb;
+    margin: 0 22px 0 12px;
+    cursor: pointer;
+}
+
+.filter-range {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e5f0f2;
+}
+
+.total-samples-selected-area {
+    padding: 15px 0 15px 0;
+   border-bottom: 1px solid #7493AF;;
+}
+
+.total-samples-count {
+	color: #E5F0F2;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 22px;
+}
+
+.total-samples-selected {
+    padding-left: 5px;
+	color: #A2C3E2;
+	font-size: 10px;
+	line-height: 12px;
+}
+
+.total-samples-selected-area .total-samples-count, .total-samples-selected, .gradient-info-icon {
+    display: inline-block;
+    vertical-align: bottom;
+    line-height: 1;
+}

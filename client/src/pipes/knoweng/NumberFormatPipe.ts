@@ -18,6 +18,10 @@ export class NumberFormatPipe implements PipeTransform {
      *     string: The formatted number according to the rule
      */
     transform(value: number, keepLeadingZero = true, keepDecimalPart = true): string {
+        if (value == null) {
+            return '';
+        }
+        
         let absVal = Math.abs(value);
         // determine number of digits after the decimal point
         let decimalDigits = 2;

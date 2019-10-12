@@ -1,7 +1,6 @@
 import logging
 import os
 import sys
-from nest_py.core.jobs.job_file_space import JobRunFileSpace
 from nest_py.core.jobs.checkpoint import CheckpointTimer
 
 class JobContext(object):
@@ -15,17 +14,19 @@ class JobContext(object):
     invocation of that code a 'run'.
     """
 
-    def __init__(self, job_key, container_user, job_run_file_space,
-        config_jdata, log_stdout=True):
+    def __init__(self, job_key, container_user, job_file_space,
+        config_jdata, log_to_stdout=True):
 
         self.job_key = job_key
-        self.file_space = job_run_file_space
+        self.run_file_space = None
+        self.job_file_space = job_file_space
         self.container_user = container_user
-        self.logger = _setup_logger(job_key, job_run_file_space, log_stdout)
+        self.log_manager = NestRunLogManager(job_key, log_to_stdout=log_to_stdout)
         self.success = None
         self.config_jdata = config_jdata
         self.runtime_objects = dict()
         self.timer = CheckpointTimer(job_key)
+        self.wix_run_tle = None
         return
 
     def get_job_key(self):
@@ -40,6 +41,12 @@ class JobContext(object):
         """
         return self.config_jdata
 
+    def get_wix_run_id(self):
+        return self.get_wix_run_tle().get_nest_id()
+
+    def get_wix_run_tle(self):
+        return self.wix_run_tle
+
     def set_runtime_object(self, name, obj):
         self.runtime_objects[name] = obj
         return
@@ -47,71 +54,47 @@ class JobContext(object):
     def runtime(self):
         return self.runtime_objects
 
-    def get_parent_job_dir(self):
+    def get_wix_file_space(self):
         """
-        the root directory that all jobs of this run's type
-        share. Normally, job runs do not write to this directory
-        directly. Instead, use get_job_global_data_dir to write
-        data that has a scope across more than one run.
+        gets the toplevel WixFileSpace object that manages all
+        files for all jobs in the current wix installation
         """
-        d = self.file_space.get_parent_job_dir()
-        return d
+        return self.get_job_file_space().get_wix_fs()
 
-    def get_job_global_data_dir(self):
+    def get_job_file_space(self):
         """
-        Returns a (string) filename of the directory on
-        the local filesystem shared by all jobs of the
-        same type. Appropriate for raw data files that
-        are loaded each run and for results cached 
-        between runs.
+        gets the JobFileSpace of that manages the files of all
+        jobs that share the current job's 'job_key'.
+        Same as self.get_wix_file_space().get_job_file_space(self.get_job_key())
         """
-        d = self.file_space.get_job_global_data_dir()
-        return d
+        return self.job_file_space
 
-    def get_run_dir(self):
+    def get_run_file_space(self):
         """
-        returns the root dir of the current RUN. Prefer
-        to put data in the get_run_local_data_dir, which
-        is inside of here.
+        gets teh RunFileSpace that manages the files of this particular
+        job run.
+        Same as self.get_job_file_space().get_run_file_space(self.get_wix_run_id())
         """
-        return self.file_space.get_run_dir()
+        return self.run_file_space
 
-    def get_run_id(self):
-        """
-        a relative identifier of the run. unique to the
-        (job_key, vm it's running on).
-        """
-        return self.file_space.get_run_idx()
-
-    def get_run_local_data_dir(self):
-        """
-        Returns a (string) filename of the data directory
-        that the current run should use for results and
-        temporary disk space during the run. A subdir
-        of get_run_dir().
-        """
-        d = self.file_space.get_run_local_data_dir()
-        return d
-
-    def get_external_run_dir(self, job_key, run_index):
-        """
-        get the "run_local_data_dir" of a run of any type of
-        job that shares the same root directory as this job
-        (e.g in wix, if you want run 23 of a job named hello_world,
-        this would return:
-            dn = jcx.get_external_run_dir('hello_world', 23)
-            dn == 'data/wix/hello_world/run_023'
-
-        """
-        dn = self.file_space.get_external_run_dir(job_key, run_index)
-        return dn
+    def set_wix_run_tle(self, wix_run_tle):
+        if not self.wix_run_tle is None:
+            raise Exception("Wix Run Tablelike entry must only be set once per run")
+        self.wix_run_tle = wix_run_tle
+        wix_run_id = wix_run_tle.get_nest_id()
+        job_fs = self.get_job_file_space()
+        self.run_file_space = job_fs.get_run_file_space(wix_run_id, ensure=True)
+        self.run_file_space.write_config_copy(self.get_config_jdata())
+        job_fs.set_current_run(self.run_file_space)
+        self.log_manager.add_file_space_target(self.run_file_space)
+        return 
 
     def log(self, message):
         """
         logs a message to either a log file or stdout, 
         depending how this JobContext is configured.
         """
-        self.logger.debug(message)
+        self.log_manager.logger.debug(message)
         return 
 
     def checkpoint(self, message):
@@ -145,49 +128,58 @@ class JobContext(object):
         runner will return a Failure exit-code to the commandline
         """
         self.success = False
+        
         return
 
     def succeeded(self):
         if self.success == None:
             self.log("WARNING: success/failure of the job run was \
                 not declared, returning succeeded=True anyway.")
-        r = (self.success == True)
+        r = (self.success == True) or (self.success is None)
         return r
-    
-def _setup_logger(job_name, file_space, log_stdout):
+   
+
+class NestRunLogManager(object):
+    """
+    Handles a single 'logger' with two targets: stdout and a logfile
+    in a RunFileSpace of a job run.
     """
 
-    log_stdout(bool): if true, log messages to stdout as well
-    as the log file. if false, log file only.
-    """
-    log_level = logging.DEBUG
-    logger = logging.getLogger(job_name)
-    logger.setLevel(log_level)
-    log_fn = _make_log_filename(job_name, file_space)
+    def __init__(self, job_name, log_to_stdout=True):
+        self.logger = logging.getLogger(job_name)
 
-    #https://docs.python.org/2/howto/logging-cookbook.html
-    fh = logging.FileHandler(log_fn)
-    fh.setLevel(log_level)
+        # create formatter to add to the handlers
+        self.formatter = logging.Formatter('[%(asctime)s] %(message)s')
 
-    # create formatter and add it to the handlers
-    formatter = logging.Formatter('[%(asctime)s] %(message)s')
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
+        self.log_level = logging.DEBUG
+        self.logger.setLevel(self.log_level)
 
-    if log_stdout:
+        if log_to_stdout:
+            self._add_stdout_target()
+        return
+
+    def _add_stdout_target(self):
+        """
+        meant to be used by the constructor, adds stdout
+        as a target to write all log messages to
+        """
         ch = logging.StreamHandler(sys.stdout)
-        ch.setLevel(log_level)
-        ch.setFormatter(formatter)
-        logger.addHandler(ch)
+        ch.setLevel(self.log_level)
+        ch.setFormatter(self.formatter)
+        self.logger.addHandler(ch)
+        return
 
-    return logger
+    def add_file_space_target(self, run_file_space):
+        """
+        run_file_space(RunFileSpace): 
+        """
+        log_fn = run_file_space.get_log_filepath()
 
-def _make_log_filename(job_name, file_space):
-    """
-    file_space (JobRunFileSpace)
-    """
-    job_name = job_name.replace(' ', '_')
-    run_dir = file_space.get_run_local_data_dir()
-    log_fn = os.path.join(run_dir, 'wix_run.log')
-    return log_fn
-    
+        #https://docs.python.org/2/howto/logging-cookbook.html
+        fh = logging.FileHandler(log_fn)
+        fh.setLevel(self.log_level)
+
+        fh.setFormatter(self.formatter)
+        self.logger.addHandler(fh)
+        return
+

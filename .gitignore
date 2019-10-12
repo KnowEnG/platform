@@ -3,11 +3,9 @@
 data/db/*
 data/userfiles/*
 !data/userfiles/.gitkeep
-# created by data/projects/knoweng/populate.sh
-data/src
-data/gene_annotations
-data/logs
-data/networks
+data/projects/knoweng/demo_files
+data/projects/knoweng/networks
+data/projects/knoweng/pipeline_readmes
 data/projects/mmbdb/*
 data/projects/hello_world/*
 

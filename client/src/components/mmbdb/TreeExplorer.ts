@@ -134,7 +134,7 @@ export class TreeExplorer implements OnChanges {
         }
         // we need the cohort ids in the order they'll be displayed, top to
         // bottom, which for MMBDB is variant then baseline then individual
-        var cohortIds: string[] = [
+        var cohortIds: number[] = [
             this.comparison.variant_cohort_id,
             this.comparison.baseline_cohort_id];
         if (this.comparison.patient_cohort_id) {
@@ -253,7 +253,7 @@ export class TreeExplorer implements OnChanges {
     prepareLinksForDisplay(): void {
         // first, group the links according to the source node
         var groupedLinks: any = d3.nest()
-            .key((link: MultiLink) => link.source.comparisonNode.id)
+            .key((link: MultiLink) => String(link.source.comparisonNode.id))
             .entries(this.shownLinks);
         // now process them in batches, one batch per source node
         groupedLinks.forEach((d: any) => {

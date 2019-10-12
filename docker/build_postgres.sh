@@ -1,1 +1,1 @@
-docker build --file=Dockerfile-postgres --tag=knowengdev/postgres:latest ..
+docker build --file=Dockerfile-postgres --tag=nest/postgres:latest ..

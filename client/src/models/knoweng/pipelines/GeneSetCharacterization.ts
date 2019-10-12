@@ -10,6 +10,7 @@ import {Pipeline} from '../Pipeline';
 import {getInteractionNetworkOptions} from './PipelineUtils';
 import {AnalysisNetwork, Collection, Species} from '../KnowledgeNetwork';
 import {FileService} from '../../../services/knoweng/FileService';
+import {JobService} from '../../../services/knoweng/JobService';
 
 export class GeneSetCharacterizationPipeline extends Pipeline {
     
@@ -17,6 +18,7 @@ export class GeneSetCharacterizationPipeline extends Pipeline {
 
     constructor(
         private fileService: FileService,
+        private jobService: JobService,
         speciesStream: Observable<Species[]>,
         collectionsStream: Observable<Collection[]>,
         networksStream: Observable<AnalysisNetwork[]>) {
@@ -47,7 +49,7 @@ export class GeneSetCharacterizationPipeline extends Pipeline {
                         speciesOptions = species.sort((a, b) => d3.ascending(a.display_order, b.display_order)).map(s => new SelectOption(s.name + " (" + s.short_latin_name + ")", s.species_number, s.selected_by_default, s.group_name));
                         Array.prototype.push.apply(dataFields, [
                             new SelectFormField("species", null, "1", "Select species", "Species", true, speciesOptions, false, VALID_UNLESS_REQUIRED_BUT_EMPTY, ALWAYS),
-                            new FileFormField("gene_set_file", null, "2", "Select gene-identifiers list or spreadsheet", "Gene Set File", true, null, this.fileService, false, true, VALID_UNLESS_REQUIRED_BUT_EMPTY, ALWAYS)
+                            new FileFormField("gene_set_file", null, "2", "Select gene-identifiers list or spreadsheet", "Gene Set File", true, null, this.fileService, this.jobService, false, true, VALID_UNLESS_REQUIRED_BUT_EMPTY, ALWAYS)
                         ]);
 
                         // create a gene collections field for each species; they'll be enabled according to the current species selection, so only one will be visible at any given time
@@ -62,7 +64,7 @@ export class GeneSetCharacterizationPipeline extends Pipeline {
                         );
                         networkFields.push(new HiddenFormField("method", "Fisher", IF('use_network', false)));
                         networkFields.push(new HiddenFormField("method", "DRaWR", IF('use_network', true)));
-                        getInteractionNetworkOptions(species, networks).forEach(nf => {
+                        getInteractionNetworkOptions(species, networks, "1").forEach(nf => {
                             networkFields.push(nf);
                         });
                         networkFields.push(
@@ -95,10 +97,10 @@ var GENE_SET_CHARACTERIZATION_ABOUT = "You have a set of genes. You want to know
 var GENE_SET_CHARACTERIZATION_TRAINING = new HelpContentGroup("Info and training", [
     new HelpContentElement("Quickstart Guide", HelpElementType.HEADING),
     new HelpContentElement("This guide walks you through the entire pipeline from setup to visualization of results. It also includes links to sample data.", HelpElementType.BODY),
-    new HelpContentElement("<a href='//www.knoweng.org/quick-start/' target='_blank'>Download the Gene Set Characterization Quickstart Guide PDF</a>", HelpElementType.BODY),
+    new HelpContentElement("<a href='https://knoweng.org/quick-start/' target='_blank'>Download the Gene Set Characterization Quickstart Guide PDF</a>", HelpElementType.BODY),
     new HelpContentElement("Video Tutorials", HelpElementType.HEADING),
     new HelpContentElement("The KnowEnG YouTube Channel contains videos for every pipeline (some currently in development) as well as information about unique attributes of the KnowEnG Platform.", HelpElementType.BODY),
-    new HelpContentElement("<a href='//www.youtube.com/channel/UCjyIIolCaZIGtZC20XLBOyg' target='_blank'>Visit the KnowEnG YouTube Channel</a>", HelpElementType.BODY)
+    new HelpContentElement("<a href='https://www.youtube.com/channel/UCjyIIolCaZIGtZC20XLBOyg' target='_blank'>Visit the KnowEnG YouTube Channel</a>", HelpElementType.BODY)
 ]);
 
 var GENE_SET_CHARACTERIZATION_OVERVIEW_HELP_CONTENT = new HelpContent([
@@ -106,7 +108,7 @@ var GENE_SET_CHARACTERIZATION_OVERVIEW_HELP_CONTENT = new HelpContent([
         new HelpContentElement(GENE_SET_CHARACTERIZATION_ABOUT, HelpElementType.BODY),
     ]),
     new HelpContentGroup("How does the KnowEnG pipeline work?", [
-        new HelpContentElement("This pipeline allows you to use a standard statistical test, called the Fisher's exact test, to assess the overlap between your submitted gene set(s) and pre-defined gene sets. This approach is commonly used for gene set characterization, for example by the popular <a href='//david.ncifcrf.gov' target='_blank'>DAVID</a> tool.", HelpElementType.BODY),
+        new HelpContentElement("This pipeline allows you to use a standard statistical test, called the Fisher's exact test, to assess the overlap between your submitted gene set(s) and pre-defined gene sets. This approach is commonly used for gene set characterization, for example by the popular <a href='https://david.ncifcrf.gov' target='_blank'>DAVID</a> tool.", HelpElementType.BODY),
         new HelpContentElement("Alternatively, you may choose a knowledge-guided method developed by us: DRaWR. This method employs state-of-the-art data mining techniques similar to Google's search algorithm to identify annotations&mdash;pathways, GO terms etc.&mdash;associated with many of your genes.", HelpElementType.BODY),
     ]),
     new HelpContentGroup("How is the KnowEnG pipeline different?", [
@@ -140,7 +142,7 @@ var GENE_SET_CHARACTERIZATION_PARAMETERS_HELP_CONTENT = new HelpContent([
         new HelpContentElement("No, each checkbox is a collection of many public gene sets. When you select a collection, each of its public gene sets will be tested for association with your gene set.", HelpElementType.BODY),
     ]),
     new HelpContentGroup("Where did these public gene sets come from?", [
-        new HelpContentElement("Public gene sets are collected from large consortium efforts, such as <a href='//geneontology.org/' target='_blank'>Gene Ontology</a> and <a href='//reactome.org/' target='_blank'>Reactome</a>, that collaborate to curate known interactions and annotations of proteins etc.  The public gene sets are also pulled from the most comprehensive, popular databases dedicated to gene set aggregation, such as <a href='//amp.pharm.mssm.edu/Enrichr/' target='_blank'>Enrichr</a>, <a href='//software.broadinstitute.org/gsea/msigdb/' target='_blank'>MSigDB</a>, etc.", HelpElementType.BODY),
+        new HelpContentElement("Public gene sets are collected from large consortium efforts, such as <a href='http://geneontology.org/' target='_blank'>Gene Ontology</a> and <a href='https://reactome.org/' target='_blank'>Reactome</a>, that collaborate to curate known interactions and annotations of proteins etc.  The public gene sets are also pulled from the most comprehensive, popular databases dedicated to gene set aggregation, such as <a href='http://amp.pharm.mssm.edu/Enrichr/' target='_blank'>Enrichr</a>, <a href='http://software.broadinstitute.org/gsea/msigdb/' target='_blank'>MSigDB</a>, etc.", HelpElementType.BODY),
     ]),
     GENE_SET_CHARACTERIZATION_TRAINING
 ]);
@@ -153,7 +155,7 @@ var GENE_SET_CHARACTERIZATION_NETWORK_HELP_CONTENT = new HelpContent([
         new HelpContentElement("This provides a more holistic view of what it means for a gene set to be associated with, say, a well-known pathway. In particular, it looks out for different types of evidence of your genes being linked to the pathway. This may include genes not directly included in the pathway, but closely related to genes in the pathway, e.g., by protein-protein interactions or homology. As a result, it provides a complementary listing of biological processes, pathways, and other annotations enriched in your gene set compared to what you see without the Knowledge Network.", HelpElementType.BODY),
     ]),
     new HelpContentGroup("Disadvantages", [
-        new HelpContentElement("This is a novel approach to gene set characterization, showcased in the original <a href='//www.ncbi.nlm.nih.gov/pubmed/27153592' target='_blank'>DRaWR</a> paper. It has been far less widely used than the standard approach without the Knowledge Network. It is not as straightforward a statistic as the standard approach, and does not provide a p-value of the association.", HelpElementType.BODY),
+        new HelpContentElement("This is a novel approach to gene set characterization, showcased in the original <a href='https://www.ncbi.nlm.nih.gov/pubmed/27153592' target='_blank'>DRaWR</a> paper. It has been far less widely used than the standard approach without the Knowledge Network. It is not as straightforward a statistic as the standard approach, and does not provide a p-value of the association.", HelpElementType.BODY),
     ]),
     new HelpContentGroup("What is Network Smoothing?", [
         new HelpContentElement("Network smoothing is the algorithm's probability that controls whether the random walker's next move is to follow a network edge versus to jump back to a node from the query gene set. The higher the network smoothing, the more neighbor information is incorporated into ranking the results. Most often, the network influence is set to a value between 50% and 85% and the results are typically stable within that range.", HelpElementType.BODY),
