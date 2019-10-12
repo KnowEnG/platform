@@ -1,1 +1,9 @@
 data/
+!data/projects/knoweng/demo_files/
+!data/projects/knoweng/pipeline_readmes/
+docker/
+!docker/flask_entrypoint.sh
+ci_scripts/
+.git
+.gitignore
+client-debug.log

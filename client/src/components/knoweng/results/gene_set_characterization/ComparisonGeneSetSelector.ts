@@ -87,6 +87,7 @@ class SupercollectionState {
         public supercollection: ComparisonGeneSetSupercollection,
         public open: boolean) {
         this.collectionStates = supercollection.collections
+            .sort((c1, c2) => d3.ascending(c1.name, c2.name))
             .map((collection: ComparisonGeneSetCollection) => new CollectionState(collection, false));
     }
     getSelectedCount(): number {
@@ -117,6 +118,7 @@ class CollectionState {
         public collection: ComparisonGeneSetCollection,
         public open: boolean) {
         this.geneSetStates = collection.sets
+            .sort((gs1, gs2) => d3.ascending(gs1.name, gs2.name))
             .map((geneSet: ComparisonGeneSet) => new GeneSetState(geneSet, true));
     }
     getSelectedCount(): number {

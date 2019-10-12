@@ -43,7 +43,7 @@
                 <grouped-barchart  *ngIf="abundance.phylum != 'Uncommon'" [data]="abundance.distributions"></grouped-barchart>
             </td>
         </tr>
-        <template [ngIf]="showUncommonPhylum">
+        <ng-template [ngIf]="showUncommonPhylum">
             <tr *ngFor="let ua of uncommonAbundances">
                 <td><i class="{{ ua.selected ? 'fa fa-check-square' : 'fa fa-square-o' }}" (click)="onCheckboxChange(ua)"></i></td>
                 <td>&nbsp;</td>
@@ -58,6 +58,6 @@
                     <grouped-barchart [data]="ua.distributions"></grouped-barchart>
                 </td>
             </tr>
-        </template>
+        </ng-template>
     </tbody>
 </table>

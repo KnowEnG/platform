@@ -6,6 +6,7 @@ import nest_py.omix.data_types.comparison_phylo_tree_nodes as comparison_phylo_t
 import nest_py.omix.data_types.geno_samples as geno_samples
 import nest_py.omix.data_types.otus as otus
 import nest_py.omix.data_types.tornado_runs as tornado_runs
+import nest_py.omix.data_types.cral.cral_schemas as cral_schemas
 
 def get_schemas():
     schemas = list()
@@ -16,6 +17,8 @@ def get_schemas():
     schemas.append(geno_samples.generate_schema())
     schemas.append(otus.generate_schema())
     schemas.append(tornado_runs.generate_schema())
+
+    schemas += cral_schemas.get_schemas().values()
 
     registry = dict()
     for schema in schemas:

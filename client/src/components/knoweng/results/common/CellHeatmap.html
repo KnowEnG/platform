@@ -1,0 +1,31 @@
+<div>
+    <!-- note we're using ChangeDetectionStrategy.OnPush, so if you edit this
+         template and find your mods aren't responding to updates in the
+         @Input()s, the problem could be you aren't triggering a
+         change-detection cycle -->
+    <canvas #canvasElement
+        (mouseout)="onMouseout($event)"
+        (mousemove)="onMousemove($event)"
+        (click)="onClick($event)"></canvas>
+    <div class="highlight-container" *ngIf="highlightData.isOn" [style.top.px]="-1 * getCanvasHeight()">
+        <div class="highlight-bar"
+            [style.background-color]="highlightColor"
+            [style.opacity]="0.5"
+            [style.width.px]="highlightData.colBarWidth"
+            [style.height.px]="highlightData.cellTop"
+            [style.left.px]="highlightData.cellLeft"></div>
+        <div class="highlight-bar"
+            [style.background-color]="highlightColor"
+            [style.opacity]="0.5"
+            [style.width.px]="highlightData.cellLeft"
+            [style.height.px]="highlightData.rowBarHeight"
+            [style.top.px]="highlightData.cellTop"></div>
+        <div class="highlight-box"
+            [style.border-color]="selectedBorderColor"
+            [style.border-width.px]="selectedBorderThicknessMultiplier * borderThickness"
+            [style.width.px]="cellWidth + selectedBorderThicknessMultiplier * borderThickness"
+            [style.height.px]="cellHeight + selectedBorderThicknessMultiplier * borderThickness"
+            [style.left.px]="highlightData.cellLeft - 0.5 * selectedBorderThicknessMultiplier * borderThickness"
+            [style.top.px]="highlightData.cellTop - 0.5 * selectedBorderThicknessMultiplier * borderThickness"></div>
+    </div>
+</div>

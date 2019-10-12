@@ -1,0 +1,96 @@
+<div dropdown [autoClose]="false" [isOpen]="showPanel" (isOpenChange)="showPanelChanged($event)">
+    <div dropdownToggle class="dropdown-toggle" (click)="toggleShowPanel($event)">
+        <!-- matches activator attribute -->
+        <ng-content select="[activator]"></ng-content>
+    </div>
+    <ul *dropdownMenu class="dropdown-menu no-whitespace" role="menu">
+        <li role="menuitem" class="no-whitespace">
+            <div class="panel panel-default">
+                <!-- matches panel-heading CSS class -->
+                <ng-content select=".panel-heading"></ng-content>
+                
+                <div class="file-and-row-selector">
+                    <div class="file-selector">
+                        <table class="table no-whitespace">
+                            <thead>
+                                <tr class="panel-table-header">
+                                    <th>SPREADSHEETS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="panel-table-row" [ngClass]="{ 'info': selectedFile && selectedFile.spreadsheetId===file.spreadsheetId }" (click)="selectFile(file)" *ngFor="let file of getRelevantSpreadsheets()">
+                                    <td><div><span trunctip maxLength="40" tooltipText="{{ file.fileId | fileName }}"></span> <span *ngIf="getSelectedRowsCount(file) > 0" class="badge pull-right">{{ getSelectedRowsCount(file) }} Selected</span></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- no whitespace between file-selector and row-selector
+                    
+                 --><div class="row-selector">
+                        <div class="row-selector-help-text" *ngIf="!selectedFile">
+                            Please select a file to view row data.
+                        </div>
+                        <div *ngIf="selectedFile">
+                            <table class="table table-hover borderless no-whitespace">
+                                <thead>
+                                    <!-- NOTE: checkFilter must be false on this one -->
+                                    <tr *ngIf="rowOptions.length > rowOptionThreshold">
+                                        <!-- Typeahead Search (shown only when # pages > 1) -->
+                                        <th colspan="3">
+                                            <p class="typeahead-helper-text">
+                                                This spreadsheet contains too many rows to display here. 
+                                                Search for the row of interest and and select it.
+                                            </p>
+                                            <div class="typeahead-input-container input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-fw fa-search"></i>
+                                                </span>
+                                                
+                                                <input [(ngModel)]="currentFilter" 
+                                                        [typeahead]="selectedFile.rowNames"
+                                                        (typeaheadOnSelect)="addRowToSearchResults($event)"
+                                                        typeaheadOptionsLimit="10"
+                                                        placeholder="SEARCH ROW LABEL"
+                                                        class="form-control">
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    
+                                    <!-- Table column headers -->
+                                    <tr class="panel-table-header">
+                                        <th class="col-show">SHOW</th>
+                                        <th class="col-name">ROW NAME</th>
+                                        <th class="col-score" *ngIf="isShowingScores()">SCORE</th>
+                                        <th class="col-type">DATA TYPE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Placeholder text, in case no search results are found -->
+                                    <tr *ngIf="!rowSearchResults.length">
+                                        <td colspan="3" class="row-selector-help-text">Search for rows above to display them here</td>
+                                    </tr>
+                                    
+                                    <!-- Search results, or single page of results -->
+                                    <!-- NOTE: if rowOptions.length <= rowOptionThreshold, rowSearchOptions statically contains all options -->
+                                    <tr class="panel-table-row" *ngFor="let row of rowSearchResults" (click)="select(row)">
+                                       <td class="col-show">
+                                            <i *ngIf="multiSelect"  class="fa" [ngClass]="{ 'fa-check-square': isSelected(row), 'fa-square-o': !isSelected(row) }"></i>
+                                            <i *ngIf="!multiSelect" class="fa" [ngClass]="{ 'fa-circle': isSelected(row), 'fa-circle-o': !isSelected(row) }"></i>
+                                        </td>
+                                        <td class="col-name" trunctip maxLength="30" [tooltipText]="row.getName()"></td>
+                                        <td class="col-score" *ngIf="isShowingScores()">{{ (row.getScore() || row.getScore() === 0) ? (row.getScore() | numFormatter) : '' }}</td>
+                                        <td class="col-type">
+                                            <div class="type-label" [ngClass]="row.getType()">{{ row.getType() }}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer no-whitespace">
+                    <button class="done-btn btn btn-sm btn-primary pull-right" (click)="toggleShowPanel($event)">Done</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

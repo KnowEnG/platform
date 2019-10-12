@@ -9,6 +9,7 @@ import {LogService} from '../common/LogService';
 import {SessionService} from '../common/SessionService';
 
 import {DownloadUtilities} from '../common/DownloadUtilities';
+import {EveUtilities} from '../common/EveUtilities';
 
 //import 'rxjs/add/operator/filter';
 
@@ -81,11 +82,9 @@ export class FileService {
      */
     triggerFetch() {
         // fetch the current files from the server
-        var requestStream = this.authHttp
-            .get(this._fileUrl)
+        var requestStream = EveUtilities.getAllItems(this._fileUrl, this.authHttp)
             .catch((error: any) => Observable.throw(error))
-            .map(res => {
-                let fileData: any[] = res.json()._items;
+            .map(fileData => {
                 return fileData.map((fileDatum: any) => new NestFile(
                     fileDatum._created,
                     fileDatum._id,
@@ -94,9 +93,9 @@ export class FileService {
                     // TODO filesize will eventually be an integer (TOOL-398)
                     parseInt(fileDatum.filesize, 10),
                     fileDatum.filetype,
-                    fileDatum.uploadername,
                     fileDatum.notes,
-                    fileDatum.favorite));
+                    fileDatum.favorite,
+                    fileDatum.job_id));
             });
         // add the array from the server to the stream of current files
         requestStream.subscribe(
@@ -107,41 +106,14 @@ export class FileService {
     }
 
     /**
-    * Create (save) a file by passing content-type: multipart/form-data required by API
-    */
-    saveFile(formData: FormData, filename: string, projectId: number): void {
-        let headers = new Headers();
-        headers.append('Accept', 'application/json');
-        let options = new RequestOptions({ headers: headers });
-        var requestStream = this.authHttp.post(this._fileUrl, formData, options)
-            .catch((error: any) => Observable.throw(error))
-            .map(res => {
-                let fileDatum: any = res.json();
-                return new NestFile(
-                    fileDatum._created,
-                    fileDatum._id,
-                    filename,
-                    projectId);
-            }).share();
-        //need to fetch files so the result table will include the file that was just updated
-         requestStream.subscribe(
-            file => {
-                this.triggerFetch();
-            },
-            err => {
-                this.logger.error("Failed saving file: " + filename);
-            });
-    }
-
-    /**
-     * TODO don't call this yet; it doesn't handle the file payload, and we need
-     * to integrate with dropzone or switch to something else; for now, just let
-     * dropzone POST the file, and have it call triggerFetch()
-     * send a POST requst to api to create a new NestFile
-     * filename: the filename
+     * Given (1) the path of a demo file relative to the demo files directory
+     * and (2) a project id, creates a new copy of the demo file for the user
+     * under the project.
+     * fileRelativePath: the path to the demo file relative to the demo files
+     *     directory
      * projectId: the parent project's _id
      */
-    createFile(filename: string, projectId: number): void {
+    copyDemoFile(fileRelativePath: string, projectId: number): void {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
         // post the new file to the server
@@ -149,7 +121,10 @@ export class FileService {
         var requestStream = this.authHttp
             .post(
                 url,
-                JSON.stringify({filename: filename, project: projectId}),
+                JSON.stringify({
+                    file_relative_path: fileRelativePath,
+                    project_id: projectId
+                }),
                 {headers: headers}
             )
             .catch((error: any) => Observable.throw(error))
@@ -158,8 +133,14 @@ export class FileService {
                 return new NestFile(
                     fileDatum._created,
                     fileDatum._id,
-                    filename,
-                    projectId);
+                    fileDatum.filename,
+                    fileDatum.project_id,
+                    // TODO filesize will eventually be an integer (TOOL-398)
+                    parseInt(fileDatum.filesize, 10),
+                    fileDatum.filetype,
+                    fileDatum.notes,
+                    fileDatum.favorite,
+                    fileDatum.job_id);
             });
         // add the new project to the current NestFile[] and publish the updated
         // NestFile[] to the _filesSubject stream
@@ -170,7 +151,7 @@ export class FileService {
                 this._filesSubject.next(currentFiles);
             },
             err => {
-                this.logger.error("Failed creating file");
+                this.logger.error("Failed copying demo file " + fileRelativePath);
             }
         );
     }
@@ -243,9 +224,9 @@ export class FileService {
                     // TODO filesize will eventually be an integer (TOOL-398)
                     parseInt(replyObj.filesize, 10),
                     replyObj.filetype,
-                    replyObj.uploadername,
                     replyObj.notes,
-                    replyObj.favorite);
+                    replyObj.favorite,
+                    replyObj.job_id);
                 return newFile;
             }).share();
         //need to fetch files so the result table will include the file that was just updated
@@ -284,9 +265,9 @@ export class FileService {
                     // TODO filesize will eventually be an integer (TOOL-398)
                     parseInt(replyObj.filesize, 10),
                     replyObj.filetype,
-                    replyObj.uploadername,
                     replyObj.notes,
-                    replyObj.favorite);
+                    replyObj.favorite,
+                    replyObj.job_id);
                 return newFile;
             }).share();
         //need to fetch files so the result table will include the file that was just updated
@@ -296,6 +277,46 @@ export class FileService {
             },
             err => {
                 this.logger.error("Failed to update file favorites");
+            });
+        return requestStream;
+    }
+    
+      /**
+     * Update file name field and return updated file back to client if successful
+     */
+    updateFileName(file: NestFile, newFileName: string): Observable<NestFile> {
+        let url = this._fileUrl + '/' + file._id + '?reply=whole';
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var requestStream = this.authHttp
+            .patch(
+                url,
+                JSON.stringify({filename: newFileName}),
+                {headers: headers}
+            )
+            .catch((error: any) => Observable.throw(error))
+            .map(res => {
+                var replyObj: any = res.json();
+                var newFile: NestFile = new NestFile(
+                    replyObj._created,
+                    replyObj._id,
+                    replyObj.filename,
+                    replyObj.project_id,
+                    // TODO filesize will eventually be an integer (TOOL-398)
+                    parseInt(replyObj.filesize, 10),
+                    replyObj.filetype,
+                    replyObj.notes,
+                    replyObj.favorite,
+                    replyObj.job_id);
+                return newFile;
+            }).share();
+        //need to fetch files so the result table will include the file that was just updated
+         requestStream.subscribe(
+            file => {
+                this.triggerFetch();
+            },
+            err => {
+                this.logger.error("Failed to update file name");
             });
         return requestStream;
     }

@@ -63,5 +63,31 @@
 }
 
 .right-side {
-    width: 473px; /* remember, fixed-full-width has 50px padding on each side */
+    width: 273px; /* remember, fixed-full-width has 50px padding on each side */
+}
+
+.column-options-grouping-rollover-addition {
+    padding: 3px 0 5px 8px;
+}
+
+.table-title {
+    color: #1D609E;
+    font-size: 10px;
+}
+
+.cluster-label, .cluster-score {
+    color: #4A4A4A;
+    font-size: 12px;
+}
+
+.cluster-label {
+    padding: 0 10px 0 10px;
+}
+
+.cluster-score {
+    text-align: right;
+}
+
+.overall {
+    font-weight: 700;
 }

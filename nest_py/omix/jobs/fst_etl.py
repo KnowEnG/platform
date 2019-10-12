@@ -28,6 +28,7 @@ def get_fst_of_comparison(comparison_key, seed_data,
             comparison_key, cohort_a, cohort_b, 
             otu_defs, geno_samples, data_dir, file_owner)
     else:
+        print('Downloading precomputed FST results at: ' + fst_cache_url)
         _download_fst_results_for_comparison(
             comparison_key, fst_cache_url, data_dir, file_owner)
 
@@ -36,7 +37,8 @@ def get_fst_of_comparison(comparison_key, seed_data,
     file_utils.set_directory_owner(file_owner, fst_workspace, recurse=True)
 
     results = fst_output_etl.load_fst_results_from_csv(comparison_key, data_dir)
-    sorted_otu_blobs = fst_output_etl.post_process_fst_results(results, otu_defs)
+    sorted_otu_blobs = fst_output_etl.post_process_fst_results(
+        comparison_key, results, otu_defs)
     return sorted_otu_blobs
 
 def _compute_fst_results_for_comparison(comparison_key, cohort_a, cohort_b,
@@ -81,6 +83,6 @@ def _download_fst_results_for_comparison(comparison_key, fst_cache_url,
     box_url = fst_cache_url
     fn = fst_output_etl.filename_of_fst_results(comparison_key, data_dir)
     box_downloads.download_from_box_no_auth(box_url, fn, 
-        file_owner=file_owner, force=False)
+        file_owner=file_owner, force=True)
     return 
 

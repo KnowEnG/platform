@@ -1,5 +1,6 @@
 .body-container {
-    white-space: nowrap; /* keep panels side by side */
+    display: flex;
+    margin-bottom: 29px;
 }
 
 .alert-invalid {
@@ -23,11 +24,6 @@
     -webkit-transform: rotate(360deg);
 }
 
-.form-container, help-panel {
-    display: inline-block;
-    vertical-align: top;
-}
-
 .form-container {
     width: 884px;
     margin-top: 40px;
@@ -39,7 +35,7 @@ help-panel {
 }
 
 .field-container:not(:first-of-type) {
-    margin-top: 50px;
+    margin-top: 34px;
 }
 
 /* form radio buttons */

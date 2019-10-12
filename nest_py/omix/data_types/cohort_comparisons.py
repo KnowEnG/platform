@@ -15,7 +15,7 @@ def generate_schema():
     schema.add_foreignid_attribute('baseline_cohort_id')
     schema.add_foreignid_attribute('variant_cohort_id')
     schema.add_foreignid_attribute('patient_cohort_id')
-    schema.add_categoric_list_attribute('top_fst_ranked_otu_ids', valid_values=None)
+    schema.add_foreignid_list_attribute('top_fst_ranked_otu_ids', valid_values=None)
     schema.add_numeric_list_attribute('top_fst_ranked_otu_scores')
     return schema
 

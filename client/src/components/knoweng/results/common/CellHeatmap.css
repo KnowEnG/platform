@@ -1,0 +1,16 @@
+canvas {
+    display: block; /* ensure we can align with baseline */
+}
+
+.highlight-container {
+    position: relative;
+    pointer-events: none; /* prevent overlays from interfering with mouse events */
+}
+
+.highlight-bar, .highlight-box {
+    position: absolute;
+}
+
+.highlight-box {
+    border-style: solid;
+}

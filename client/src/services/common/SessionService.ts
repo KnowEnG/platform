@@ -12,52 +12,47 @@ import {ServerStatusService} from './ServerStatusService';
 export class SessionService {
     // store the URL so we can redirect after logging in
     redirectUrl: string;
-    
-    // The login route for the KnowEnG dashboard
-    private _staticLoginRoute: string = 'login';
-    
-    // The HubZero path to log out the user and redirect to login
-    private _hzEnsureLogoutRoute: string = '/logout';
 
-    private _sessionUrl: string = '/api/v2/sessions';
+    // The login route for the KnowEnG dashboard
+    private _staticLoginRoute = 'login';
+
+    private _sessionUrl = '/api/v2/sessions';
 
     // if changing this, check angular2-jwt docs for consequences
-    private _tokenKey: string = 'id_token';
-    
+    private _tokenKey = 'id_token';
+
     private _tokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>({});
-    
-    private _runlevel: string = 'development';
-    private _hubzeroHost: string = '';
+
+    private _cilogonLoginUrl = '';
 
     constructor(private http: Http, private location: Location, private router: Router, private statusService: ServerStatusService) {
     }
-    
+
     getLoginUrl(presentStaticLogin: boolean = false) {
         // Short-circuit for our static login route
         if (presentStaticLogin) {
             return this._staticLoginRoute;
         }
-        
-        // Check the latest server status to determine the hubzeroHost
+
+        // Check the latest server status to determine the cilogon url
         if (this.statusService.status) {
-            this._runlevel = this.statusService.status.runlevel;
-            this._hubzeroHost = this.statusService.status.hzHost;
+            this._cilogonLoginUrl = this.statusService.status.cilogonLoginUrl;
         }
-        
-        // If hubzeroHost is not set, return our static login route
-        if (!this._hubzeroHost) {
+
+        // If cilogonLoginUrl is not set, return our static login route
+        if (!this._cilogonLoginUrl) {
             return this._staticLoginRoute;
         }
-        
-        // If HubZero auth is enabled and we weren't told explicitly to send 
-        // the user to the nest login page, redirect to HubZero
+
+        // If cilogon auth is enabled and we weren't told explicitly to send
+        // the user to the nest login page, redirect to cilogon
         // TODO: how to detect protocol?
-        return this.location.normalize('https://' + this._hubzeroHost) + this._hzEnsureLogoutRoute;
+        return this._cilogonLoginUrl;
     }
-    
+
     redirectToLogin(presentStaticLogin: boolean = false) {
         let loginUrl = this.getLoginUrl(presentStaticLogin);
-        
+
         if (loginUrl === this._staticLoginRoute) {
             // Handle relative urls with router
             this.router.navigateByUrl(this._staticLoginRoute);
@@ -66,7 +61,7 @@ export class SessionService {
             window.location.href = loginUrl;
         }
     }
-    
+
     tokenChanged() {
         return this._tokenSubject.asObservable();
     }
@@ -77,21 +72,21 @@ export class SessionService {
      * authentication succeeds, the server will return a token, which we'll
      * store to localStorage.
      * As of this writing, username and password are used for
-     * DemoAuthenticationStrategy only, and hz_session is used for
-     * HubzeroAuthenticationStrategy only. TODO clean this up as backend
+     * NativeAuthenticationStrategy only, and authCode is used for
+     * CILogonAuthenticationStrategy only. TODO clean this up as backend
      * evolves.
      */
-    createSession(username: string, password: string, hz_session: string): Observable<string> {
+    createSession(username: string, password: string, authCode: string): Observable<string> {
         // TODO BehaviorSubject is overkill
         var returnVal: BehaviorSubject<string> = new BehaviorSubject<string>("Authenticating...");
-        
+
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
         // post the session info to the server
         var requestStream = this.http
             .post(
                 this._sessionUrl,
-                JSON.stringify({username: username, password: password, hz_session: hz_session}),
+                JSON.stringify({username: username, password: password, authCode: authCode}),
                 {headers: headers})
             .map(res => res.json().access_token)
             .catch((error: any) => Observable.throw(error))
@@ -128,9 +123,10 @@ export class SessionService {
      * Returns true if there is currenly a valid session.
      */
     hasValidSession(): boolean {
-        var token: string = this.getToken();
-        var jwtHelper: JwtHelper = new JwtHelper();
-        return token !== null && token.length != 0 && !jwtHelper.isTokenExpired(token);
+        let token = this.getToken();
+        let jwtHelper = new JwtHelper();
+        let returnVal = token !== null && token.length != 0 && !jwtHelper.isTokenExpired(token);
+        return returnVal;
     }
 
 

@@ -1,4 +1,5 @@
 import traceback
+import math
 from sqlalchemy.sql import select, update, delete
 from nest_py.core.data_types.nest_id import NestId
 from nest_py.core.db.security_policy import SecurityException
@@ -23,7 +24,7 @@ class CrudDbClient(object):
         """
         sqla_engine(SQLAlchemy.Engine): configured against against
         a database and engine containing this object's table
-        sqla_table(SQLAlcheymy.Table) table representation
+        sqla_table(SQLAlchemy.Table) table representation
         json_transcoder(SqlaJsonTranscoder) converts to and from
         dictionaries that sqla uses
         security_policy(SecurityPolicy): provides rules for what
@@ -31,9 +32,9 @@ class CrudDbClient(object):
             this client interacts with. If None, will use the
             default SecurityPolicy
 
-        e.g. for http://localhost:8000/api/foo/bar
+        e.g. for http://localhost/api/foo/bar
 
-        the http client is configured for server='localhost', port=8000
+        the http client is configured for server='localhost', port=80
         the eve_endpoint is 'foo/bar',
         and 'api' is configured in Eve config's URL_PREFIX and hard-coded
         to always be added by NestHttpClient
@@ -247,7 +248,7 @@ class CrudDbClient(object):
             res['items'] = page_dtos
             total_available = len(found_dtos)
             num_items = len(page_dtos)
-            last_page = int(total_available / results_per_page)
+            last_page = int(math.ceil(float(total_available) / float(results_per_page)))
             res['total_available'] = total_available
             res['num_items'] = num_items
             res['last_page'] = last_page
@@ -282,9 +283,10 @@ class CrudDbClient(object):
             if fields is None:
                 stmt = select([tbl])
             else:
+                self._validate_fields_for_table(fields)
                 stmt = select([tbl.c.id, tbl.c.owner_id]) #always include the primary key
                 for fieldname in fields:
-                    print('adding projection field: ' + str(fieldname))
+                    #print('adding projection field: ' + str(fieldname))
                     stmt = stmt.column(tbl.c[fieldname])
 
             #only give users back data they created if can't read all
@@ -292,18 +294,25 @@ class CrudDbClient(object):
                 owner_id = user.get_nest_id().get_value()
                 stmt = stmt.where(tbl.c.owner_id == owner_id)
 
+            filter_params = self._nest_ids_to_ints(filter_params)
             #apply matching filters using 'where' clauses
+            self._validate_fields_for_table(filter_params.keys())
             for k in filter_params:
                 #if a list was given for the field's value in the filter, an entry
                 #whose value is any value in that list will match
                 #print('filter param [' + str(k) + '] is : ' + str(filter_params[k]))
-                if isinstance(filter_params[k], list):
-                    stmt = stmt.where(tbl.c[k].in_(filter_params[k]))
+                col_type = self.sqla_table.c[k].type
+                if str(col_type) == 'JSONB':
+                    stmt = stmt.where(tbl.c[k].contains(filter_params[k]))
                 else:
-                    stmt = stmt.where(tbl.c[k] == filter_params[k])
+                    if isinstance(filter_params[k], list):
+                        stmt = stmt.where(tbl.c[k].in_(filter_params[k]))
+                    else:
+                        stmt = stmt.where(tbl.c[k] == filter_params[k])
 
             #apply requested sort order
             if sort_fields is not None:
+                self._validate_fields_for_table(sort_fields)
                 for fieldname in sort_fields:
                     stmt = stmt.order_by(tbl.c[fieldname])
             #always sort by _id as the final criteria
@@ -321,9 +330,46 @@ class CrudDbClient(object):
             db_conn.close()
             log('Error in simple_filter_query: ' + str(e))
             traceback.print_exc()
-            found_dtos = None
+            raise e
+            #found_dtos = None
         return found_dtos
 
+    def _validate_fields_for_table(self, fields):
+        """
+        validates that the given list of fields all map to columns
+        in this CrudDbClient's Postgres table. If not, raises an
+        exception with a user-centric error message (suitable for
+        the API to show a user).
+        """
+        bad_fields = list()
+        for f in fields:
+            if not f in self.sqla_table.c:
+                bad_fields.append(f)
+
+        if len(bad_fields) > 0:
+            good_fields = ['_id'] + self.sqla_table.c.keys()
+            good_fields.remove('id')
+            good_fields.remove('owner_id')
+            raise Exception("Unexpected fields '" + str(bad_fields) + \
+                "' received in query.\nValid fields for this data_type are: " + \
+                str(good_fields))
+        return
+    
+    def _nest_ids_to_ints(self, filter_params):
+        """
+        Given a dict of filter params used by simple_filter_query, converts all
+        NestId objects (which are valid if the field is a foreignid_attribute)
+        into type int, which sqlalchemy can use to query on.
+        """
+        clean_filter = dict(filter_params)
+        for k in clean_filter:
+            if isinstance(clean_filter[k], NestId):
+                clean_filter[k] = clean_filter[k].get_value()
+            elif isinstance(clean_filter[k], list):
+                for i in range(len(clean_filter[k])):
+                    if isinstance(clean_filter[k][i], NestId):
+                        clean_filter[k][i] = clean_filter[k][i].get_value()
+        return clean_filter
 
     def update_entry(self, dto, user=None):
         """

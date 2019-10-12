@@ -33,9 +33,16 @@ class MayoMar16SeedData(SeedFlavorData):
         self.subsample = subsample
         return
 
+    def get_username(self):
+        return 'mayo-shared'
+
+    def get_userpass(self):
+        return 'VisualAnalytics'
+
     def get_biom_table(self):
         if self.biom_table is None:
             dest_filename = self.data_dir + '/' + BIOM_FILE_NAME
+            print('biom download location: ' + dest_filename)
 
             box_downloads.download_from_box_no_auth(
                 BIOM_FILE_BOX_URL, dest_filename,
@@ -51,6 +58,9 @@ class MayoMar16SeedData(SeedFlavorData):
 
     def get_comparison_configs(self):
         return comparison_configs()
+
+    def get_tornado_config(self):
+        return tornado_config()
 
     def get_fst_results_cache_url(self, comparison_key):
         fst_urls = fst_cache_urls()
@@ -267,7 +277,7 @@ def comparison_configs():
     cdiff_configs = [
         {
             'comparison_key': 'cdiff_neg_pos',
-            'display_name': 'C. diff - vs C. diff +, Pardi Study',
+            'display_name': 'C. diff - vs. C. diff +, Pardi Study',
             'baseline_cohort_key': 'C. diff -',
             'variant_cohort_key': 'C. diff +',
             'patient_cohort_key': 'Pardi:Patient-1'
@@ -276,14 +286,14 @@ def comparison_configs():
     noncdiff_configs = [
         {
             'comparison_key': 'mwr1_mwr2',
-            'display_name': 'MWR 1 vs MWR 2',
+            'display_name': 'MWR 1 vs. MWR 2',
             'baseline_cohort_key': 'MWR1',
             'variant_cohort_key': 'MWR2',
             'patient_cohort_key': 'Pardi:Patient-1'
         },
         {
             'comparison_key': 'cdiff_norm_pos',
-            'display_name': 'Normal vs C. diff +, Pardi Study',
+            'display_name': 'Normal vs. C. diff +, Pardi Study',
             'baseline_cohort_key': 'C. diff Normal',
             'variant_cohort_key': 'C. diff +',
             'patient_cohort_key': 'Pardi:Patient-1'
@@ -360,6 +370,13 @@ def comparison_configs():
         configs = cdiff_configs + noncdiff_configs
     return reversed(configs)
 
+def tornado_config():
+    config = {
+        'date_of_run' : '2016-03-16T00:00:00Z',
+        'display_name_short' : 'Mayo_16Mar2016'
+    }
+    return config
+
 def fst_cache_urls():
     """
     the keys are the official comparison_keys used for keeping track of
@@ -386,4 +403,5 @@ def fst_cache_urls():
     }
 
     return url_lookup
+
 

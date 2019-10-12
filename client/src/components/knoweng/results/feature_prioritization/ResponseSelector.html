@@ -1,0 +1,13 @@
+<div class="header-row" (click)="onAllClicked()">
+    <div class="checkbox-area"><i class="fa" [ngClass]="{'fa-check-square': getSelectedStates().length == states.length, 'fa-minus-square': getSelectedStates().length > 0 && getSelectedStates().length < states.length, 'fa-square': getSelectedStates().length == 0}"></i></div>
+    <div class="response-area">
+        <div class="response-label">SHOW ALL RESPONSES ({{ states.length }})</div>
+    </div>
+</div>
+<div *ngFor="let state of states" class="body-row">
+    <div class="checkbox-area"><i class="fa" [ngClass]="{'fa-check-square': state.selected, 'fa-square': !state.selected}" (click)="onOneClicked(state)"></i></div>
+    <div class="response-area">
+        <div class="response-label">{{ state.response }}</div>
+        <response-plot [result]="result" [response]="state.response" [numTopFeatures]="numTopFeatures"></response-plot>
+    </div>
+</div>

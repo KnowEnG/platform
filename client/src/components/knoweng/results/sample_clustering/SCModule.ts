@@ -1,25 +1,40 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-
-import { BsDropdownModule } from 'ngx-bootstrap';
+import {FormsModule} from '@angular/forms';
+import {AngularDraggableModule} from 'angular2-draggable';
+import {BsDropdownModule, TooltipModule, PopoverModule, TypeaheadModule} from 'ngx-bootstrap';
 
 import {NestCommonModule} from '../../../common/NestCommonModule';
 import {ResultsCommonModule} from '../common/ResultsCommonModule';
+import {SSModule} from '../spreadsheet_visualization/SSModule';
 
+import {NumberFormatPipe} from '../../../../pipes/knoweng/NumberFormatPipe';
+
+import {ConsensusVisualization} from './ConsensusVisualization';
 import {DataArea} from './DataArea';
-import {HeatmapPane} from './HeatmapPane';
-import {StatsPane} from './StatsPane';
 import {SCVisualization} from './SCVisualization';
 
 @NgModule({
-    imports: [CommonModule, BsDropdownModule.forRoot(), NestCommonModule, ResultsCommonModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        BsDropdownModule.forRoot(),
+        TypeaheadModule.forRoot(),
+        AngularDraggableModule,
+        NestCommonModule,
+        ResultsCommonModule,
+        SSModule,
+        PopoverModule,
+        TooltipModule
+    ],
     declarations: [
         DataArea,
-        HeatmapPane,
-        StatsPane,
+        ConsensusVisualization,
         SCVisualization
     ],
-    exports: [SCVisualization]
+    exports: [
+        SCVisualization
+    ]
 })
 
 export class SCModule { }

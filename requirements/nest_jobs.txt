@@ -4,13 +4,16 @@
 # shared
 ################################################################################
 
-# pandas
+# pandas (if updating, see also lifelines below and JIRA tickets)
 pandas==0.17.1
 
 # box downloads
-pyopenssl==16.2.0
-ndg-httpsclient==0.4.2
-pyasn1==0.1.9
+pyopenssl==18.0.0
+ndg-httpsclient==0.5.0
+pyasn1==0.4.3
+
+#comments in the wix json config files
+jsoncomment==0.3.0
 
 ################################################################################
 # for mmbdb
@@ -19,6 +22,7 @@ pyasn1==0.1.9
 # pkg-config libpng-dev libfreetype6-dev libblas-dev liblapack-dev gfortran
 matplotlib==2.0.2
 IPython==5.3.0
+scipy==1.2.1
 scikit-bio==0.4.2
 
 #biom-format for reading tornado output. also needs non-python deps for
@@ -31,3 +35,5 @@ Cython==0.23.5
 # for knoweng
 ################################################################################
 pyyaml==3.11
+# lifelines 0.7.0 is the most recent version that doesn't require pandas 0.18
+lifelines==0.7.0

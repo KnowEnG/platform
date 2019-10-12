@@ -27,16 +27,12 @@ const routes: Routes = [
                         loadChildren: 'dist/components/knoweng/pipelines/PipelinesModule#PipelinesModule'
                     },
                     {
-                        path: 'results',
+                        path: 'data',
                         loadChildren: 'dist/components/knoweng/results/ResultsModule#ResultsModule'
                     },
                     {
                         path: 'network',
                         loadChildren: 'dist/components/knoweng/network/NetworkModule#NetworkModule'
-                    },
-                    {
-                        path: 'data',
-                        loadChildren: 'dist/components/knoweng/data/DataModule#DataModule'
                     },
                     {
                         path: 'support',

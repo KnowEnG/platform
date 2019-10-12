@@ -1,0 +1,52 @@
+:host {
+	white-space: nowrap;
+}
+
+.top-rows-picker, .threshold-num-area {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.top-rows-picker {
+	height: 80px;
+	width: 190px;
+}
+
+.threshold-num-area {
+	width: 63px;
+	height: 80px;
+}
+
+.num-box {
+	height: 29px;
+	width: 48px;
+	margin-top: 23px;
+	border: 1px solid #C7C7C7;
+	color: #29465F;
+	font-family: Lato;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 15px;
+	text-align: center;
+}
+
+.num-box.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+    outline: 0;
+}
+
+.top-label, .rows-label {
+	color: #000000;
+	/* TODO: need a plan for this font font-family: "Pixel Operator SC"; */
+	font-size: 10px;
+	line-height: 9px;
+}
+
+.top-label {
+	margin-top: 5px;
+}
+
+.rows-label {
+	margin-top: 2px;
+}

@@ -1,0 +1,72 @@
+.plot-container {
+    white-space: nowrap;
+    padding: 33px 0 0 0;
+}
+
+.plot-container .legend-container, .plot-container svg {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.legend-container {
+    padding-left: 35px;
+}
+
+.legend-label {
+    color: #152A3C;
+    font-size: 14px;
+    line-height: 19px;
+    padding-right: 7px;
+    min-width: 190px;
+    max-width: 190px;
+    text-align: right;
+}
+
+.legend-swatch {
+    height: 10px;
+    width: 10px;
+    margin-top: 2px;
+}
+
+.pvalue {
+    color: #29465F;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    margin-top: 20px;
+    width: 200px;
+}
+
+svg {
+    shape-rendering: crispedges;
+}
+
+.plot-border {
+    stroke-width: 1px;
+    stroke: #979797;
+    fill: none;
+}
+
+.survival-curve {
+    fill: none;
+    stroke-width: 3px; /* comp calls for 2.5, but arrived at 3px in discussion with Lisa, Charles, Amin */
+}
+
+.censor-tick {
+    stroke-width: 2px;
+}
+
+.axis-label {
+    fill: #1D609E;
+    font-size: 12px;
+}
+
+.axis-tick {
+    stroke-width: 1px;
+    stroke: #979797;
+}
+
+.axis-tick-label {
+    fill: #000000;
+    font-size: 12px;
+}

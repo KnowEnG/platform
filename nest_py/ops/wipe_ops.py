@@ -71,7 +71,8 @@ def _run_wipe(project_env, target_site):
     a 0/1 exit code based on whether all walkthroughs worked.
     """
     http_client = target_site.build_http_client()
-    jobs_auth.login_jobs_user(http_client)
+    #this is a superuser, so will be able to delete all entries
+    jobs_auth.login_jobs_user(http_client, 'fakeadmin', 'GARBAGESECRET')
 
     if project_env == ProjectEnv.hello_world_instance():
         cms = hw_api_clients.get_api_client_makers()

@@ -1,0 +1,53 @@
+
+
+.primary-visualization-area{
+    color: black;
+    line-height: 12px;
+    padding: 12px 0 8px 15px;
+    margin-left:-50px;
+    margin-right:-50px;
+    border-bottom: 1px solid #d8d8d8;
+}
+
+.primary-visualization-area .control-panel,
+.primary-visualization-area .main-heatmap-area,
+.primary-visualization-area .color-scale-area {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.main-heatmap-area {
+    width: 850px;
+    padding-left: 0px; /* this value changes dynamically when showLabels is toggled on each heatmap */
+}
+
+.heatmap-colors, .missing-value {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 25px;
+}
+
+.color-gradient-label, .missing-value-label {
+    font-size: 8px;
+}
+
+.missing-value {
+    margin-left: 9px;
+}
+
+.missing-value-block {
+	height: 22px;
+	width: 10px;
+	border: 1px solid #7493AF;
+	background-color: #FFFFFF;
+}
+
+.control-panel {
+    width: 158px; /* remember, fixed-full-width has 50px padding on each side */
+    padding-left: 15px;
+    padding-top: 5px;
+}
+
+.heatmap-pop-content {
+    width: 450px;
+}

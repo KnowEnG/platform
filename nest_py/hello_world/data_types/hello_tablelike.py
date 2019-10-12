@@ -26,6 +26,7 @@ def generate_schema():
     schema.add_foreignid_attribute('foreignid_val')
     schema.add_foreignid_list_attribute('foreignid_list_val')
     schema.add_json_attribute('json_val')
+    schema.add_jsonb_attribute('jsonb_val')
     schema.add_int_attribute('int_val')
     schema.add_int_list_attribute('int_list_val')
 
@@ -44,7 +45,7 @@ class HelloTablelikeDTO(object):
     """
 
     def __init__(self, flt_val_0, flt_val_1, string_val_0, cat_list, 
-        num_list, foreignid, foreignid_list, jdata_0, int_0, int_list):
+        num_list, foreignid, foreignid_list, jdata_0, jdata_1, int_0, int_list):
         self.flt_val_0 = flt_val_0
         self.flt_val_1 = flt_val_1
         self.string_val = string_val_0
@@ -53,6 +54,7 @@ class HelloTablelikeDTO(object):
         self.foreignid = foreignid
         self.foreignid_list = foreignid_list
         self.jdata_0 = jdata_0
+        self.jdata_1 = jdata_1
         self.int_0 = int_0
         self.int_list = int_list
         return
@@ -72,6 +74,7 @@ class HelloTablelikeDTO(object):
         tle.set_value('foreignid_val', self.foreignid)
         tle.set_value('foreignid_list_val', self.foreignid_list)
         tle.set_value('json_val', self.jdata_0)
+        tle.set_value('jsonb_val', self.jdata_1)
         tle.set_value('int_val', self.int_0)
         tle.set_value('int_list_val', self.int_list)
         return tle
@@ -86,8 +89,9 @@ class HelloTablelikeDTO(object):
         fi = entry.get_value('foreignid_val')
         fl = entry.get_value('foreignid_list_val')
         jd = entry.get_value('json_val')
+        jdb = entry.get_value('jsonb_val')
         ind = entry.get_value('int_val')
         inl = entry.get_value('int_list_val')
-        hello_tle = HelloTablelikeDTO(f0, f1, s, cl, nl, fi, fl, jd, ind, inl)
+        hello_tle = HelloTablelikeDTO(f0, f1, s, cl, nl, fi, fl, jd, jdb, ind, inl)
         return hello_tle
 

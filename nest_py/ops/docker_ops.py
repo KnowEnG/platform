@@ -54,7 +54,7 @@ def register_subcommand(nest_ops_subparsers):
 
     parser.add_argument('action', \
         help=ACTION_ARG_DESCRIPTION, \
-        nargs='?', \
+        nargs=1, \
         choices=VALID_ACTIONS, \
         )
 
@@ -99,7 +99,8 @@ def _run_docker_cmd(arg_map):
     the compilation succeeded.
     """
     project_root_dir = arg_map['project_root_dir']
-    action = arg_map['action']
+    #nargs=1 forces our subcommand into a list of size 1
+    action = arg_map['action'][0]
     project_env_name = arg_map['project']
     project_env = ProjectEnv.from_string(project_env_name)
     target_site_name = arg_map['site']

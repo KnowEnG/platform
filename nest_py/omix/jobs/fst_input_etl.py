@@ -20,7 +20,7 @@ def _make_fst_config(comparison_key, data_dir, otu_defs):
     config['refuse_forests'] = 10
     config['refuse_search_parameters'] = False
     config['refuse_compare_methods'] = False
-    config['refuse_node_size'] = 5
+    config['refuse_node_size'] = 1
     return config
 
 def _make_debugging_config(comparison_key, data_dir, otu_defs):
@@ -116,22 +116,25 @@ def _compile_fst_input_blobs(cohortA_tle, cohortB_tle, geno_samples, otu_defs):
     samples_by_nest_id= dict()
     for sample_key in geno_samples:
         smpl = geno_samples[sample_key]
-        nest_id = smpl.get_nest_id().get_value()
+        nest_id = smpl.get_nest_id()
         samples_by_nest_id[nest_id] = smpl
         row_data = list()
 
+    #print('samples_by_nest_id: ' + str(samples_by_nest_id))
+    
     for cohort in [cohortA_tle, cohortB_tle]:
         cohort_name = cohort.get_value('display_name_short')
         sample_ids = cohort.get_value('sample_ids')
         for sample_id in sample_ids:
             row = dict()
             row['cohort'] = cohort_name
+            #print('looking for sample: ' + str(sample_id))
             geno_sample = samples_by_nest_id[sample_id]
-            sample_otu_counts = geno_sample.get_value('otu_counts')
+            sample_otu_abundances = geno_sample.get_value('otu_frac_abundances')
             for otu_def in otu_defs:
                 otu_tornado_idx = otu_def.get_value('index_within_tornado_run')
                 otu_name = otu_def.get_value('tornado_observation_key')
-                otu_val = sample_otu_counts.get_value(otu_tornado_idx)
+                otu_val = sample_otu_abundances.get_value(otu_tornado_idx)
                 row[otu_name] = otu_val
             row_data.append(row)
     return row_data 

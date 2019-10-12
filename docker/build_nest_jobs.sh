@@ -1,1 +1,1 @@
-docker build --file=Dockerfile-nest_jobs --tag=knowengdev/nest_jobs:latest ..
+docker build --file=Dockerfile-nest_jobs --tag=nest/nest_jobs:latest ..

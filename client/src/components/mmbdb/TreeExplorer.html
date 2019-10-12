@@ -7,9 +7,9 @@
                     <line class="level" x1="0" y1="5" x2="0" [attr.y2]="currentHeight"></line>
                 </g>
             </g>
-            <template ngFor let-link [ngForOf]="shownLinks">
+            <ng-template ngFor let-link [ngForOf]="shownLinks">
                 <path *ngFor="let cohort of link.target.cohortNodesDisplayData; let cohortIndex=index" class="link" [ngClass]="'cohort'+cohortIndex" [attr.d]="cohort.linkPath" [attr.stroke-width]="adjustThicknessForDisplay(cohort.height)"></path>
-            </template>
+            </ng-template>
             <g *ngFor="let node of shownNodes" [ngClass]="'node' + (node.children ? ' expanded' : '')" [attr.transform]="'translate(' + node.x + ',' + node.y + ')'" (click)="onNodeClick(node)">
                 <rect *ngFor="let cohortNode of node.cohortNodesDisplayData; let cohortIndex=index" [ngClass]="'cohort cohort'+cohortIndex" [attr.x]="nodeWidth/-2" [attr.width]="nodeWidth" [attr.y]="cohortNode.y" [attr.height]="adjustThicknessForDisplay(cohortNode.height)"></rect>
                 <g *ngIf="node.getFeatureCount(topOtuThreshold) > 0">

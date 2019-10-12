@@ -1,0 +1,23 @@
+<!-- For some reason, popover's customized content style gradientPickerClass has to be defined in style.css in order to be recongnized-->
+<button type="button" class="btn color-gradient" 
+    [style.background]="convertScaleToGradientStyle(currentGradientScale)"
+    [popover]="gradientsPopover"
+    placement="bottom"
+    containerClass="gradientPickerClass" 
+    outsideClick="true">
+</button>
+
+<ng-template #gradientsPopover>
+    <table class="gradient-table">
+        <tbody>
+            <div *ngFor="let group of gradientsGroups; let g=index">
+                <tr><td class="gradients-group-label">{{group.groupName}}</td></tr>
+                <tr class="gradient-row" *ngFor="let gradient of group.gradients; let i=index">
+                    <td>
+                        <div class="gradient-item" [style.background]="getGradientStyle(g, i)" (click)="selectGradientScale(g, i)"></div>
+                    </td>
+                </tr>
+            </div>
+        </tbody>
+    </table>
+</ng-template>

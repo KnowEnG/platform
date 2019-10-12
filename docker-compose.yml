@@ -1,0 +1,33 @@
+version: '2'
+services:
+  nest_flask_i:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.flask
+    image: knowengdev/nest:flask
+    ports:
+     - "80:80"
+     - "443:443"
+    links:
+     - redis_i
+    volumes:
+     - ".:/code_live"
+  nest_jobs_i:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.jobs
+    image: knowengdev/nest:jobs
+    volumes:
+     - ".:/code_live"
+  redis_i:
+    image: "redis:3.0.3"
+    ports: 
+     - "6379:6379"
+    volumes:
+     - "/home/ubuntu/nest/data/redis:/data"
+  postgres_i:
+    image: "postgres:9.6.2"
+    ports: 
+     - "5432:5432"
+    volumes:
+     - "/home/ubuntu/nest/data/db:/data/db"

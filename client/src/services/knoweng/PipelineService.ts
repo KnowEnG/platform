@@ -7,10 +7,12 @@ import 'rxjs/add/operator/share';
 import {Pipeline} from '../../models/knoweng/Pipeline';
 import {AnalysisNetwork, Collection, Species} from '../../models/knoweng/KnowledgeNetwork';
 import {FileService} from './FileService';
+import {JobService} from './JobService';
 import {KnowledgeNetworkService} from './KnowledgeNetworkService';
 import {SampleClusteringPipeline} from '../../models/knoweng/pipelines/SampleClustering';
-import {GenePrioritizationPipeline} from '../../models/knoweng/pipelines/GenePrioritization';
+import {FeaturePrioritizationPipeline} from '../../models/knoweng/pipelines/FeaturePrioritization';
 import {GeneSetCharacterizationPipeline} from '../../models/knoweng/pipelines/GeneSetCharacterization';
+import {SignatureAnalysisPipeline} from '../../models/knoweng/pipelines/SignatureAnalysis';
 import {SpreadsheetVisualizationPipeline} from '../../models/knoweng/pipelines/SpreadsheetVisualization';
 
 @Injectable()
@@ -24,7 +26,8 @@ export class PipelineService {
 
     constructor(
             private knService: KnowledgeNetworkService,
-            private fileService: FileService) {
+            private fileService: FileService,
+            private jobService: JobService) {
 
         // need to call first() on speciesStream because it's not a one-off http call--it's a persistent Observable in the service
         // need to call share() on everything so each pipeline can subscribe
@@ -33,11 +36,11 @@ export class PipelineService {
         let networksStream = this.knService.getAnalysisNetworks(null).share();
 
         this.pipelines = [
-            new SampleClusteringPipeline(fileService, speciesStream, networksStream),
-            new GenePrioritizationPipeline(fileService, speciesStream, networksStream),
-            new GeneSetCharacterizationPipeline(fileService, speciesStream, collectionsStream, networksStream)
-            //TODO: uncomment when ssv is ready
-            //new SpreadsheetVisualizationPipeline(fileService)
+            new SampleClusteringPipeline(fileService, jobService, speciesStream, networksStream),
+            new FeaturePrioritizationPipeline(fileService, jobService, speciesStream, networksStream),
+            new GeneSetCharacterizationPipeline(fileService, jobService, speciesStream, collectionsStream, networksStream),
+            new SignatureAnalysisPipeline(fileService, jobService),
+            new SpreadsheetVisualizationPipeline(fileService, jobService)
         ];
     }
 

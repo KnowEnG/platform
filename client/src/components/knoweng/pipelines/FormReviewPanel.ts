@@ -101,4 +101,23 @@ export class FormReviewPanel implements OnInit, OnChanges {
     setJobName(name: string): void {
         this.form.jobName = name;
     }
+    
+    /**
+     * To check is a form field value is multiple values delimted by ",". An example of this is the multiple primary/secondary 
+     * file names with spreadsheet visualization. 
+     */
+    isMultiValues(summaryValue: string) {
+        if (summaryValue) {
+            let valueArray = summaryValue.split(",");
+            return valueArray.length > 1; 
+        }
+        return false;
+    }
+    
+    /**
+     * Delimite multiple value (file names) string into array to display one (file name) per line
+     */
+    getMultiValues(values: string) {
+        return values.split(",");
+    }
 }

@@ -93,7 +93,7 @@ def smoke_job_0(http_client, result_acc, job_client):
     while (not new_status == u'failed') and time.time() < max_time:
         job_x = job_client.read_entry(job_nest_id)
         new_status = job_x.get_value(u'status')
-        print(' status: ' + new_status)
+        result_acc.add_report_line(' status: ' + new_status)
         time.sleep(5) # seconds
 
     if new_status == u'failed':

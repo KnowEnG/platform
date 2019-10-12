@@ -1,4 +1,4 @@
-import {Component, OnChanges, SimpleChange, Input} from '@angular/core';
+import {Component, OnInit, OnChanges, SimpleChange, Input, ChangeDetectorRef} from '@angular/core';
 
 import {Form, FormData, FormField, SelectFormField, SelectOption, BooleanFormField, NumberFormField, FileFormField, HiddenFormField} from '../../../models/knoweng/Form';
 import {LogService} from '../../../services/common/LogService';
@@ -12,7 +12,7 @@ import {Pipeline} from '../../../models/knoweng/Pipeline';
     styleUrls: ['./FormEntryPanel.css']
 })
 
-export class FormEntryPanel implements OnChanges {
+export class FormEntryPanel implements OnInit, OnChanges {
     class = 'relative';
 
     @Input()
@@ -26,14 +26,20 @@ export class FormEntryPanel implements OnChanges {
 
     formData: FormData;
 
-    constructor(private logger: LogService) {
+    constructor(private logger: LogService,
+                private changeRef: ChangeDetectorRef) {
     }
 
+    ngOnInit() {
+        this.formData = this.form.getData();
+    }
+    
     ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     }
     
     setCurrentPageToDefault(): void {
         this.form.formGroups[this.currentIndex].fields.forEach(field => field.setDataToDefault());
+        this.formData = this.form.getData();
     }
     
     getFieldType(field: FormField, log: boolean = false): string {

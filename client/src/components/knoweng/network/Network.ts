@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, NavigationEnd} from "@angular/router";
+
+import {GoogleAnalyticsService} from '../../../services/common/GoogleAnalyticsService';
 import {tokenNotExpired} from 'angular2-jwt';
 
 @Component({
@@ -13,8 +15,12 @@ import {tokenNotExpired} from 'angular2-jwt';
 export class Network implements OnInit {
     class = 'relative';
     
-    constructor(
-            private _router: Router) {
+    constructor(private router: Router, private googleAnalytics: GoogleAnalyticsService) {
+        this.router.events.subscribe(event => {
+          if (event instanceof NavigationEnd) {
+            this.googleAnalytics.emitPageView(event.urlAfterRedirects);
+          }
+        });
     }
     ngOnInit() {
     }

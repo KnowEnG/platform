@@ -1,10 +1,12 @@
 import {Component, Injectable, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
+import {ActivatedRoute, Params, Router, NavigationEnd} from '@angular/router';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {Http, Headers, Response} from '@angular/http';
 
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
+
+import {GoogleAnalyticsService} from '../../../services/common/GoogleAnalyticsService';
 
 @Component({
     moduleId: module.id,
@@ -23,17 +25,23 @@ export class Support implements OnInit, OnDestroy {
     // TODO: Could we query the YouTube api for a particular playlist instead?
     private videosUrl = '/static/data/youtube.json';
     private videoCodes: string[] = [];
+    private safeVideoUrls: SafeResourceUrl[] = [];
     
-    topics = ['contact', 'training', 'about'];
+    topics = ['contact', 'training', 'about', 'manuscript'];
     menuSelection: string;
     
     routeSub: Subscription;
-
-    constructor(
-        private _route: ActivatedRoute,
-        private _router: Router,
-        private _sanitizer: DomSanitizer,
-        private _http: Http) {
+   
+    constructor(private _route: ActivatedRoute,
+                private _router: Router,
+                private _sanitizer: DomSanitizer,
+                private _http: Http,
+                private _googleAnalytics: GoogleAnalyticsService) {
+        this._router.events.subscribe(event => {
+          if (event instanceof NavigationEnd) {
+            this._googleAnalytics.emitPageView(event.urlAfterRedirects);
+          }
+        });
     }
     ngOnInit() {
         this.routeSub = this._route.params.subscribe((params : Params) => {
@@ -44,7 +52,6 @@ export class Support implements OnInit, OnDestroy {
             } else {
                 this.selectTopic(this.topics[0]);
             }
-            console.log(this.menuSelection);
         });
         
         let headers = new Headers();
@@ -55,7 +62,11 @@ export class Support implements OnInit, OnDestroy {
           .catch((error: any) => Observable.throw(error))
           .subscribe((videoCodes: any) => {
               this.videoCodes = videoCodes;
+              this.safeVideoUrls = [];
+              this.videoCodes.forEach(code => this.safeVideoUrls.push(this.sanitizeYoutubeUrl(code)));
           });
+          
+       
     }
     ngOnDestroy() {
         this.routeSub.unsubscribe();

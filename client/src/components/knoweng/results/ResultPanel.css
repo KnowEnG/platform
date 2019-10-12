@@ -1,9 +1,18 @@
 .result-panel-container {
     width: 301px;
-    height: 566px;
+    height: 604px;
     border-radius: 8px;
     background-color: #c6d8e8;
     padding: 10px 16px 16px 16px;
+}
+
+.job-name-label {
+    margin: 7px 12px 7px 0px;
+    cursor: pointer;
+}
+
+.job-name-label:hover {
+    color: #1d609e;
 }
 
 .job-name {

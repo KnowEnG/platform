@@ -1,0 +1,59 @@
+<div *ngIf="!uploadedFiles || !selectedManuscript" class="loading white-text">
+    <i class="fa fa-fw fa-spinner fa-pulse"></i>
+        Loading manuscript...
+</div>
+<div *ngIf = "uploadedFiles && selectedManuscript">
+    <div class="section">
+        <div class="ms-title">{{ selectedManuscript.title }}</div>
+        <div class="ms-author">{{ selectedManuscript.authors }}.
+          <a class="ms-link" [href]="selectedManuscript.link.url" target="_blank">{{ selectedManuscript.link.text }}</a>
+        </div>
+        <div class="ms-abstract">
+            <div *ngFor="let section of selectedManuscript.abstractSections">
+              <div class="ms-abstract-section-title">{{ section.title }}</div>
+              <div class="ms-abstract-section-details">{{ section.text }}</div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="section">
+        <div class="manuscripts-data">
+            <div class="load-manuscript-data">
+                <button class="btn upload-btn" [disabled]="selectedManuscript.dataLoaded" (click)="uploadSelectedManuscriptDataFiles()">
+                    <span *ngIf="!uploadingDataFiles">
+                        <img src="img/knoweng/upload-manuscript.svg">Load Manuscript Data
+                    </span>
+                    <span *ngIf="uploadingDataFiles">
+                        <i class="fa fa-fw fa-spinner fa-pulse"></i>Importing...
+                    </span>
+                </button>
+                <div *ngIf="selectedManuscript.dataLoaded">
+                    <svg height="28" width="100">
+    		            <polygon points="50,10,58,26,42,26" class="warning-triangle" />
+    	            </svg>
+                    <div class="data-uploaded-warning">
+                        <div class="warning-title"><i class="fa fa-exclamation-triangle"></i>Files have been loaded</div>
+                        <div class="warning-content">
+                            <p>
+                                The data files cited in this manuscript have been
+                                loaded into your account in the KnowEnG platform.
+                                They can be found on the
+                                <a routerLink="/data" class="open-link">Data Tab</a>.
+                            </p>
+                            <p>
+                                If you need to load fresh copies of the files
+                                for any reason, first delete the old copies on
+                                the Data Tab, and then return here to load
+                                them again.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- no whitespace
+            --><div class="ms-file-list">
+                    <div class="dfile-list">File List <a class="dfile-readme" [href]="selectedManuscript.dataReadmeUrl" target="_blank">About these files</a></div>
+                    <div class="dfile-name" *ngFor="let fname of selectedManuscript.dataFiles">{{ fname }}</div>
+            </div>
+        </div>
+    </div>
+</div>

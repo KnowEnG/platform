@@ -1,1 +1,1 @@
-docker build --file=Dockerfile-nest_flask --tag=knowengdev/nest_flask:latest ..
+docker build --file=Dockerfile-nest_flask --tag=nest/nest_flask:latest ..

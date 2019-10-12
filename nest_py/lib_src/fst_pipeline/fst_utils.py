@@ -148,19 +148,30 @@ def check_r_packages():
     """Ensures required R packages are installed."""
     # import R's utility package
     utils = rpackages.importr('utils')
-    # select a mirror for R packages
-    utils.chooseCRANmirror(ind=113) # Indiana
     # R package names
-    packnames = ('classInt', 'minerva', 'randomForest', 'MASS', 'ggplot2',
+    packnames = ('classInt',
+        'minerva', # should already be installed in dockerfile
+        'randomForest', #should already be installed in dockerfile
+        #'ggplot2', #used by FST commands that generate PDFs, which aren't currently
+        #           #used, and this package doesn't install properly due to versioning problems
+        'MASS',
         'gplots')
 
     # R vector of strings
-    packnames_to_install = [x for x in packnames
-        if not rpackages.isinstalled(x)]
-    if len(packnames_to_install) > 0:
-        utils.install_packages(StrVector(packnames_to_install))
+    for x in packnames:
+        print('$$$ ensuring installation of R package: ' + str(x))
+        if rpackages.isinstalled(x):
+            print('$$$  already installed')
+        else:
+            print('$$$  INSTALLING: ' + x)
+            utils.install_packages(StrVector([x]), verbose=True, quiet=False, dependencies=True, repos="https://cran.rstudio.com", method="curl")
+            print('$$$  reported as now installed? ' + str(rpackages.isinstalled(x)) + ' for ' + x)
+
+
     #R likes to fail silently, so double check.
-    #commenting this out because ggplot2 is known to always fail
-    #for x in packnames_to_install:
-    #    if not rpackages.isinstalled(x):
-    #        raise Exception('rpackages claims to have installed the package, but did not: ' + str(x))
+    failed_installs = list()
+    for x in packnames:
+        if not rpackages.isinstalled(x):
+            failed_installs.append(x)
+    if not len(failed_installs) == 0:
+        raise Exception('rpackages claims to have installed these packages, but did not: ' + str(failed_installs))

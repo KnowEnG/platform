@@ -6,11 +6,11 @@ Here's the idea:
    endpoint from the `public` blueprint. We currently support two kinds of
    authentication:
 
-   - single user w/ username and password: see DemoAuthenticationStrategy below.
+   - username and password hash matched against our own database: see
+   NativeAuthenticationStrategy below.
 
-   - single sign-on from HUBZero: see HubzeroAuthenticationStrategy.
-
-   For the time being, neither requires user records in our own database.
+   - trusted third-party authentication via CILogon: see
+   CILogonAuthenticationStrategy.
 
    A successful authentication request will be answered with a JWT token.
 
@@ -28,13 +28,12 @@ Here's the idea:
      has a valid token.
 """
 
+import traceback
 from werkzeug.exceptions import UnsupportedMediaType
-from werkzeug.security import safe_str_cmp
 from nest_py.core.data_types.nest_user import NestUser
 from nest_py.core.flask.accounts.token import TokenAgent
 import nest_py.core.flask.accounts.password_hash as password_hash
 import nest_py.core.db.core_db as core_db
-import traceback
 
 class AuthenticationStrategy(object):
     """Base class for authentication strategies."""
@@ -69,7 +68,7 @@ class NativeAuthenticationStrategy(AuthenticationStrategy):
             app (Eve): The application object.
             self.token_agent = token_agent
         """
-        self.users_db_client = users_db_client 
+        self.users_db_client = users_db_client
         self.token_agent = None
         self._init_token_agent(app.config)
 
@@ -81,7 +80,7 @@ class NativeAuthenticationStrategy(AuthenticationStrategy):
         jwt_issuer = config['JWT_ISSUER']
         jwt_audiences = config['JWT_AUDIENCES']
         default_lifespan = config['JWT_LIFESPAN']
-        self.token_agent = TokenAgent(jwt_secret, jwt_issuer, 
+        self.token_agent = TokenAgent(jwt_secret, jwt_issuer, \
             jwt_audiences, default_lifespan=default_lifespan)
         return
 
@@ -131,13 +130,17 @@ class NativeAuthenticationStrategy(AuthenticationStrategy):
     def authenticate_token(self, request):
         """
         inspects the token in the header of a request and decodes it
-        into a valid NestUser, or None if it's invalid, expired, or doesnt' exist
+        into a valid NestUser, or None if it's invalid, expired, or doesn't exist
         """
         print('request headers: ' + str(request.headers))
         try:
             if 'Authorization' in request.headers:
                 auth_field = request.headers['Authorization']
                 #should start with 'Bearer '. Not sure why.
+                if "Bearer" not in auth_field:
+                    print('token was not a Bearer token')
+                    nest_user = None
+                    return nest_user
                 skip_len = len('Bearer ')
                 tkn = auth_field[skip_len:]
                 tkn_payload = self.token_agent.decode(tkn)
@@ -158,6 +161,7 @@ class NativeAuthenticationStrategy(AuthenticationStrategy):
                         nest_user = NestUser.from_tablelike_entry(user_tle)
                         print('user from db: ' + str(nest_user))
             else:
+                print('no auth header found')
                 nest_user = None
         except Exception:
             traceback.print_exc()
@@ -167,6 +171,6 @@ class NativeAuthenticationStrategy(AuthenticationStrategy):
     def create_token_for_user(self, nest_user):
         tkn = self.token_agent.create_for_user(nest_user)
         return tkn
-            
+
 def log(msg):
-    print(msg) 
+    print(msg)

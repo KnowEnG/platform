@@ -12,7 +12,7 @@ def upload_nodes(client_registry, comparison_def, comparison_tree):
     """
     nodes_client = client_registry[comparison_phylo_tree_nodes.COLLECTION_NAME]
 
-    comparison_id = comparison_def.get_nest_id().get_value()
+    comparison_id = comparison_def.get_nest_id()
 
     node_tles = _extract_comparison_node_tles(comparison_tree, comparison_id)
     node_tles = nodes_client.bulk_create_entries_async(node_tles, batch_size=6000)

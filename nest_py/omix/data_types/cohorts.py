@@ -19,7 +19,7 @@ def generate_schema():
     schema.add_foreignid_attribute('tornado_run_id')
     schema.add_categoric_attribute('query', valid_values=None)
     schema.add_numeric_attribute('num_samples', min_val=0, max_val=None)
-    schema.add_categoric_list_attribute('sample_ids', valid_values=None,
+    schema.add_foreignid_list_attribute('sample_ids', valid_values=None,
         min_num_vals=0, max_num_vals=None)
     return schema
 

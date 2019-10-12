@@ -3,15 +3,22 @@
         <table>
             <thead></thead>
             <tbody>
-                <template ngFor let-summary [ngForOf]="summaries">
+                <ng-template ngFor let-summary [ngForOf]="summaries">
                     <tr *ngIf="summary !== null">
                         <td class="summary-label">{{ summary.label }}</td>
-                        <td class="summary-value" [attr.title]="summary.value">{{ summary.value | truncator:200 }}</td>
+                        <td *ngIf="!isMultiValues(summary.value)" class="summary-value" [attr.title]="summary.value">
+                            {{ summary.value | truncator:200 }}
+                        </td>
+                        <td *ngIf="isMultiValues(summary.value)">
+                            <div *ngFor="let v of getMultiValues(summary.value)" class="summary-value">
+                                {{ v | truncator:200}}
+                            </div>
+                        </td>
                     </tr>
                     <tr *ngIf="summary === null">
                         <td class="summary-label">&nbsp;</td><td class="summary-value">&nbsp;</td>
                     </tr>
-                </template>
+                </ng-template>
             </tbody>
         </table>
     </div><!-- no whitespace

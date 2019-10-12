@@ -1,0 +1,50 @@
+<div *ngIf="job" class="header full-fixed-width">
+    <div class="left-side job-name-area">
+        <span class="job-label">Job:</span><span class="job-name">{{ job.name }}</span>
+    </div><!-- no whitespace
+ --><div class="right-side">
+        <div class="tab" [class.active]="activeTab == 'visualizations'" (click)="activeTab = 'visualizations'">Visualization</div>
+        <div class="tab disabled" [class.active]="activeTab == 'spreadsheet'">Spreadsheet</div>
+        <div class="tab" [class.active]="activeTab == 'job'" (click)="activeTab = 'job'">Job Stats</div>
+    </div>
+</div>
+<div class="tab-body full-fixed-width">
+    <!-- Show a spinner until "state" is populated -->
+    <div *ngIf="!state" class="loading brand-text">
+        <i class="fa fa-fw fa-spinner fa-pulse"></i>
+        Loading...
+    </div>
+    <div *ngIf="state">
+        <!-- hiding these instead of destroying them (with ngIf/ngSwitch) so visualization is preserved -->
+        <div [hidden]="activeTab != 'visualizations'">
+            <top-options
+                [state]="state"
+                [selectablePrimarySpreadsheets]="selectablePrimarySpreadsheets"
+                [expandedGroup]="expandedGroup"
+                [displayedColumns]="displayedColumns"
+                (spreadsheetToggled)="handleSpreadsheetToggle($event)"
+                (displayedColumnsChanged)="handleDisplayedColumnsChange($event)"
+                (closingGroup)="handleExpandedGroupChange($event)">
+            </top-options>
+            <column-options
+                [job]="job"
+                [state]="state"
+                [expandedGroup]="expandedGroup"
+                [displayedColumns]="displayedColumns"
+                (expandedGroupChanged)="handleExpandedGroupChange($event)">
+            </column-options>
+            <primary-visualization *ngFor="let spreadsheet of primarySpreadsheets"
+                [state]="state"
+                [spreadsheet]="spreadsheet"
+                [displayedColumns]="displayedColumns"
+                (settingsChanged)="handlePrimaryVisualizationSettingsChange($event)">
+            </primary-visualization>
+            <secondary-visualization
+                [job]="job" 
+                [state]="state" 
+                [displayedColumns]="displayedColumns">
+            </secondary-visualization>
+        </div>
+        <job-summary [hidden]="activeTab != 'job'" [job]="job" orientation="horizontal"></job-summary>
+    </div>
+</div>

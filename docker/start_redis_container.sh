@@ -5,7 +5,7 @@ echo docker group $DOCKER_HOST_DOCKER_GROUP_ID
 docker run \
 	--detach=true \
 	--name=redis_i \
-	knowengdev/redis:latest \
+	nest/redis:latest \
 	"$@"
 	#--user=$DOCKER_HOST_USER_ID:$DOCKER_HOST_DOCKER_GROUP_ID \
 

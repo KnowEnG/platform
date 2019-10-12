@@ -41,7 +41,6 @@ def check_db_connection():
         print('config was' + str(nest_db.GLOBAL_SQLA_RESOURCES.config))
     return connectable
 
-
 def ensure_tables_in_db():
     engine = nest_db.get_global_sqlalchemy_engine()
     md = nest_db.get_global_sqlalchemy_metadata()
@@ -86,7 +85,7 @@ def list_metadata_tables():
         print(' ' + str(tbl.name))
     return True
 
-def seed_users(project_env, runlevel):
+def seed_users(project_env=None, runlevel=None):
     """
     adds users declared in nest_config to the nest_users table
     if they don't already exist
@@ -252,7 +251,7 @@ def ensure_default_project(nest_user):
     
     # Noop for non-knoweng projects
     if not 'projects' in inspector.get_table_names():
-        print 'No projects table defined... skipping'
+        #print 'No projects table defined... skipping'
         return None
 
     projects_client = sqla_maker.get_db_client(db_engine, md)

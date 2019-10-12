@@ -57,7 +57,10 @@ export class Job {
     }
 
     /**
-     * Returns a Date object representing this object's _created string.
+     * Returns a Date object representing this object's _created string. Note
+     * that in templates, especially if displaying dates for multiple jobs at
+     * once, it's better to work directly with _created, because this returns a
+     * different object every time, which means lots of change detection.
      */
     getCreatedDate(): Date {
         return new Date(this._created);
@@ -67,7 +70,36 @@ export class Job {
      * Returns a pretty version of this object's pipeline and method.
      */
     getPrettyPipelineAndMethod(): string {
-        return this.pipeline.replace(/_/g, ' ') + '/' + this.parameters.method;
+        let returnVal = this.pipeline.replace(/_/g, ' ');
+        if (this.parameters.method) {
+            returnVal += '/' + this.parameters.method;
+        }
+        return returnVal;
+    }
+
+    /**
+     * Assign different color to a job indicator (a triangle in table)
+     */
+    getColor(): string {
+        // seen in comp:
+        //     - orange #E79038 (SSV)
+        //     - green #1F977E
+        //     - blue #64A2D9 (SA)
+        //     - red #E05869 (SC)
+        //     - lime #CACF47 (GSC)
+        //     - teal #3DBFC2 (FP)
+        switch(this.pipeline) {
+            case 'sample_clustering':
+                return '#E05869';
+            case 'feature_prioritization':
+                return '#3DBFC2';
+            case 'gene_set_characterization':
+                return '#CACF47';
+            case 'spreadsheet_visualization':
+                return '#E79038';
+            case 'signature_analysis':
+                return '#64A2D9';
+        }
     }
     
     /** 

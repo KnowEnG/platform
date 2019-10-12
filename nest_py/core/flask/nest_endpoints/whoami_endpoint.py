@@ -1,6 +1,8 @@
-from nest_py.core.flask.nest_endpoints.nest_endpoint import NestEndpoint
-import flask
 import traceback
+
+import flask
+
+from nest_py.core.flask.nest_endpoints.nest_endpoint import NestEndpoint
 
 class WhoamiEndpoint(NestEndpoint):
     """
@@ -44,4 +46,3 @@ class WhoamiEndpoint(NestEndpoint):
         jdata['form'] = dict(request.form)
         resp = self._make_success_json_response(jdata)
         return resp
-

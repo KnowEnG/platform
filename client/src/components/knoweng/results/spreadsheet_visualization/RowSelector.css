@@ -1,0 +1,221 @@
+.dropdown-menu, .panel {
+    border-radius: 0;
+}
+
+.dropdown-menu {
+    top: inherit;
+}
+
+.panel-heading {
+    /* NOTE: this content is coming from and styled by the host */
+    font-size: 18px;
+    background-color: #29465F;
+    width: 741px;
+    color: #ffffff;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.panel-subheading {
+    /* NOTE: this content is coming from and styled by the host */
+    font-size: 12px;
+}
+
+.panel-table-header {
+    color: #1D609E;
+    font-size: 10px;
+    line-height: 12px;
+}
+
+.panel-table-header > th {
+    padding: 7px 0 1px 0;
+    border-bottom: 1px solid #d8d8d8;
+    font-weight: 400;
+}
+
+.file-selector .panel-table-header > th {
+    padding-left: 11px;
+}
+
+.panel-table-row {
+    cursor: pointer;
+    color: #29465F;
+}
+
+.file-and-row-selector {
+    margin: 2px 0 2px 0;
+    display: flex;
+}
+
+.file-selector {
+    color: #1D609E;
+	width: 360px;
+	margin-bottom: 60px;
+}
+
+.row-selector {
+	background-color: #E5F0F2;
+	width: 380px;
+}
+
+.panel-table-row:hover > td {
+    background-color: #f5f5f5;
+}
+
+.panel-table-row.info > td {
+    background-color: #E5F0F2;
+}
+
+.file-selector .panel-table-row > td > div {
+    padding: 2px 10px 2px 11px;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+}
+
+.file-selector .panel-table-row > td {
+    padding: 0;
+    border-top: 1px solid #d8d8d8;
+    border-bottom: 1px solid #d8d8d8;
+}
+
+
+.badge {
+    background-color: #7493AF;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    margin-top: 1px;
+}
+
+.row-selector-help-text {
+    text-align: center;
+    color: #1D609E;
+}
+
+.row-selector .panel-table-row > td {
+    padding: 1px 0 1px 0;
+}
+
+.row-selector .panel-table-row > td.col-name {
+    padding-right: 8px;
+}
+
+.dropdown-checkbox {
+    padding-left: 10px;
+}
+
+.no-whitespace {
+     margin: 0;
+     padding: 0;
+}
+
+.panel-body {
+    border-radius: 0;
+}
+
+.done-btn {
+    background-color: #1D609E;
+    margin: 8px 11px 8px 11px;
+}
+
+.borderless td {
+    border: none;
+}
+
+.col-show {
+    width: 63px;
+    text-align: right;
+    padding-right: 20px !important;
+}
+
+td.col-show {
+    color: black;
+    line-height: 18px;
+}
+
+td.col-show fa-circle-o, td.col-show fa-circle {
+    font-size: 16.5px;
+}
+
+td.col-show fa-check-square, td.col-show fa-square-o {
+    font-size: 18px;
+}
+
+.col-name {
+    width: 161px;
+}
+
+td.col-name {
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.col-score {
+    width: 90px;
+}
+
+td.col-score {
+    font-size: 11px;
+    line-height: 18px;
+}
+
+.type-label {
+    color: #fff;
+    display: inline-block;
+    vertical-align: baseline;
+    border-radius: 3px;
+    width: 54px;
+    text-align: center;
+    font-size: 11px;
+    /* font-weight: 700; comp css says bold but in browser, normal weight matches comp's appearance */
+    line-height: 13px;
+    text-transform: capitalize;
+}
+
+.type-label.categoric {
+    background-color: #3DBFC2;
+}
+
+.type-label.numeric {
+    background-color: #7ED321;
+}
+
+.type-label.other {
+    background-color: #64A2D9;
+}
+
+.typeahead-helper-text {
+    height: 36px;
+    width: 297px;
+    color: #29465F;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.typeahead-input-container {
+    width: 100%;
+    font-weight: 400;
+}
+
+.typeahead-input-container .input-group-addon {
+    border-radius: 0;
+    color: #7493AF;
+    background-color: #FFFFFF;
+    padding: 6px 0 6px 9px;
+}
+
+.typeahead-input-container input {
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.typeahead-input-container input:not(:focus) {
+    border-left-color: transparent;
+}
+
+.typeahead-input-container input::placeholder {
+    color: #7493AF;
+}

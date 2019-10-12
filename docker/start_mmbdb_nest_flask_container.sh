@@ -10,7 +10,6 @@ docker run \
     --link=redis_i:redis \
     --name=nest_flask_i \
     --publish=80:80 \
-    --publish=443:443 \
     --volume="$DOCKER_HOST_NEST_DIR/data/userfiles":/userfiles \
     --volume="$DOCKER_HOST_NEST_DIR":/code_live \
     --volume="$DOCKER_HOST_NEST_DIR/nest_flask_etc/uwsgi":/etc/uwsgi \
@@ -19,5 +18,5 @@ docker run \
     --env="PROJECT_ENV=mmbdb" \
     --env="NEST_RUNLEVEL=$NEST_RUNLEVEL" \
 	--workdir=/code_live \
-    knowengdev/nest_flask:latest 
+    nest/nest_flask:latest 
 

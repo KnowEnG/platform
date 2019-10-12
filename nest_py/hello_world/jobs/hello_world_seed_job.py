@@ -15,12 +15,12 @@ def run(http_client, hello_world_data_dir):
     """
     log("hello_world_seed_job: Begin")
     exit_code = 0
-    jobs_auth.login_jobs_user(http_client)
+    jobs_auth.login_jobs_user(http_client, 'fakeuser', 'GARBAGESECRET')
     
 
     x0 = hello_tablelike.HelloTablelikeDTO(1.0, 2.0, 'x',
         ['a','b'], [1.1, 2.2], NestId(0), [NestId(1), NestId(2)], 
-        {'x':'innerx'}, 5, [6,7])
+        {'x':'innerx'}, {'xb':'innerxb'}, 5, [6,7])
 
     client_makers = hw_api_clients.get_api_client_makers()
     client = client_makers['hello_tablelike'].get_crud_client(http_client)

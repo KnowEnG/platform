@@ -1,7 +1,14 @@
 <div class="result-panel-container">
-    <template [ngIf]="job !== null">
-        <!-- [attr.title]="job.name" -->
-        <div class="job-name" trunctip [tooltipText]="job.name"></div>
+    <ng-template [ngIf]="job !== null">
+        <form #jobForm="ngForm">
+            <label *ngIf="!isEditable" (click)="isEditable=true" class="job-name-label job-name" trunctip [tooltipText]="job.name"></label>
+            <input *ngIf="isEditable" type="text" class="form-control job-name"
+                (keydown.enter)="updateJobName()" 
+                (blur)="updateJobName()" 
+                [(ngModel)]="newJobName" 
+                name="newjobnameinput"
+                #newjobnameinput>
+        </form>
         <div class="files-area">
             <!-- TODO ngSwitch and/or better -->
             <!-- TODO better set of fields, which should include filenames as comped -->
@@ -12,7 +19,7 @@
         </div>
         <div class="icons-area">
             <!-- note: these are inline-block but not controlling whitespace between elements yet -->
-            <button class="btn view-results" [disabled]="job.status !== 'completed'" [routerLink]="['/results', job._id]">View Results</button>
+            <button class="btn view-results" [disabled]="job.status !== 'completed'" [routerLink]="['/data', job._id]">View Results</button>
             <!-- This is a HACK - <div> can't be [disabled], but apparently <fieldset> can -->
             <fieldset class="icon-item" (click)='downloadJob()' [disabled]="job.status !== 'completed'" [style.cursor]="(job.status === 'completed' && downloadStatus !== 'start') ? '' : 'not-allowed'" >
                 <i [ngClass]="downloadStatus == 'start' ? 'fa fa-spinner fa-spin' : 'fa fa-download'"></i>
@@ -55,7 +62,7 @@
                     <table class="parameters-table">
                         <tbody>
                             <!-- List our formatted parameters, but hide file names (these are displayed separately at the top of the panel) -->
-                            <template ngFor let-summary [ngForOf]="summaries">
+                            <ng-template ngFor let-summary [ngForOf]="summaries">
                                 <tr *ngIf="summary && summary.label && summary.value != null && summary.value !== '' && ['Pasted Gene Set', 'Features File', 'Response File', 'Gene Spreadsheet'].indexOf(summary.label) === -1">
                                     <td class="value-label" >{{ summary.label }}:</td>
                                     <td class="value" trunctip maxLength="100" [tooltipText]="summary.value"></td>
@@ -63,7 +70,7 @@
                                 <tr *ngIf="!summary">
                                     <td class="line-break">&nbsp;</td><td class="line-break">&nbsp;</td>
                                 </tr>
-                            </template>
+                            </ng-template>
                         </tbody>
                     </table>
                 </div>
@@ -82,7 +89,7 @@
                 </div>
             </div>
         </div>
-    </template>
+    </ng-template>
 </div>
 
 <div [ngSwitch]="modal" class="modal-container" [style.bottom.px]="modalBottom" [style.right.px]="modalRight">

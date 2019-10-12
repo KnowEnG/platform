@@ -31,7 +31,7 @@
     <g [attr.transform]="'translate(' + (svgMargin.left + mainAreaMarginLeft) + ',' + svgMargin.top + ')'">
         <rect class="background" x="0" y="0" [attr.width]="svgWidth - mainAreaMarginLeft" [attr.height]="svgHeight"></rect>
         <g *ngFor="let bin of data; let binIndex=index" [attr.transform]="'translate(' + binOffset(bin) + ',0)'">
-            <template ngFor let-bar [ngForOf]="bin.barDataRecords" let-barIndex="index">
+            <ng-template ngFor let-bar [ngForOf]="bin.barDataRecords" let-barIndex="index">
                 <g *ngIf="barIndex < 2">
                     <!-- data bar -->
                     <rect [attr.width]="barWidth()" [attr.x]="barOffset(bar)" [attr.y]="svgHeight-barHeight(bar)" [attr.height]="barHeight(bar)" [ngClass]="barClass(bar)"/>
@@ -40,7 +40,7 @@
                 </g>
                 <!-- individual's bar -->
                 <rect *ngIf="barIndex == 2 && bar.sampleSize > 0" class="individual" width="2" [attr.x]="barOffset(bin.barDataRecords[barIndex-1])-1" [attr.y]="-svgMargin.top" [attr.height]="svgHeight+svgMargin.top"/>
-            </template>
+            </ng-template>
         </g>
     </g>
     <!-- scale label -->

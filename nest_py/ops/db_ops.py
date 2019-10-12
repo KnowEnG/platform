@@ -36,7 +36,13 @@ ensure_tables:
 drop_tables: 
 list_bindings: list tables Nest expects to be in the Postgres DB
 psql: open a psql command prompt that accesses the current Postgres DB
+    Note that the *local* postgres_i container must be running on this
+    machine, even if you are connecting to a remote site via the --site
+    option (That is where the psql executable is installed).
 """
+
+SITE_DESCRIPTION="""The machine running the database to operate against.
+Default: localhost."""
 
 VALID_ACTIONS = ['check_connection', 'list_tables', 'ensure_tables', 'drop_tables', 'list_bindings', 'psql']
 
@@ -53,7 +59,7 @@ def register_subcommand(nest_ops_subparsers):
 
     parser.add_argument('action', \
         help=ACTION_ARG_DESCRIPTION, \
-        nargs='?', \
+        nargs=1, \
         choices=VALID_ACTIONS, \
         )
 
@@ -65,7 +71,7 @@ def register_subcommand(nest_ops_subparsers):
         )
 
     parser.add_argument('--site',
-        help='',
+        help=SITE_DESCRIPTION,
         nargs='?',
         choices=nest_sites.VALID_NEST_SITE_NAMES,
         default=nest_sites.DEFAULT_NEST_SITE_NAME,
@@ -85,7 +91,8 @@ def _run_db_cmd(arg_map):
     project_env = ProjectEnv.from_string(project_env_name)
     target_site_name = arg_map['site']
     target_site = NestSite.from_string(target_site_name)
-    action = arg_map['action']
+    #nargs=1 forces our subcommand into a list of size 1
+    action = arg_map['action'][0]
     exit_code = _run_db_action(action, project_env, target_site)
     return exit_code
 
@@ -127,12 +134,12 @@ def open_psql_prompt(project_env, target_site):
     c_user = container_users.make_host_user_container_user()
     runner = CommandRunnerLocal(c_user)
     config = _construct_config(project_env, target_site) 
-    cmd = 'docker exec -it postgres_i '
-    #cmd += ' /bin/bash'
-    db_name = config['db_name']
-    #db_name = 'nest_test'
-    cmd += '/usr/lib/postgresql/9.6/bin/psql'
-    cmd += ' --dbname=' + db_name
+    cmd = 'docker exec -it '
+    cmd += '-e PGPASSWORD=' + config['password']
+    cmd += ' postgres_i '
+    cmd += ' /usr/lib/postgresql/9.6/bin/psql'
+    cmd += ' --dbname=' + config['db_name']
+    cmd += ' --host=' + config['host']
     cmd += ' --username=' + config['user']
     cmd += ' --port=' + str(config['port'])
     log(cmd)
@@ -140,7 +147,7 @@ def open_psql_prompt(project_env, target_site):
     return res.get_exit_code()
     
 def _construct_config(project_env, target_site):
-    proj_config = nest_db.generate_db_config(project_env=project_env)
+    proj_config = nest_db.generate_db_config(project_env=project_env, site=target_site)
     return proj_config
 
 def _bind_tables_to_metadata(sqla_metadata, project_env):

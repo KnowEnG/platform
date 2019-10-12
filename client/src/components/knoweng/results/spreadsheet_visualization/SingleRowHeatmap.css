@@ -1,0 +1,394 @@
+.main-container {
+    white-space: nowrap;
+}
+
+cell-heatmap, .time-to-event-analysis-button {
+    display: inline-block;
+    vertical-align: top;
+}
+
+cell-heatmap {
+    cursor: pointer;
+}
+
+.time-to-event-analysis-button i {
+    cursor: pointer;
+    padding: 9px 0 0 9px;
+    font-size: 18px; /* matches rendered size in comp */
+    color: #35516A;
+}
+
+/* adding .rollover class from here down as crude namespace */
+
+.rollover {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #D8D8D8;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px 0 rgba(0,0,0,0.1), 2px 2px 4px 0 rgba(0,0,0,0.14);
+}
+
+.rollover.ng-draggable {
+    cursor: default; /*override ng-draggable cursor except in header */
+}
+
+.rollover .header {
+    border-radius: 5px 5px 0 0;
+    background-color: #29465F;
+    height: 45px;
+    display: flex;
+    cursor: move;
+}
+
+.rollover .title {
+    font-size: 18px;
+    color: #FFFFFF;
+    padding: 10px 0 0 11px;
+    line-height: 20px;
+}
+
+.rollover.title .title-primary {
+    font-weight: 700;
+}
+
+.rollover.title .title-secondary {
+    font-weight: 300;
+}
+
+.rollover .close-x, .time-to-event-popup .close-x {
+    font-size: 13px;
+    color: #FFFFFF;
+    cursor: pointer;
+    padding: 5px 7px 0 0;
+    line-height: 1;
+}
+
+.rollover .subheader {
+    border-bottom: 1px solid #D8D8D8;
+}
+
+.rollover .key-value-container {
+    padding: 3px 0 5px 8px;
+}
+
+.rollover .key-text {
+    color: #1D609E;
+    font-size: 10px;
+}
+
+.rollover .value-text {
+    color: #4A4A4A;
+    font-size: 12px;
+}
+
+.rollover .plot-area {
+    display: flex;
+    margin-top: 3px;
+}
+
+.rollover .left-plot, .rollover .right-plot {
+    border: 1px solid #D8D8D8;
+    margin-bottom: 16px;
+}
+
+.rollover .left-plot {
+    margin-left: 9px;
+}
+
+.rollover .right-plot {
+    margin-left: 15px;
+}
+
+.rollover svg {
+    display: block;
+}
+
+.rollover line, .rollover rect {
+    shape-rendering: crispedges;
+}
+
+.rollover .plot-background-shaded {
+    stroke-width: 0;
+    fill: #EFF7F9;
+}
+
+.rollover .axis-tick-label {
+    font-size: 11px;
+    fill: #4A4A4A;
+    stroke: none;
+}
+
+.rollover .axis-label {
+    font-size: 11px;
+    fill: #1D609E;
+    stroke: none;
+}
+
+.rollover .axis-label-arrow {
+    font-size: 18px;
+    fill: #B5D1EB;
+    stroke: none;
+}
+
+.rollover .axis-line {
+    stroke-width: 1px;
+    stroke: #D8D8D8;
+}
+
+.rollover .axis-tick {
+    stroke-width: 1px;
+    stroke: #9B9B9B;
+}
+
+.rollover .histo-primary-label {
+    font-size: 12px;
+    font-weight: 700;
+    fill: #29465F;
+}
+
+.rollover .histo-secondary-label {
+    font-size: 11px;
+    fill: #1D609E;
+}
+
+.rollover .histo-percentage {
+    font-size: 11px;
+    fill: #1D609E;
+}
+
+.rollover .histo-percentage.highlight {
+    font-weight: 700;
+    fill: #29465F;
+}
+
+.rollover .left-histo-legend {
+    stroke-width: 1px;
+    shape-rendering: geometricprecision; /* required to align everything w/ changing stroke-width */
+}
+
+.rollover .left-histo-bar {
+    stroke: #000000;
+    shape-rendering: geometricprecision; /* required to align everything w/ changing stroke-width */
+    cursor: pointer;
+}
+
+.rollover .right-histo-bar {
+    cursor: pointer;
+}
+
+.rollover .header-box-percent {
+    fill: #EEEEEE;
+}
+
+.rollover .graph-background {
+    fill: #EEEEEE;
+}
+
+.rollover .subbin-bar {
+    fill: #C6D8E8;
+}
+
+.rollover .graph-mouse-foreground {
+    fill: transparent;
+    stroke: #000000;
+    cursor: pointer;
+}
+
+.rollover .curve {
+    stroke-width: 2px;
+    stroke: #29465F;
+    fill: none;
+}
+
+.rollover .left-plot-hr {
+    stroke-width: 1px;
+    stroke: #D8D8D8;
+}
+
+.rollover .clamp {
+    stroke-width: 1px;
+    stroke: #B5D1EB;
+}
+
+.tooltip {
+    opacity: 1;
+    position: fixed;
+    color: #152A3C;
+    font-size: 8px;
+    width: 80px;
+}
+
+.tooltip-inner {
+    padding: 1px 6px;
+}
+
+.tooltip-samples-count {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/** adding .time-to-event-popup from here down as crude namespace. */
+
+.time-to-event-popup {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #D8D8D8;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px 0 rgba(0,0,0,0.1), 2px 2px 4px 0 rgba(0,0,0,0.14);
+}
+
+.time-to-event-popup.panel {
+    border-radius: 0;
+}
+
+.time-to-event-popup .panel-heading {
+    font-size: 18px;
+    font-weight: 700;
+    height: 59px;
+    padding: 0;
+    background-color: #29465F;
+    color: #ffffff;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    white-space: nowrap;
+}
+
+.time-to-event-popup .panel-heading > * {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.time-to-event-popup .panel-heading .panel-title {
+    padding: 16px 12px 0 12px;
+}
+
+.time-to-event-popup .panel-body {
+    padding: 0;
+    cursor: default; /*override ng-draggable cursor except in header */
+}
+
+.time-to-event-popup .panel-body .buttons-row > * {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.time-to-event-popup .panel-body .buttons-row .fa {
+    font-size: 17px;
+    color: #B5D1EB;
+    margin-left: 25px;
+    cursor: pointer;
+}
+
+.time-to-event-popup .panel-body .buttons-row .fa:hover {
+    color: #333;
+}
+
+.time-to-event-popup .panel-body .buttons-row ::ng-deep .infoClass {
+    max-width: 400px;
+}
+
+.time-to-event-popup .panel-body form {
+    background-color: #E5F0F2;
+}
+
+.time-to-event-popup .instructions, .time-to-event-popup .big-label {
+    color: #1D609E;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22px;
+}
+
+.time-to-event-popup .instructions {
+    padding: 16px 12px 10px 12px;
+}
+
+.time-to-event-popup .big-label {
+    padding: 0 12px 0 12px;
+}
+
+.time-to-event-popup label {
+    color: #1D609E;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 12px;
+    padding-left: 21px;
+}
+
+.time-to-event-popup hr {
+    border-color: #d8d8d8;
+}
+
+.time-to-event-popup .form-control {
+    width: 346px;
+    margin-left: 12px;
+}
+
+.time-to-event-popup .inline-form-group label {
+    width: 98px;
+}
+
+.time-to-event-popup .typeahead-input-container {
+    margin-left: 12px;
+}
+
+.time-to-event-popup .typeahead-input-container .input-group-addon {
+    border-radius: 0;
+    color: #D8D8D8; /* comp might be showing a different color on focus, but not worrying about that */
+    background-color: #FFFFFF;
+    padding: 6px 0 6px 9px;
+    width: auto;
+}
+
+.time-to-event-popup .typeahead-input-container .input-group-addon.disabled {
+    background-color: #eee;
+}
+
+.time-to-event-popup .typeahead-input-container input {
+    width: 318px;
+    margin-left: 0;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.typeahead-input-container input:not(:focus) {
+    border-left-color: transparent;
+}
+
+.time-to-event-popup .inline-form-group .form-control {
+    display: inline-block;
+    vertical-align: middle;
+    width: 260px;
+    margin-left: 0;
+}
+
+.time-to-event-popup .button-container {
+    width: 534px;
+    background-color: #FFFFFF;
+    padding: 10px 16px 9px 0;
+    text-align: right;
+    margin-top: 31px;
+}
+
+.time-to-event-popup button {
+    height: 28px;
+    margin-left: 5px;
+    padding: 3px 9px;
+}
+
+.time-to-event-popup .btn-default {
+    color: #1D609E;
+    border-color: #1D609E;
+}
+
+.time-to-event-popup .btn-primary {
+    background-color: #1D609E;
+}
+
+.time-to-event-popup .btn-primary:hover {
+    background-color: #094C8A;
+}
+
+.time-to-event-plot-container {
+    padding: 14px 34px 58px 17px;
+}

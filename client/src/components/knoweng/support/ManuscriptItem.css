@@ -1,0 +1,135 @@
+.ms-title {
+    padding: 11px 10px 0 10px;
+    width: 788px;
+    color: #FFFFFF;
+    font-size: 24px;
+    font-style: italic;
+    line-height: 29px;
+}
+
+.ms-author {
+    padding: 18px 10px;
+    width: 788px;
+    color: #B5D1EB;
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.ms-link {
+    color: #55EBEE; 
+}
+
+.ms-abstract {
+    padding: 14px 22px;
+    height: 255px;
+    width: 788px;
+    background-color: #FFFFFF;
+    margin-bottom: 11px;
+    overflow: scroll;
+}
+
+.ms-abstract-section-title {
+    color: #1E384E;
+    font-size: 18px;
+    line-height: 22px;
+    margin-bottom: 7px;
+}
+
+.ms-abstract-section-details {
+    color: #1E384E;
+    font-size: 12px;
+    line-height: 15px;
+    margin-bottom: 15px;
+}
+
+.load-manuscript-data,
+.ms-file-list {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.manuscripts-data {
+    margin-top: 19px;
+    margin-bottom: 68px;
+}
+
+.section .btn.upload-btn {
+    width: 284px;
+    text-align: left;
+}
+
+.section .btn.upload-btn img {
+    vertical-align: top;
+    margin: 2px 16px 0 0;
+}
+
+.section .btn.upload-btn i {
+    vertical-align: top;
+    margin: 5px 16px 0 0;
+}
+
+.warning-triangle {
+    fill: #F8E998;
+    stroke: #F8E998;
+    stroke-width: 1;
+}
+
+.data-uploaded-warning {
+    padding: 12px 11px 15.5px 16px;
+    margin-top: -7px;
+    width: 284px;
+    border-radius: 5px;
+    background-color: #F8E998;
+}
+
+.warning-title {
+    margin-bottom: 5px;
+    color: #29465F;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: bold;
+}
+
+.warning-title .fa {
+    margin-right: 7px;
+}
+
+.warning-content {
+    color: #29465F;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.warning-content p {
+    margin: 0 0 5px;
+}
+
+.section .warning-content a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.ms-file-list {
+    margin-top: 10px;
+    margin-left: 30px;
+}
+
+.dfile-list {
+    height: 27px;
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 27px;
+    margin-bottom: 17px;
+}
+
+.dfile-readme {
+    margin-left: 16px;
+    font-size: 12px;
+}
+
+.dfile-name {
+    color: #FFFFFF;
+    font-size: 12px;
+    line-height: 15px;
+}

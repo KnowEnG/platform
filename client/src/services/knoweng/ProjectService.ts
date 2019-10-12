@@ -117,7 +117,7 @@ export class ProjectService {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
         // post the new project to the server
-		var url = this._projectUrl + '?reply=whole';
+        var url = this._projectUrl + '?reply=whole';
         var requestStream = this.authHttp
             .post(url, JSON.stringify({name}), {headers: headers})
             .map(res => {

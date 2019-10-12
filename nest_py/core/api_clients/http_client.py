@@ -6,6 +6,11 @@ from requests import Request
 from requests.exceptions import Timeout
 from requests.exceptions import ConnectionError
 
+#disable expected ssl warnings
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+urllib3.disable_warnings(urllib3.exceptions.InsecurePlatformWarning)
+
 #import nest_py.flask.app2.API_PREFIX as API_PREFIX
 #TODO move to a (jobs?) config file
 API_PREFIX = '/api/v2/'
@@ -138,7 +143,7 @@ class NestHttpClient(object):
         NOTE: the 'api' prefix is defined by the URL_PREFIX
             parameter in the Eve config.
         """
-        url = 'https://'
+        url = 'http://'
         url += str(self.server)
         url += API_PREFIX
         url += str(nest_request.get_relative_url())
@@ -155,8 +160,11 @@ class NestHttpRequest(object):
             headers
         files is a dictionary of {<file field name>: <fileobject>} files to
             upload. If files is None, data will be converted to JSON for an
-            application/json request. If files is not None, data and files
-            will be encoded as multipart/form-data.
+            application/json request. If files is not None, files will be
+            encoded as multipart/form-data and data must be None. If you need
+            to send additional data with the files, include them in the files
+            dictionary as seen in
+            nest_py.knoweng.data_types.files.FileBytesDTO.to_files_dict.
         If require_json, the header accept type will be set to JSON and the returned
             payload will be parsed as json. If the parsing does not succeed, will
             be considered a failed call
@@ -189,10 +197,15 @@ class NestHttpRequest(object):
         if files is None:
             self.headers['Content-Type'] = 'application/json'
             self.data = json.dumps(data)
-        # if files is not None, then we have to use multipart/form-data
-        # that means self.data should not be JSON-encoded
-        # the Content-Type will be set automatically and will include the
-        #     correct boundary, which we can't hardcode
+        else:
+            # we have to use multipart/form-data
+            # the Content-Type will be set automatically and will include the
+            #     correct boundary, which we can't hardcode
+            # `data` must be none--see comment in method doc above
+            if data is not None:
+                raise Exception('NestHttpRequest.data must be None when ' + \
+                    'NestHttpRequest.files is not None; see constructor ' + \
+                    'documentation for details.')
 
         #headers we got as an input, allowed to overwrite defaults
         for header_key in headers:

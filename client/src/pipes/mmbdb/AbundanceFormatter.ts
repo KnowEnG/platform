@@ -19,7 +19,9 @@ export class AbundanceFormatter implements PipeTransform {
      */
     transform(value: number, includeSign: boolean): string {
         var returnVal: string;
-        if (value == 0) {
+        if (value == null) {
+            returnVal = "";
+        } else if (value == 0) {
             returnVal = "0";
         } else {
             if (includeSign) {

@@ -1,12 +1,16 @@
-""" 
+"""
 Below are the config definitions for various environments and projects that
 need to be bundled into the main config dictionary that flask consumes on
 startup
 """
 
 from datetime import timedelta
+import logging
 import os
 from nest_py.nest_envs import ProjectEnv, RunLevel
+
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
 
 def generate_config_from_os():
     """
@@ -14,18 +18,22 @@ def generate_config_from_os():
     returns generate_eve_config(project_env, runlevel).
     """
     project_env = ProjectEnv.detect_from_os(fallback_to_default=True)
-    print "Detected PROJECT_ENV: " + str(project_env)
+    LOGGER.info("Detected PROJECT_ENV: " + str(project_env))
 
     runlevel = RunLevel.detect_from_os(fallback_to_default=True)
-    print "Detected RUN_LEVEL: " + str(runlevel)
+    LOGGER.info("Detected RUN_LEVEL: " + str(runlevel))
 
     return generate_config(project_env, runlevel)
 
-def generate_config(project_env, runlevel):
+def generate_config(project_env=None, runlevel=None):
     """
     runlevel (RunLevel)
     project_env (ProjectEnv)
     """
+    if project_env is None:
+        project_env = ProjectEnv.default_instance()
+    if runlevel is None:
+        runlevel = RunLevel.default_instance()
     config = {}
     base_config = _generate_base_config()
     config.update(base_config)
@@ -61,10 +69,10 @@ def _generate_deploy_params(runlevel):
     return supplemental_config
 
 def _generate_base_config():
-    #TODO: break this up by component that uses them. 
+    #TODO: break this up by component that uses them.
     #Hard to know what is still being used like this
     config = {
-        "SECRET_KEY": 'GARBAGESECRET',
+        "SECRET_KEY": os.getenv('SECRET_KEY', 'GARBAGESECRET'),
         # APP_DIR is this directory
         "APP_DIR": os.path.abspath(os.path.dirname(__file__)),
         "PROJECT_ROOT": os.path.abspath(
@@ -73,7 +81,7 @@ def _generate_base_config():
         "BCRYPT_LOG_ROUNDS": 13,
         "DEBUG_TB_ENABLED": False,  # Disable Debug toolbar
         "DEBUG_TB_INTERCEPT_REDIRECTS": False,
-        "REDIS_HOST": 'redis',
+        "REDIS_HOST": os.environ.get("REDIS_HOST", 'redis'),
         "PAGINATION_LIMIT": 100, #TODO: start using this again
         "PAGINATION_DEFAULT": 100,
         "XML": False, # JSON only
@@ -85,7 +93,7 @@ def _generate_base_config():
         "USERFILES_DIR": "/userfiles",
         "DEFAULT_CLOUD": "aws", # TODO KNOW-112 knoweng only? or not even there?
         "AUTHENTICATION_STRATEGY": 'nest_py.core.flask.accounts.authentication.NativeAuthenticationStrategy',
-        "JWT_SECRET": "GARBAGESECRET", # TODO reject default in production
+        "JWT_SECRET": os.getenv('JWT_SECRET', "GARBAGESECRET"), # TODO reject default in production
         "JWT_ISSUER": "NEST_DEMO_CHANGE_IN_PRODUCTION", # TODO reject default in production
         "JWT_AUDIENCES": ["NEST_DEMO_CHANGE_IN_PRODUCTION"], # TODO reject default in production
         "JWT_LIFESPAN": timedelta(days=365)
@@ -105,7 +113,7 @@ def generate_seed_users(project_env, runlevel):
     else:
         raise Exception("Unsupported project env: " + str(project_env))
     return project_users
-    
+
 def _generate_development_params():
     config = {
         "ENV": 'dev',
@@ -121,4 +129,3 @@ def _generate_production_params():
         "DEBUG_TB_ENABLED": False,  # Disable Debug toolbar
         }
     return config
-

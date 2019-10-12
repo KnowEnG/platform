@@ -1,0 +1,134 @@
+<div class="control-panel-container">
+    <div class="col-control-row">
+        <div class="control-panel">
+            <button type="button" 
+                    class="btnd control-panel-label" 
+                    [popover]="groupColumnsByTemplate"
+                    popoverTitle="Group Columns By"
+                    placement="bottom"
+                    containerClass="infoClass"
+                    triggers="mouseenter:mouseleave">GROUP COLUMNS BY
+            </button>
+            <ng-template #groupColumnsByTemplate>
+                <div class="help-info-popover">
+                    <div>This allows you to group your columns by any row of categorical data in any of your spreadsheets. 
+                    Rows of categorical data are often ones containing phenotypes or clinical data such as gender or smoking status.</div>
+                    <br>
+                    <div>Grouping columns in this way allows you to identify patterns across the data in all of your spreadsheets.</div>
+                </div>
+            </ng-template>
+            <row-selector [job]="job" [state]="state" [types]="'categoric'" 
+                    [showScores]="false" (selectionChanged)="selectGroupColumnsBy($event)">
+                <button activator type="button" class="btn row-selector-btn">
+                    <span class="pull-left">
+                        <span *ngIf="!groupColumnsBy">None</span>
+                        <span *ngIf="groupColumnsBy" trunctip maxLength="15" [tooltipText]="groupColumnsBy.getName()"></span>
+                    </span>
+                    <i class="fa fa-fw fa-chevron-down pull-right"></i>
+                </button>
+                <div class="panel-heading">
+                    Main Heatmap Grouping
+                    <div class="panel-subheading">Select how to visually group samples in the main spreadsheets.</div>
+                </div>
+            </row-selector>
+        </div>
+        <div class="main-heatmap-header-area">
+            <!-- Column Group Placeholder -->
+            <div class="header-placeholder column-group-header-placeholder" *ngIf="!groupColumnsBy">
+                <span class="column-header-arrow-icon">&larr;</span> 
+                Select a row for grouping (optional)
+            </div>
+            
+            <!-- Column Group Header [style.width.px]="group.width"-->
+            <div class="column-group-header" *ngIf="groupColumnsBy">
+                <div *ngIf="!expandedGroup">
+                    <span *ngFor="let group of columnGroups; let i = index" [ngClass]="group.highlighted? 'highlight-label-block highlight-box' : 'col-label-block'" 
+                            [ngStyle]="getGroupHeaderStyle(i)"
+                            title="G{{ i + 1 }} - {{ group.shortName }}" (click)="toggleGroupHighlight(i)">
+                        <span *ngIf="group.width > 40">G{{ i + 1 }} - {{ group.shortName }}</span>
+                        <span *ngIf="group.width > 10 && group.width <= 40">G{{ i + 1 }}</span>
+                        <span *ngIf="group.width <= 10">..</span>
+                        <i *ngIf="group.highlighted" class="pull-right fa fa-expand group-expansion" (click)="expandGroup(i)"
+                            tooltip="Expand this group" 
+                            placement="right"></i>
+                    </span>
+                </div>
+                <span *ngIf="expandedGroup" class="highlight-label-block" [ngStyle]="{'width.px': getHeatmapWidth()}">
+                    G{{ expandedGroup.groupPosition + 1 }} - {{ expandedGroup.groupName }}
+                    <i class="pull-right fa fa-compress group-undo-expansion" (click)="undoExpansion()"
+                        tooltip="Exit Group Expansion" 
+                        placement="right"></i>
+                </span>
+                <!-- Column Group Mini Heatmap -->
+                <single-row-heatmap *ngIf="groupColumnsBy.getColorRGBValues().length"
+                    [width]="getHeatmapWidth()" [height]="38" [row]="groupColumnsBy" [displayedHeatmapData]="displayedGroupColumnsHeatmapData" [state]="state">
+                    <div class="single-row-heatmap-rollover-addition">
+                        <!-- TODO this content projection is a quick fix for SC silhouette scores.
+                             it might be useful more generally, and/or silhouette scores might find a new home.
+                             reconsider when revisiting SC and/or when adopting SSV components elsewhere.
+                        -->
+                        <ng-content select=".column-options-grouping-rollover-addition"></ng-content>
+                    </div>
+                </single-row-heatmap>
+            </div>
+        </div>
+        <div class="color-scale-area">
+            <!-- Column Group Header ColorScale -->
+            <!-- the extensive ngIf-ing below ensures good state but could probably be avoided with some attention upstream -->
+            <mini-distribution-graph *ngIf="groupColumnsBy && groupColumnsBy.getRawRow() && groupColumnsBy.getColorScale()" [rowDisplayData]="groupColumnsBy"></mini-distribution-graph>
+       </div>
+    </div>
+    <div class="col-control-row">
+        <div class="control-panel">
+            <button type="button" 
+                    class="btnd control-panel-label" 
+                    [popover]="sortColumnsByTemplate"
+                    popoverTitle="Sort Columns By"
+                    placement="bottom"
+                    containerClass="infoClass"
+                    triggers="mouseenter:mouseleave">SORT COLUMNS BY
+            </button>
+            <ng-template #sortColumnsByTemplate>
+                <div class="help-info-popover">
+                    <div>This allows you to sort your columns by any row that is present in your spreadsheets.</div>
+                    <br>
+                    <div>If a "Group By" row has been selected, sorting will be within Groups. If no "Group By" row is selected, sorting will be across all samples (columns).</div>
+                </div>
+            </ng-template>
+            <row-selector [job]="job" [state]="state" [types]="'categoric,numeric'" 
+                    (selectionChanged)="selectSortColumnsBy($event)">
+                <button activator type="button" class="btn row-selector-btn">
+                    <span class="pull-left">
+                        <span *ngIf="!sortColumnsBy">None</span>
+                        <span *ngIf="sortColumnsBy" trunctip maxLength="15" [tooltipText]="sortColumnsBy.getName()"></span>
+                    </span>
+                    <i class="fa fa-fw fa-chevron-down pull-right"></i>
+                </button>
+                <div class="panel-heading">
+                    Main Heatmap Grouped Sample Sorting
+                    <div class="panel-subheading">Select how to visually sort samples within the grouped columns of the main spreadsheets.</div>
+                </div>
+            </row-selector>
+        </div>
+        <div class="main-heatmap-header-area">
+            <!-- Column Sort Placeholder -->
+            <div class="header-placeholder column-sort-header-placeholder" *ngIf="!sortColumnsBy">
+                <span class="column-header-arrow-icon">&larr;</span> Select a row for sorting (optional)
+            </div>
+            
+            <!-- Column Sort Header -->
+            <div class="column-sort-header" *ngIf="sortColumnsBy">
+                <!-- Column Sort Mini Heatmap -->
+                <single-row-heatmap *ngIf="sortColumnsBy.getColorRGBValues().length"
+                        [width]="getHeatmapWidth()" [height]="38" [row]="sortColumnsBy" [displayedHeatmapData]="displayedSortColumnsHeatmapData" [state]="state">
+                </single-row-heatmap>
+            </div>
+        </div>
+        <div class="color-scale-area">
+            <!-- Column Sort Header ColorScale -->
+            <!-- the extensive ngIf-ing below ensures good state but could probably be avoided with some attention upstream -->
+            <mini-distribution-graph *ngIf="sortColumnsBy && sortColumnsBy.getRawRow() && sortColumnsBy.getColorScale()" [rowDisplayData]="sortColumnsBy"></mini-distribution-graph>
+       </div>
+        
+    </div>
+</div>

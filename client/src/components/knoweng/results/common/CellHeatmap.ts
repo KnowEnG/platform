@@ -1,13 +1,17 @@
-/// <reference path="../../../../typings/pixi.js/pixi.js.d.ts" />
-import {Component, AfterViewInit, OnChanges, SimpleChange, Input, ViewChild, ElementRef, Output, EventEmitter, NgZone} from '@angular/core';
+import {Component, AfterViewInit, OnChanges, SimpleChange, Input, ViewChild,
+    ElementRef, Output, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 
 @Component({
+    moduleId: module.id,
     selector: 'cell-heatmap',
-    template: `<div #canvasHost></div>`,
-    styleUrls: []
+    templateUrl: './CellHeatmap.html',
+    styleUrls: ['./CellHeatmap.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
+
 export class CellHeatmap implements AfterViewInit, OnChanges {
+    class = 'relative';
 
     @Input()
     cellWidth: number;
@@ -19,32 +23,31 @@ export class CellHeatmap implements AfterViewInit, OnChanges {
     borderThickness: number;
 
     @Input()
+    borderColor: string;
+
+    @Input()
     selectedBorderThicknessMultiplier: number;
 
     @Input()
-    selectedBorderColor: number;
+    selectedBorderColor: string;
 
     @Input()
-    highlightColor: number;
+    highlightColor: string;
 
     @Input()
-    updateHighlight: boolean;
+    freezeHighlight: boolean;
 
     @Input()
-    rowsOfColumns: number[][];
+    rowsOfColumns: string[][];
+    
+    @Input()
+    DEBUG: boolean = false;
 
     @Output()
     cellMousedOver: EventEmitter<CellHeatmapEvent> = new EventEmitter<CellHeatmapEvent>();
 
     @Output()
     cellClicked: EventEmitter<CellHeatmapEvent> = new EventEmitter<CellHeatmapEvent>();
-
-    renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer = null;
-    stage: PIXI.Container = null;
-
-    loading: boolean;
-    
-    overlay: PIXI.Container = null;
 
     numRows: number = null;
     numCols: number = null;
@@ -54,36 +57,25 @@ export class CellHeatmap implements AfterViewInit, OnChanges {
     /** [rowIndex, colIndex] for last cell to receive a mouseover event. */
     mouseoverCell: number[] = [null, null];
 
-    /** reference to the template element that'll contain the canvas element. */
-    @ViewChild('canvasHost') canvasHost: ElementRef;
+    highlightData = {
+        isOn: false,
+        cellTop: null as number,
+        cellLeft: null as number,
+        rowBarHeight: null as number,
+        colBarWidth: null as number
+    };
 
-    constructor(public ngZone: NgZone) {
+    canvasContext: CanvasRenderingContext2D = null;
+
+    /** reference to the template element that'll contain the canvas element. */
+    @ViewChild('canvasElement') canvasElementRef: ElementRef;
+    canvasNativeElement: HTMLCanvasElement = null;
+
+    constructor() {
     }
     ngOnInit() {
-        // create the renderer
-        this.renderer = new PIXI.CanvasRenderer(
-            0, 0, // we'll resize in ngOnChanges
-            {antialias: false, transparent: true, resolution: 1}
-        );
-        this.renderer.autoResize = false;
-
-        this.drawCells();
     }
     ngOnDestroy() {
-        if (this.overlay) {
-            this.overlay.destroy(true);
-            this.overlay = undefined;
-        }
-        
-        if (this.stage) {
-            this.stage.destroy(true);
-            this.stage = undefined;
-        }
-        
-        if (this.renderer) {
-            this.renderer.destroy(true);
-            this.renderer = undefined;
-        }
     }
     getCanvasWidth(): number {
         return this.numCols * (this.cellWidth + this.borderThickness) +
@@ -93,12 +85,12 @@ export class CellHeatmap implements AfterViewInit, OnChanges {
         return this.numRows * (this.cellHeight + this.borderThickness) +
             2 * this.borderThickness;
     }
-    getRectangleX(colIndex: number): number {
-        return colIndex * (this.cellWidth + this.borderThickness) +
+    getRectangleX(colIndex: number, cellWidthInContext: number): number {
+        return colIndex * (cellWidthInContext + this.borderThickness) +
             this.borderThickness;
     }
-    getRectangleY(rowIndex: number): number {
-        return rowIndex * (this.cellHeight + this.borderThickness) +
+    getRectangleY(rowIndex: number, cellHeightInContext: number): number {
+        return rowIndex * (cellHeightInContext + this.borderThickness) +
             this.borderThickness;
     }
     /**
@@ -106,157 +98,153 @@ export class CellHeatmap implements AfterViewInit, OnChanges {
      * inputs.
      */
     ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-        if (!this.renderer) {
-            return;
-        }
+        if (this.canvasNativeElement) {
+            if (this.DEBUG) {
+                console.log("property changed... redrawing!", changes);
+                console.time('redraw');
+            }
 
-        this.drawCells();
+            // Redraw when heatmap contents change
+            this.drawCells();
+
+            if (this.DEBUG) {
+                console.timeEnd('redraw');
+            }
+        }
     }
     ngAfterViewInit() {
-        // add the canvas to the DOM
-        let nativeElement: any = this.canvasHost.nativeElement;
-        nativeElement.appendChild(this.renderer.view);
-
-        // start update loop
-        this.update();
+        // get the context
+        this.drawCells();
     }
     drawCells(): void {
+        if (this.DEBUG) {
+            console.log('Drawing all cells...')
+            console.time('draw_cells');
+        }
         // initialize size vars
         this.numRows = this.rowsOfColumns.length;
         this.numCols = (this.numRows > 0 ? this.rowsOfColumns[0].length : 0);
-        
-        let newWidth: number = this.getCanvasWidth();
-        let newHeight: number = this.getCanvasHeight();
-        
-        // do we need to resize the canvas?
-        if (newWidth != this.renderer.width || newHeight != this.renderer.height) {
-            this.renderer.resize(newWidth, newHeight);
-        }
-        
-        let newStage: PIXI.Container = new PIXI.Container();
-        // detect mouse leaving canvas
-        newStage.interactive = true;
-        newStage.hitArea = new PIXI.Rectangle(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
-        (<any>newStage).mouseout = (event: PIXI.interaction.InteractionEvent) => this.onMouseout(event);
 
-        this.rowsOfColumns.forEach((row: number[], rowIndex: number) => {
-            row.forEach((cellColor: number, colIndex: number) => {
-                this.drawCell(newStage, rowIndex, colIndex, cellColor);
+        this.canvasNativeElement = this.canvasElementRef.nativeElement;
+        this.canvasContext = this.canvasNativeElement.getContext('2d', {alpha: false});
+
+        // what happens if cellWidth or cellHeight is less than 1px?
+        // we'll create a larger canvas such that each cell is at least 1px x 1px,
+        // and then we'll adjust the css width and height of the canvas element,
+        // which will usually result in the GPU doing the work. that beats
+        // trying to write an efficient implementation of the same in js, and it
+        // also prevents anti-aliasing from washing out the colors.
+
+        // in fact, we can do the same thing whenever cellWidth or cellHeight is
+        // not an integer, as long as borderThickness is 0 (for the current
+        // implementation, anyway). that'll prevent the anti-aliasing artifacts we
+        // see when, e.g., cellWidth = 1.9.
+
+        // set the canvas width and height depending on whether we have subpixel
+        // cellWidth or cellHeight
+        let workingCellWidth = null as number;
+        let canvasWidth = null as number;
+        if (this.borderThickness == 0 && !Number.isInteger(this.cellWidth)) {
+            workingCellWidth = 1;
+            canvasWidth = workingCellWidth * this.numCols;
+        } else {
+            workingCellWidth = this.cellWidth;
+            canvasWidth = this.getCanvasWidth();
+        }
+        this.canvasContext.canvas.width = canvasWidth;
+
+        let workingCellHeight = null as number;
+        let canvasHeight = null as number;
+        if (this.borderThickness == 0 && !Number.isInteger(this.cellHeight)) {
+            workingCellHeight = 1;
+            canvasHeight = workingCellHeight * this.numRows;
+        } else {
+            workingCellHeight = this.cellHeight;
+            canvasHeight = this.getCanvasHeight();
+        }
+        this.canvasContext.canvas.height = canvasHeight;
+
+        // always set the css width and height to match the desired size of the
+        // rendered heatmap
+        this.canvasNativeElement.style.setProperty('width', this.getCanvasWidth() + 'px');
+        this.canvasNativeElement.style.setProperty('height', this.getCanvasHeight() + 'px');
+
+        // paint background
+        this.canvasContext.fillStyle = this.borderColor;
+        this.canvasContext.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        this.rowsOfColumns.forEach((row: string[], rowIndex: number) => {
+            row.forEach((cellColor: string, colIndex: number) => {
+                this.drawCell(rowIndex, colIndex, cellColor, workingCellWidth, workingCellHeight);
             });
         });
 
-        let oldStage: PIXI.Container = this.stage;
-        this.stage = newStage;
-
-        // destroy the old stage
-        if (oldStage !== null) {
-            oldStage.destroy(true);
-            oldStage = undefined;
+        if (this.DEBUG) {
+            console.timeEnd('draw_cells');
         }
-
-        this.changed = true;
     }
-    drawCell(
-            stage: PIXI.Container,
-            rowIndex: number,
-            colIndex: number,
-            cellColor: number): void {
+    drawCell(rowIndex: number, colIndex: number, cellColor: string,
+            workingCellWidth: number, workingCellHeight: number): void {
         // draw rectangle
-        var rectangle: PIXI.Graphics = new PIXI.Graphics();
-        rectangle.beginFill(cellColor);
-        rectangle.drawRect(0, 0, this.cellWidth, this.cellHeight);
-        rectangle.endFill();
-        // add interactivity
-        rectangle.interactive = true;
-        rectangle.hitArea = new PIXI.Rectangle(0, 0, this.cellWidth, this.cellHeight);
-        (<any>rectangle).mouseover = (event: PIXI.interaction.InteractionEvent) => this.onMouseover(event, rowIndex, colIndex);
-        (<any>rectangle).click = (event: PIXI.interaction.InteractionEvent) => this.onClick(event, rowIndex, colIndex);
-        // position
-        rectangle.x = this.getRectangleX(colIndex);
-        rectangle.y = this.getRectangleY(rowIndex);
-        // add to stage
-        stage.addChild(rectangle);
+        this.canvasContext.fillStyle = cellColor;
+        this.canvasContext.fillRect(
+            this.getRectangleX(colIndex, workingCellWidth),
+            this.getRectangleY(rowIndex, workingCellHeight),
+            workingCellWidth,
+            workingCellHeight);
     }
-    onMouseout(event: PIXI.interaction.InteractionEvent): void {
+    onMouseout(event: MouseEvent): void {
         // mouse has left the canvas
-        if (this.updateHighlight) {
+        if (!this.freezeHighlight) {
             this.mouseoverCell = [null, null];
+            this.highlightCell(this.mouseoverCell[0], this.mouseoverCell[1]);
+            this.cellMousedOver.emit(new CellHeatmapEvent(null, null, event));
         }
-        // note: could reduce calls to highlightCell by checking for changes
-        // in mouseoverCell; seems to need a little help after a click event
-        this.highlightCell(this.mouseoverCell[0], this.mouseoverCell[1]);
-        this.cellMousedOver.emit(new CellHeatmapEvent(
-            null, null, <MouseEvent>event.data.originalEvent));
     }
-    onMouseover(event: PIXI.interaction.InteractionEvent, rowIndex: number, colIndex: number): void {
-        if (this.updateHighlight) {
-            this.mouseoverCell = [rowIndex, colIndex];
+    onMousemove(event: MouseEvent): void {
+        if (!this.freezeHighlight) {
+            let rowAndColIndex = this.getRowAndColIndexForMouseEvent(event);
+            if (rowAndColIndex.rowIndex != this.mouseoverCell[0] ||
+                    rowAndColIndex.colIndex != this.mouseoverCell[1]) {
+                this.mouseoverCell = [rowAndColIndex.rowIndex, rowAndColIndex.colIndex];
+                this.highlightCell(this.mouseoverCell[0], this.mouseoverCell[1]);
+                this.cellMousedOver.emit(new CellHeatmapEvent(
+                    rowAndColIndex.rowIndex, rowAndColIndex.colIndex, event));
+            }
         }
-        // note: could reduce calls to highlightCell by checking for changes
-        // in mouseoverCell; seems to need a little help after a click event
-        this.highlightCell(this.mouseoverCell[0], this.mouseoverCell[1]);
-        this.cellMousedOver.emit(new CellHeatmapEvent(
-            rowIndex, colIndex, <MouseEvent>event.data.originalEvent));
     }
-    onClick(event: PIXI.interaction.InteractionEvent, rowIndex: number, colIndex: number): void {
+    onClick(event: MouseEvent): void {
+        let rowAndColIndex = this.getRowAndColIndexForMouseEvent(event);
         this.cellClicked.emit(new CellHeatmapEvent(
-            rowIndex, colIndex, <MouseEvent>event.data.originalEvent));
+            rowAndColIndex.rowIndex, rowAndColIndex.colIndex, event));
     }
-    // note: could use mouseoverCell directly; let's see how that shakes out
+    getRowAndColIndexForMouseEvent(event: MouseEvent): {rowIndex: number, colIndex: number} {
+        let canvasRect = this.canvasNativeElement.getBoundingClientRect();
+        let x = event.clientX - canvasRect.left;
+        let y = event.clientY - canvasRect.top;
+        // for the purposes of this method, we'll consider the left border of
+        // the cell as part of the column. we'll also consider the right border
+        // of the rightmost cell as part of that column.
+        let colIndex = Math.min(
+            Math.floor(x / (this.cellWidth + this.borderThickness)), this.numCols - 1);
+        // for the purposes of this method, we'll consider the top border of
+        // the cell as part of the row. we'll also consider the bottom border
+        // of the bottommost cell as part of that row.
+        let rowIndex = Math.min(
+            Math.floor(y / (this.cellHeight + this.borderThickness)), this.numRows - 1);
+        let returnVal = {rowIndex, colIndex};
+        return returnVal;
+    }
     highlightCell(rowIndex: number, colIndex: number): void {
-        if (this.overlay !== null) {
-            this.stage.removeChild(this.overlay);
-            this.overlay.destroy(true);
-        }
-        this.overlay = new PIXI.Container();
-
         if (rowIndex !== null && colIndex !== null) {
-            // draw a border around the selected cell
-            var rectangle: PIXI.Graphics = new PIXI.Graphics();
-            rectangle.lineStyle(this.selectedBorderThicknessMultiplier * this.borderThickness, this.selectedBorderColor, 1);
-            rectangle.drawRect(0, 0, this.cellWidth, this.cellHeight);
-            rectangle.x = this.getRectangleX(colIndex);
-            rectangle.y = this.getRectangleY(rowIndex);
-            this.overlay.addChild(rectangle);
-
-            // highlight the path from the current cell back to its column label
-            if (rowIndex > 0) {
-                var colHighlight: PIXI.Graphics = new PIXI.Graphics();
-                colHighlight.beginFill(this.highlightColor, 0.5);
-                colHighlight.drawRect(0, 0, this.cellWidth, rowIndex * (this.cellHeight + this.borderThickness));
-                colHighlight.endFill();
-                colHighlight.x = this.getRectangleX(colIndex);
-                colHighlight.y = 0;
-                this.overlay.addChild(colHighlight);
-            }
-
-            // highlight the path from the current cell back to its row label
-            if (colIndex > 0) {
-                var rowHighlight: PIXI.Graphics = new PIXI.Graphics();
-                rowHighlight.beginFill(this.highlightColor, 0.5);
-                rowHighlight.drawRect(0, 0, colIndex * (this.cellWidth + this.borderThickness), this.cellHeight);
-                rowHighlight.endFill();
-                rowHighlight.x = 0
-                rowHighlight.y = this.getRectangleY(rowIndex);
-                this.overlay.addChild(rowHighlight);
-            }
-        }
-
-        this.stage.addChild(this.overlay);
-        this.changed = true;
-    }
-    update(): void {
-        if (!this.renderer || !this.stage) {
-            return;
-        }
-        
-        this.ngZone.runOutsideAngular(() => {
-            requestAnimationFrame(() => this.update());
-        });
-        
-        if (this.changed) {
-            this.renderer.render(this.stage);
-            this.changed = false;
+            this.highlightData.isOn = true;
+            this.highlightData.cellTop = this.getRectangleY(rowIndex, this.cellHeight);
+            this.highlightData.cellLeft = this.getRectangleX(colIndex, this.cellWidth);
+            // ensure the highlight bars are wide/tall enough to be rendered
+            this.highlightData.rowBarHeight = Math.max(1, this.cellHeight);
+            this.highlightData.colBarWidth = Math.max(1, this.cellWidth);
+        } else {
+            this.highlightData.isOn = false;
         }
     }
 }
@@ -267,9 +255,4 @@ export class CellHeatmapEvent {
         public colIndex: number,
         public event: MouseEvent) {
     }
-}
-
-/* hex input should begin with 0x */
-export function hexToDec(hex: string): number {
-    return parseInt(hex.replace(/^#/, ''), 16);
 }

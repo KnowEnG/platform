@@ -1,0 +1,134 @@
+svg {
+    display: block;
+    shape-rendering: crispedges;
+}
+
+.plot-area-background {
+    stroke: none;
+    fill: #FFFFFF;
+}
+
+.plot-area-foreground {
+    stroke: #7493AF;
+    stroke-width: 1px;
+    fill: none;
+}
+
+.minmax {
+    font-size: 8px;
+    fill: #000000;
+}
+
+.color-bar-missing-value-line {
+    stroke-width: 1px;
+    stroke: #7493AF;
+}
+
+.missing-value-separator {
+    stroke-width: 1px;
+    stroke: #7493AF;
+}
+
+.x-axis-bar {
+    stroke-width: 0;
+    fill: #EEEEEE;
+}
+
+.dist-path {
+    stroke-width: 1px;
+    stroke: #000000;
+    fill: none;
+}
+
+.bin-highlight-categoric {
+    fill: none;
+    stroke-width: 2px;
+    stroke: #29465F;
+}
+
+.bin-fill-categoric {
+    stroke: none;
+}
+
+.bin-highlight-numeric {
+    fill: #29465F;
+    stroke: none;
+}
+
+.bin-highlight-numeric-neighbor {
+    fill: #FFFFFF;
+    stroke: none;
+}
+
+.mouse-target {
+    stroke: transparent;
+    fill: transparent;
+    stroke-width: 0;
+    cursor: pointer;
+}
+
+.popover {
+    display: block;
+    border: 1px solid #152A3C;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+    padding: 0;
+}
+
+.popover.right>.arrow {
+    top: 20px;
+}
+
+.popover.right>.arrow:after {
+    border-right-color: #152A3C;
+}
+
+.popover-title {
+    background-color: #152A3C;
+    padding: 5px 6px 7px 6px;
+    min-width: 110px;
+}
+
+.row-name {
+    color: #B5D1EB;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    text-transform: uppercase;
+}
+
+.bin-label {
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 14px;
+}
+
+.popover-content {
+    padding: 4px 6px 4px 6px;
+    color: #152A3C;
+    white-space: nowrap;
+}
+
+.popover-percentage, .popover-count-area {
+    display: inline-block;
+    vertical-align: top;
+    padding: 1px 0 4px 0;
+}
+
+.popover-percentage, .popover-count {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 15px;
+}
+
+.popover-count-area {
+    border-left: 1px solid #152A3C;
+    margin-left: 8px;
+    padding-left: 7px;
+}
+
+.popover-count-units {
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 10px;
+}

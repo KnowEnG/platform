@@ -1,20 +1,21 @@
+import logging
+
 import flask
 from flask import render_template
-import time
 from flask_sqlalchemy import SQLAlchemy
+
 from nest_py.core.db.sqla_resources import FlaskSqlaResources
 from nest_py.nest_envs import ProjectEnv, RunLevel
-from nest_py.core.flask.accounts.authentication import NativeAuthenticationStrategy
 import nest_py.core.nest_config as nest_config
 import nest_py.core.db.nest_db as nest_db
 import nest_py.core.db.core_db as core_db
 import nest_py.core.db.sqla_resources as sqla_resources
-import json
 from nest_py.core.flask.views import public
 from nest_py.core.flask.extensions import (
-    CACHE,
     DEBUG_TOOLBAR,
 )
+
+logging.basicConfig()
 
 #TODO: move to flask.config
 API_PREFIX = '/api/v2/'
@@ -44,7 +45,9 @@ def setup_db(flask_app, project_env):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = sqla_resources.get_engine_url(db_config)
     db = SQLAlchemy(flask_app)
     sqla_res= FlaskSqlaResources(db, db_config)
-    nest_db.set_global_sqla_resources(sqla_res)
+    # FIXME flask still uses JobsSqlaResources, despite all this
+    # see https://visualanalytics.atlassian.net/browse/TOOL-510
+    # nest_db.set_global_sqla_resources(sqla_res)
     return
 
 def build_authenticator(flask_app, project_env, runlevel):
@@ -57,18 +60,19 @@ def build_authenticator(flask_app, project_env, runlevel):
     auth_user = core_db.get_system_user()
     users_client.set_requesting_user(auth_user)
 
-    #knoweng uses hubzero to look up user accounts in production
-    #all other situations will use user accounts stored in the local db
-    use_hubzero = (ProjectEnv.knoweng_instance() == project_env 
-        and RunLevel.production_instance() == runlevel)
-        
-    if use_hubzero:
-        print('registering Hubzero authenticator')
-        from nest_py.knoweng.flask.accounts.knoweng_authentication import HubzeroAuthenticationStrategy
-        authenticator = HubzeroAuthenticationStrategy(flask_app, users_client)
-    else:
-        from nest_py.core.flask.accounts.authentication import NativeAuthenticationStrategy
+    # knoweng uses CILogon to look up user accounts in production
+    # note the CILogon code could be moved to core for use w/ other projects
+    # all other situations will use user accounts stored in the local db
+    use_cilogon = flask_app.config.get('CILOGON_ENABLED', False)
 
+    if use_cilogon:
+        print('registering CILogon authenticator')
+        from nest_py.knoweng.flask.accounts.knoweng_authentication \
+            import CILogonAuthenticationStrategy
+        authenticator = CILogonAuthenticationStrategy(flask_app, users_client)
+    else:
+        from nest_py.core.flask.accounts.authentication \
+            import NativeAuthenticationStrategy
         authenticator = NativeAuthenticationStrategy(
             flask_app, users_client)
     return authenticator
@@ -98,8 +102,8 @@ def register_nest_endpoints(flask_app, project_env, authenticator):
         print('registering flask rule: ' + str(rule))
         flask_ep = nest_ep.get_flask_endpoint()
         renderer = nest_ep.handle_request
-        flask_app.add_url_rule(rule, flask_ep, view_func=renderer,
-            methods=['GET','POST','PATCH','DELETE'])
+        flask_app.add_url_rule(rule, flask_ep, view_func=renderer, \
+            methods=['GET', 'POST', 'PATCH', 'DELETE'])
     return
 
 def register_extensions(app):
@@ -112,7 +116,6 @@ def register_extensions(app):
         None: None.
 
     """
-    CACHE.init_app(app)
     DEBUG_TOOLBAR.init_app(app)
     return None
 
@@ -157,4 +160,3 @@ def register_errorhandlers(app):
     return None
 
 app = make_flask_app()
-

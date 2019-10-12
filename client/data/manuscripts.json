@@ -1,0 +1,41 @@
+{
+    "manuscripts": [
+        {
+            "title": "Knowledge-guided analysis of \"omics\" data using the KnowEnG cloud platform",
+            "authors": "Charles Blatti III, Amin Emad, Matthew J. Berry, Lisa Gatzke, Milt Epstein, Daniel Lanier, Pramod Rizal, Jing Ge, Xiaoxia Liao, Omar Sobh, Mike Lambert, Corey S. Post, Jinfeng Xiao, Peter Groves, Aidan T. Epstein, Xi Chen, Subhashini Srinivasan, Erik Lehnert, Krishna R. Kalari, Liewei Wang, Richard M. Weinshilboum, Jun S. Song, C. Victor Jongeneel, Jiawei Han, Umberto Ravaioli, Nahil Sobh, Colleen B. Bushell, Saurabh Sinha",
+            "link": {
+                "text": "bioRxiv",
+                "url": "https://www.biorxiv.org/content/10.1101/642124v1"
+            },
+            "abstract_sections": [
+                {
+                    "title": "Abstract",
+                    "text": "We present KnowEnG, a free-to-use computational system for analysis of genomics data sets, designed to accelerate biomedical discovery. It includes tools for popular bioinformatics tasks such as gene prioritization, sample clustering, gene set analysis and expression signature analysis. The system offers \"knowledge-guided\" data-mining and machine learning algorithms, where user-provided data are analyzed in light of prior information about genes, aggregated from numerous knowledge-bases and encoded in a massive \"Knowledge Network.\" KnowEnG adheres to \"FAIR\" principles: its tools are easily portable to diverse computing environments, run on the cloud for scalable and cost-effective execution of compute-intensive and data-intensive algorithms, and are interoperable with other computing platforms. They are made available through multiple access modes including a web-portal, and include specialized visualization modules. We present use cases and re-analysis of published cancer data sets using KnowEnG tools and demonstrate its potential value in democratization of advanced tools for the modern genomics era."
+                }
+            ],
+            "data_files_directory": "publication_data/blatti_et_al_2019/spreadsheets/",
+            "data_files": [
+                "in1_SC_pancanClinical",
+                "in1_SC_pancanMutations",
+                "in2_SC_pancanClinical",
+                "in2_SC_pancanMultiomicsClusters",
+                "in3_SC_metabricClinical",
+                "in3_SC_metabricExpression",
+                "in4_FP_pancanDiseaseType",
+                "in4_FP_pancanExpression",
+                "in5_GSC_diseaseGenes_out4",
+                "in6_SA_esccExpression",
+                "in6_SA_luscSignatures",
+                "in7_FP_esccBestSignature_out6",
+                "in7_FP_esccExpression",
+                "in8_GSC_signatSpecificGenes_out7",
+                "out1_SC_pancanMutationClusters",
+                "out2_SC_cocaClusters",
+                "out3_SC_metabricClusters",
+                "out5_GSC_diseaseGeneOntology",
+                "out8_GSC_pathwayEnrichments"
+            ],
+            "data_readme_url": "https://github.com/KnowEnG/quickstart-demos/blob/master/publication_data/blatti_et_al_2019/README.md"
+        }
+    ]
+}

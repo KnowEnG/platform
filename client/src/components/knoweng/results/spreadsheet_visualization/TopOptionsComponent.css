@@ -1,0 +1,258 @@
+.primary-visualization-header{
+    color: black;
+    font-size: 13px;
+    line-height: 34px;
+    padding: 10px 0 15px 30px;
+    margin-left:-50px;
+    margin-right:-50px;
+}
+
+.show-spreadsheets-dropdown {
+    position: relative !important;
+}
+
+.show-spreadsheets-button {
+    background-color: #35516A;
+    font-size: 14px;
+    line-height: 15px;
+    color: white;
+    padding: 3px 8px 6px 7px;
+    width: 184px;
+}
+
+.show-spreadsheets-button .fa-chevron-down {
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.show-spreadsheets-popout {
+    margin-top: -5px !important; /* CSS hack to align the popout with the button above */
+}
+
+.show-spreadsheets-dropdown,
+.show-columns-slider-container,
+.show-birdseye-view-container,
+.group-expansion-container {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+
+.show-columns-slider-container {
+    margin-left: 43px;
+    padding-right: 15px;
+    height: 33px;
+}
+
+.show-columns,
+.page-left,
+.page-turner,
+.page-block,
+.page-count,
+.page-right,
+.page-turner-left,
+.page,
+.page-turner-right{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.show-columns {
+	height: 24px;
+	width: 50px;
+	transform: rotate(360deg);
+	color: #1D609E;
+	font-size: 10px;
+	line-height: 12px;
+	text-align: right;
+}
+
+.page-left {
+	height: 20px;
+	width: 15px;
+	padding-top: 3px;
+	padding-left: 0px;
+	border: 1px solid #C6D8E8;
+	border-radius: 3px 0 0 3px;
+	background-color: #FFFFFF;
+	font-size: 10px;
+	line-height: 12px;
+	color: #1D609E;
+}
+
+.page-right {
+	height: 20px;
+	width: 15px;
+	padding-top: 3px;
+	padding-left: 1px;
+	border: 1px solid #C6D8E8;
+	border-radius: 0 3px 3px 0;
+	background-color: #FFFFFF;
+	font-size: 10px;
+	line-height: 12px;
+	color: #1D609E;
+}
+
+.page-turner {
+    padding-bottom: 4px;
+}
+
+.page-turner-left {
+    height: 20px;
+	margin-left: 1px;
+	background: repeating-linear-gradient(45deg, #E5F0F2 0px, #E5F0F2 3px, #C6D8E8 4px, #C6D8E8 5px);
+}
+
+.page-turner-right {
+    height: 20px;
+	margin-right: 1px;
+	background: repeating-linear-gradient(45deg, #E5F0F2 0px, #E5F0F2 3px, #C6D8E8 4px, #C6D8E8 5px);
+}
+
+.page-count {
+    margin-left: 9px;
+	transform: rotate(360deg);
+	color: #1D609E;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 14px;
+}
+
+.btnd:active,
+.btnd:focus,
+.btnd.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.total-column-count {
+	color: #9B9B9B;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: 12px;
+}
+
+.page-block,
+.page{
+	box-sizing: border-box;
+	height: 22px;
+	border: 2px solid #000000;
+	background-color: #83B5D9;
+}
+
+.show-birdseye-view-container {
+    border-left: 1px solid #D8D8D8;
+    padding-left: 17px;
+    padding-right: 15px;
+    cursor: pointer;
+}
+
+.show-birdseye-view-checkbox,
+.show-birdseye-view {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.show-birdseye-view-checkbox {
+    color: #35516A;
+    padding-top: 2px;
+}
+
+.show-birdseye-view {
+    transform: rotate(360deg);
+    color: #1D609E;;
+	font-size: 10px;
+	line-height: 12px;
+}
+
+.group-expansion-container {
+    border-left: 1px solid #D8D8D8;
+    padding-left: 17px;
+}
+
+.group-is-expanded-circle,
+.group-is-expanded,
+.undo-expansion {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.group-is-expanded-circle {
+    color: #E05869;
+    padding-top: 2px;
+}
+
+.group-is-expanded,
+.undo-expansion{
+	transform: rotate(360deg);
+	color: #1D609E;
+	font-size: 10px;
+	line-height: 12px;
+}
+
+.undo-expansion {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.mini-panel {
+    padding: 5px !important;
+}
+
+.mini-panel-heading {
+    font-size: 14pt;
+    line-height: 22px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    width: 480px;
+    color: #29465F;
+}
+
+.mini-panel-heading-label {
+    margin: 5px;
+}
+
+.mini-panel-close-button {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 5px;
+    cursor: pointer;
+    color: #29465F;
+}
+
+.panel-heading {
+    font-size: 18px;
+    background-color: #29465F;
+    width: 741px;
+    color: #ffffff;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.table {
+    background-color: #E5F0F2;
+    padding-bottom: 7px;
+}
+
+.mini-panel-table-header {
+    color: #1D609E;
+    font-size: 10px;
+    line-height: 12px;
+}
+
+.panel-table-row {
+    cursor: pointer;
+    color: #29465F;
+}
+
+.no-whitespace {
+    margin: 0;
+    padding: 0;
+}
+
+.borderless td, .borderless th {
+    border: none;
+}

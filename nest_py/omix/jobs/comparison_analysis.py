@@ -45,7 +45,7 @@ def _derive_rankings_by_otu_idx(comp_def, otu_defs):
 
     otu_defs_by_eid = dict()
     for otu_def in otu_defs:
-        eid = otu_def.get_nest_id().get_value()
+        eid = otu_def.get_nest_id()
         otu_defs_by_eid[eid] = otu_def
 
     rankings_by_otu_idx = dict()

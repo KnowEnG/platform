@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
-import { BsDropdownModule } from 'ngx-bootstrap';
+import {TooltipModule, BsDropdownModule } from 'ngx-bootstrap';
 // note: for ngx-bootstrap 1.6.6, ModalModule will be included here without forRoot
 // and will also be included in KnowengCommonModule with forRoot
 // https://github.com/valor-software/ngx-bootstrap/issues/1903
@@ -27,7 +27,18 @@ import {Pipelines} from './Pipelines';
 import {TemplatePanel} from './TemplatePanel';
 
 @NgModule({
-    imports: [CommonModule, FormsModule, BsDropdownModule.forRoot(), ModalModule, SlimScrollModule, PipelinesRoutingModule, NestCommonModule, KnowengCommonModule, FileUploadModule],
+    imports: [
+        CommonModule, 
+        FormsModule, 
+        TooltipModule.forRoot(),
+        BsDropdownModule.forRoot(), 
+        ModalModule, 
+        SlimScrollModule, 
+        PipelinesRoutingModule, 
+        NestCommonModule, 
+        KnowengCommonModule, 
+        FileUploadModule
+    ],
     declarations: [
         FilePicker,
         FormContainer,

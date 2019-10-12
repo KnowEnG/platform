@@ -42,8 +42,7 @@ export class FileUploadService {
                     this.defaultProject = defaultProject;
                     
                     this.uploader.onBuildItemForm = (item, form) => {
-                        form.append('uploadername', this.userName);
-                        form.append('project', this.defaultProject._id);
+                        form.append('project_id', this.defaultProject._id);
                     };
                 }
             });
@@ -84,6 +83,9 @@ export class FileUploadService {
     }
     
     // Given a URL, create and save (upload) a new File from it
+    // ** WARNING **
+    //   needs attention for Safari--users would get 0-byte files
+    // ** WARNING **
     saveFileFromURL(desiredFilename: string, url: string) {
         let observable = this.http.get(url, {
             method: RequestMethod.Get,

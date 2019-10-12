@@ -16,7 +16,7 @@ docker run \
     --volume="$DOCKER_HOST_NEST_DIR/data/userfiles":/userfiles \
     --volume="$DOCKER_HOST_NEST_DIR":/code_live \
     --volume="$DOCKER_HOST_NEST_DIR/data/projects/knoweng/networks":/networks \
-    --volume="$DOCKER_HOST_NEST_DIR/data/projects/knoweng/zip_readmes":/zip_readmes \
+    --volume="$DOCKER_HOST_NEST_DIR/data/projects/knoweng/pipeline_readmes":/pipeline_readmes \
     --env="PYTHONPATH=/code_live" \
     --env="PROJECT_ENV=knoweng" \
-    knowengdev/nest_jobs:latest 
+    nest/nest_jobs:latest 

@@ -1,0 +1,74 @@
+<div class="heatmap-container">
+    <div class="row">
+        <!-- "Show Labels" Checkbox -->
+        <div class="show-labels-checkbox-area pull-left" (click)="showLabels = !showLabels">
+            <span class="show-labels-checkbox-label">LABELS</span>
+            <i class="show-labels-checkbox fa fa-fw" [ngClass]="{ 'fa-check-square': showLabels, 'fa-square-o': !showLabels }"></i>
+        </div>
+        <!-- Spreadsheet File Name  -->
+        <div class="pull-right">
+            <span class="primary-filename-area">{{ title }}</span>
+            <button type="button" class="btn file-info-btn" 
+                [popover]="tooltipContent"
+                containerClass="infoClass"
+                [popoverTitle]="title"
+                placement="bottom"
+                outsideClick="true">
+                <i class="fa fa-fw fa-info-circle"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="row" [ngStyle]="{ 'padding-left': showLabels ? '0' : '60px' }">
+        <!-- Row Labels -->
+        <div class="heatmap-labels" *ngIf="showLabels">
+            <div class="row-label-column">
+                <div *ngFor="let row of rowLabels" class="dimension-label" trunctip maxLength="16" [tooltipText]="row">{{ row }}</div>
+            </div>
+        </div>
+        
+        <!-- Spreadsheet Heatmap -->
+        <div class="heatmap-area">
+            <!-- TODO: Reconcile: [cellHeight]="(heatmapHeight - 20) / heatmapData.length" -->
+            <cell-heatmap *ngIf="heatmapData"
+                [cellWidth]="heatmapWidth / heatmapData[0].length"
+                [cellHeight]="getCellHeight()"
+                [borderThickness]="0"
+                [borderColor]="'#fff'"
+                [selectedBorderThicknessMultiplier]="1"
+                [selectedBorderColor]="'#000'"
+                [highlightColor]="'#152a3c'"
+                [rowsOfColumns]="heatmapData"
+                [freezeHighlight]="false"
+                (cellClicked)="cellClicked($event)">
+            </cell-heatmap>
+        </div>
+    </div>
+</div>
+
+<!-- CellDetails tooltip / popover -->
+<div *ngIf="cellDetails" ngDraggable class="popover right cell-details-popover" [style.top.px]="popoverTop" [style.left.px]="popoverLeft">
+    <table class="table table-condensed table-borderless no-whitespace pull-left">
+        <tr>
+            <td class="align-right cell-details-label">Row:</td>
+            <td>{{ cellDetails.rowName }}</td>
+            <td>
+                <!-- Close button -->
+                <button class="btn btn-xs btn-link cell-details-close-btn no-whitespace" (click)="closeCellDetails()">
+                    <i class="fa fa-fw fa-times"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td class="align-right cell-details-label">Sample:</td>
+            <td colspan="2">{{ cellDetails.sampleName }}</td>
+        </tr>
+        <tr>
+            <td class="align-right cell-details-label">
+                <i class="cell-details-colorbox fa fa-fw fa-square" tooltip="{{ cellDetails.color }}" placement="bottom" [ngStyle]="{ 'color': cellDetails.color }"></i>:
+            </td>
+            <td *ngIf="cellDetails.value !== null" colspan="2">{{ cellDetails.value | numFormatter }}</td>
+            <td *ngIf="cellDetails.value === null" colspan="2">missing value</td>
+        </tr>
+    </table>
+</div>

@@ -1,5 +1,10 @@
-<div class="table-container" slimScroll [options]="slimScrollOpts">
-    <div class="table-header">
+<div class="mode-button-container">
+    <button class="btn upload-new-data" [class.hidden]="!modeIsSelect" (click)="setModeIsSelect(false)">Upload New Data</button>
+    <div class="upload-new-data-x" [class.hidden]="modeIsSelect">Upload New Data   <i class="fa fa-times close-upload" (click)="setModeIsSelect(true)"></i></div>
+</div>
+
+<div class="table-container">
+    <div class="table-header" *ngIf="modeIsSelect">
         <table>
             <thead>
                 <tr>
@@ -16,14 +21,46 @@
                         </select>
                     </td>
                     <td class="tags">
-                        <div class="tag" [class.active]="!selectedTag || selectedTag === 'all'" (click)="selectTag()" placement="bottom" tooltip="Show all results">All</div>
-                        <div class="tag" [class.active]="selectedTag === 'recent'" (click)="selectTag('recent')" placement="bottom" tooltip="Show only results from the past 7 days">Recent</div>
+                        <div class="tag" [class.active]="!selectedTag || selectedTag === 'all'" (click)="selectTag()" placement="bottom" tooltip="Show all data">All</div>
+                        <div class="tag" [class.active]="selectedTag === 'recent'" (click)="selectTag('recent')" placement="bottom" tooltip="Show only data from the past 7 days">Recent</div>
+                        <div class="tag" [class.active]="selectedTag === 'favorites'" (click)="selectTag('favorites')" placement="bottom" tooltip="Show only data marked as favorite">Favorites</div>
                     <td class="search"><i class="fa fa-search hidden"></i></td><!-- hiding for now, to match comp -->
                 </tr>
             </tbody>
         </table>
     </div>
-    <div class="table-area">
-        <results-table-body [jobs]="jobs" (jobSelected)="jobSelected.emit($event)"></results-table-body>
+    <div class="upload-new-data-area" [class.hidden]="modeIsSelect">
+        <!-- previously didn't use ngIf here because dropzone had to find #dropzone in the DOM, but could probably replace this class.hidden now -->
+        <div class="drop-browse-url-area">
+            <!-- TODO consider moving ng2FileDrop higher in the DOM; consider handling fileOver event w/ color change or similar -->
+            <div ng2FileDrop [uploader]="uploader" class="drop-browse">
+                <div class="drop-text">
+                    Drop files here or
+                    <label for="file-browse" class="browse-text">BROWSE</label>
+                    <input id="file-browse" type="file" ng2FileSelect [uploader]="uploader" multiple/>
+                </div>
+            </div><!-- no whitespace
+         --><div class="enter-url hidden"><input #url type="text" class="url-input" placeholder="Paste URL here" (keyup)="setUrl($event.target.value)"><button class="btn get-button" [disabled]="!isUrlValid()">Get Data</button></div>
+        </div><!-- no whitespace
+     --><div class="gene-paste-btn-area">
+            <button class="gene-paste-btn" (click)="openGenePasteModal($event)">Paste a Gene List</button>
+        </div>
     </div>
+    <div class="table-area">
+        <results-table-body 
+            [jobs]="jobs"  
+            [regularFiles]="regularFiles" 
+            [jobOutputFiles]="jobOutputFiles"
+            [uploaderQueue]="uploaderQueue" 
+            [projectList]="projects" 
+            (fileSelected)="fileSelected.emit($event)" 
+            (jobSelected)="jobSelected.emit($event)">
+        </results-table-body>
+    </div>
+    <div *ngIf="showGenePasteModal" class="modal-container">
+        <gene-paste-modal [defaultProjectId]="getDefaultProjectId()" [userName]="userName" (close)="closeGenePasteModal($event)"></gene-paste-modal>
+    </div>
+</div>
+<div bsModal #errModal="bs-modal" class="modal fade" tabindex="-1">
+    <error-modal [header]="'Upload Failed'" [body]="errorMessage" (closeMe)="errModal.hide()"></error-modal>
 </div>

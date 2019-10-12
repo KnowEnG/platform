@@ -1,9 +1,13 @@
 """This module defines a class that creates JWT tokens for users."""
 from datetime import datetime
+import logging
 import jwt
 from jwt import InvalidAudienceError, InvalidIssuerError, ExpiredSignatureError
 from nest_py.core.data_types.nest_user import NestUser
 from nest_py.core.data_types.nest_id import NestId
+
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
 
 class TokenAgent(object):
     """Class that creates JWT tokens for users."""
@@ -17,7 +21,7 @@ class TokenAgent(object):
                 token?").
             jwt_audiences (List[str]): The audiences list to use ("who should
                 accept this token?").
-            default_lifespan(datetime.timedelta): if no lifespan is passed 
+            default_lifespan(datetime.timedelta): if no lifespan is passed
                 to the create* methods, this will be used.
 
         Returns:
@@ -39,15 +43,15 @@ class TokenAgent(object):
         """
         if lifespan is None:
             lifespan = self.default_lifespan
-        print('TokenAgent.create_for_user: ' + str(user.to_jdata()))
+        LOGGER.debug('TokenAgent.create_for_user: ' + str(user.to_jdata()))
         token_payload = create_user_payload_now(user, self.jwt_issuer, self.jwt_audiences, lifespan)
-        print('TokenAgent created payload: ' + str(token_payload.data))
+        LOGGER.debug('TokenAgent created payload: ' + str(token_payload.data))
         token = token_payload.to_jwt_token(self.jwt_secret)
-        print('TokenAgent created token: ' + str(token))
+        LOGGER.debug('TokenAgent created token: ' + str(token))
         return token
 
     def create_for_system_operation_as_user(self, nest_id, lifespan=None, \
-        given_name='Nest', family_name='System', thumb_url='',
+        given_name='Nest', family_name='System', thumb_url='', \
         username='nestsysteminternal'):
         """Creates a token for a system operation performed on a user's behalf.
 
@@ -96,7 +100,7 @@ class TokenPayload(object):
         tkn = jwt.encode(self.data, jwt_secret)
         return tkn
 
-def create_payload_now(nest_id, username, given_name, family_name, 
+def create_payload_now(nest_id, username, given_name, family_name, \
         thumb_url, jwt_issuer, jwt_audiences, lifespan):
     """
     creates a TokenPayload that is issued 'now' and expires at
@@ -152,23 +156,22 @@ def decode_token(tkn, jwt_secret, audience, issuer):
     try:
         data = jwt.decode(tkn, jwt_secret, audience=audience, issuer=issuer)
     except InvalidAudienceError:
-        print("Invalid audience for token being decoded: " + str(audience))
+        LOGGER.error("Invalid audience for token being decoded: " + str(audience))
         data = None
     except InvalidIssuerError:
-        print("Invalid issuer for token being decoded: " + str(audience))
+        LOGGER.error("Invalid issuer for token being decoded: " + str(audience))
         data = None
     except ExpiredSignatureError:
-        print("Decoded expired token")
+        LOGGER.warning("Decoded expired token")
         data = jwt.decode(tkn, jwt_secret, audience=audience, issuer=issuer, verify=False)
 
     if data is None:
-        print("No data from decoded token")
+        LOGGER.error("No data from decoded token")
         tp = None
     else:
         data['exp'] = datetime.fromtimestamp(data['exp'])
         data['iat'] = datetime.fromtimestamp(data['iat'])
         tp = TokenPayload(data)
-    #print(str(data))
+
+    #LOGGER.debug(str(data))
     return tp
-
-

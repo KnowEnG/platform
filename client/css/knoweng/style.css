@@ -182,7 +182,7 @@ H4 {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 80px;
+    padding-top: 80px;
     font-size: 16pt;
     z-index: -1;
 }
@@ -194,3 +194,70 @@ H4 {
 .brand-text {
     color: #1D609E;
 }
+
+/* Start of ngx-bootstrap popover customization */
+.popover.customClass {
+    margin-top: -22px;
+    margin-left: 66px;
+}
+
+.popover.customClass>.arrow, .popover.customClass>.arrow:after {
+    border-style: none;
+}
+
+.popover.customClass>.popover-content {
+    padding: 0;
+    background-color: #EBF2F2;
+}
+
+.popover.infoClass {
+    padding: 0px;
+	color: #000000;
+	font-family: Lato;
+	font-size: 14px;
+	line-height: 17px;
+	max-width: 100%;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+.popover.infoClass>.popover-title {
+    background-color: #35516A;
+}
+
+.popover.infoClass>.arrow:before, .popover.infoClass>.arrow:after {
+    border-bottom-color: #35516A;
+}
+
+.popover.infoClass>.popover-content .popover-content-blue {
+    color: #1D609E;
+}
+
+.popover.infoClass>.popover-content .help-info-popover {
+    width: 292px;
+    padding-bottom: 10px;
+}
+
+.popover.infoClass>.popover-content h5 {
+    font-weight: 700;
+}
+
+.popover.gradientPickerClass {
+    margin-top: 3px;
+    margin-left: 20px;
+}
+
+.popover.gradientPickerClass>.arrow, .popover.gradientPickerClass>.arrow:after {
+    border-style: none;
+}
+
+.popover.gradientPickerClass>.popover-content {
+    padding: 0px;
+}
+
+/* End of ngx-bootstrap popover customization */
+
+.ng-draggable {
+    cursor: move;
+}
+

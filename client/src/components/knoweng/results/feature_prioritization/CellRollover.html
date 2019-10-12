@@ -1,0 +1,23 @@
+<div class="rollover">
+    <div class="header">
+        <span class="title">{{ responseName }} &mdash; {{ featureName }}</span>
+        <span class="close pull-right" (click)="onClose()"><i class="fa fa-times"></i></span>
+    </div>
+    <div class="score-area">
+        <table>
+            <thead>
+                <tr>
+                    <th class="score-name">SCORES</th>
+                    <th colspan="2">0 &ndash; 1 Scale</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="final">
+                    <td class="score-name">Final</td>
+                    <td class="score-value">{{ finalScore | numFormatter: false }}</td>
+                    <td class="score-note">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

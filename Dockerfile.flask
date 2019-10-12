@@ -1,0 +1,65 @@
+FROM tiangolo/uwsgi-nginx-flask:python2.7
+
+# Install package dependencies
+RUN apt-get -qq update && \
+    apt-get -qq install --no-install-recommends \
+      build-essential \
+      curl \
+      netcat \
+      libpq-dev \
+      python-dev \
+      sudo && \
+    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
+    apt-get -qq update && \
+    apt-get -qq install nodejs && \
+    apt-get -qq clean all && \
+    apt-get -qq autoclean && \
+    apt-get -qq autoremove && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g gulp@3.9.0
+
+# Configure/clear flask working directory
+ENV BASEDIR="/code_live"
+WORKDIR $BASEDIR/
+
+# Install Python dependencies
+RUN pip --no-cache-dir install -q setuptools==33.1.1
+ADD ./requirements/ $BASEDIR/requirements
+RUN pip --no-cache-dir install -q -r requirements/nest_flask.txt
+
+RUN rm -rf /app
+
+# Copy in our app source and config files
+#COPY data/projects/knoweng/demo_files/*.txt /demo_files/
+COPY nest_flask_etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
+COPY nest_flask_etc/nginx/ /etc/nginx/
+COPY nest_flask_etc/supervisor/ /etc/supervisor/
+COPY client $BASEDIR/client
+
+# Build UI from source
+WORKDIR $BASEDIR/client/
+RUN npm install && \
+    gulp dist
+
+# Copy in demo files, publication data, and pipeline readmes
+WORKDIR /
+RUN git clone https://github.com/KnowEnG/quickstart-demos && \
+    cp -r quickstart-demos/demo_files / && \
+    cp -r quickstart-demos/publication_data /demo_files/ && \
+    find /demo_files -type f -name \*.bz2 | xargs bzip2 -d && \
+    cp -r quickstart-demos/pipeline_readmes / && \
+    rm -rf /quickstart-demos
+WORKDIR $BASEDIR/
+
+COPY . .
+RUN cp $BASEDIR/docker/flask_entrypoint.sh $BASEDIR/entrypoint.sh
+
+# Set runtime environment options
+ENV PROJECT_ENV="knoweng" \
+    NEST_RUNLEVEL="development" \
+    PYTHONPATH="$BASEDIR"
+
+# We need to override the entrypoint from the base image, because it clobbers our config
+# Note the k8s yamls override the entrypoint *again*
+ENTRYPOINT [ "./entrypoint.sh" ]

@@ -10,6 +10,6 @@ docker run \
 	--detach=true \
 	--env=PGDATA="/data/db/postgres" \
 	--env=POSTGRES_USER="nest" \
-	--env=POSTGRES_PASSWORD="GARBAGESECRET" \
+	--env=POSTGRES_PASSWORD="Toaslej8" \
 	--volume="$DOCKER_HOST_NEST_DIR/data/db":/data/db \
-	knowengdev/postgres:latest 
+	nest/postgres:latest 

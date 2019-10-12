@@ -1,0 +1,360 @@
+<div class="main-container">
+    <cell-heatmap
+        [cellWidth]="width / displayedHeatmapData.length"
+        [cellHeight]="height"
+        [borderThickness]="0"
+        [borderColor]="'#fff'"
+        [selectedBorderThicknessMultiplier]="0"
+        [selectedBorderColor]="'#000'"
+        [highlightColor]="'#152a3c'"
+        [rowsOfColumns]="[displayedHeatmapData]"
+        [freezeHighlight]="true"
+        (cellClicked)="onCellClicked($event)">
+    </cell-heatmap><!-- no whitespace for inline-block
+ --><div class="time-to-event-analysis-button"><i *ngIf="rlcInfo" class="fa fa-clock-o" (click)="onTimeToEventButtonClicked($event)"></i></div>
+</div>
+
+
+<div *ngIf="showRollover" class="rollover" [style.left.px]="rolloverLeft" [style.top.px]="rolloverTop" ngDraggable>
+    <div class="header">
+        <div class="title" [style.width.px]="rrInfo && rrInfo.groupingType == 'normal' ? 800 : 390"><span class="title-primary">{{ row.getName() }}</span> <span class="title-secondary">Distribution</span></div>
+        <div class="close-x" (click)="onCloseRollover()"><i class="fa fa-times"></i></div>
+    </div>
+    <div class="subheader key-value-container">
+        <span class="key-text">SOURCE FILE:&nbsp;&nbsp;</span><span class="value-text">{{ row.spreadsheet.fileId | fileName }}</span>
+    </div>
+    <div class="key-value-container">
+        <span class="key-text">TOTAL NUMBER OF SAMPLES:&nbsp;&nbsp;</span><span class="value-text">{{ totalCount }}</span>
+    </div>
+    <!-- TODO this content projection is a quick fix for SC silhouette scores.
+         it might be useful more generally, and/or silhouette scores might find a new home.
+         reconsider when revisiting SC and/or when adopting SSV components elsewhere.
+    -->
+    <ng-content select=".single-row-heatmap-rollover-addition"></ng-content>
+    <div class="plot-area">
+        <svg *ngIf="rlcInfo" class="left-plot" [attr.width]="rlcInfo.leftWidth + rlcInfo.rightWidth - 1" [attr.height]="plotMatchedHeight">
+            <rect class="plot-background-shaded" x="0" y="0" [attr.width]="rlcInfo.leftWidth" [attr.height]="plotMatchedHeight"/>
+            <g [attr.transform]="'translate(0, ' + rlcInfo.headerBaseline + ')'">
+                <text class="axis-label" [attr.x]="rlcInfo.leftWidth - 15" dy=".1em" text-anchor="end">Percent of Samples in Category</text>
+                <text class="axis-label-arrow" [attr.x]="rlcInfo.leftWidth - 15" dy=".15em" text-anchor="start">&#x25B8;</text>
+                <text class="axis-tick-label" [attr.x]="rlcInfo.xScale(0)" dx="-.15em" text-anchor="start">0 %</text>
+                <line class="axis-tick" [attr.x1]="rlcInfo.xScale(0)" [attr.x2]="rlcInfo.xScale(0)" [attr.y1]="rlcInfo.headerHeight - rlcInfo.headerBaseline - rlcInfo.tickHeight" [attr.y2]="rlcInfo.headerHeight - rlcInfo.headerBaseline"/>
+                <text class="axis-tick-label" [attr.x]="rlcInfo.xScale(rlcInfo.histoMax/2)" text-anchor="middle">{{ rlcInfo.histoMax/2 * 100 | numFormatter : false : false }}</text>
+                <line class="axis-tick" [attr.x1]="rlcInfo.xScale(rlcInfo.histoMax/2)" [attr.x2]="rlcInfo.xScale(rlcInfo.histoMax/2)" [attr.y1]="rlcInfo.headerHeight - rlcInfo.headerBaseline - rlcInfo.tickHeight" [attr.y2]="rlcInfo.headerHeight - rlcInfo.headerBaseline"/>
+                <text class="axis-tick-label" [attr.x]="rlcInfo.xScale(rlcInfo.histoMax)" dx=".35em" text-anchor="end">{{ rlcInfo.histoMax * 100 | numFormatter : false : false }}</text>
+                <line class="axis-tick" [attr.x1]="rlcInfo.xScale(rlcInfo.histoMax)" [attr.x2]="rlcInfo.xScale(rlcInfo.histoMax)" [attr.y1]="rlcInfo.headerHeight - rlcInfo.headerBaseline - rlcInfo.tickHeight" [attr.y2]="rlcInfo.headerHeight - rlcInfo.headerBaseline"/>
+            </g>
+            <line class="axis-line" x1="0" [attr.x2]="rlcInfo.leftWidth + rlcInfo.rightWidth - 1"
+                [attr.y1]="rlcInfo.headerHeight" [attr.y2]="rlcInfo.headerHeight"/>
+            <g *ngFor="let bin of rlcInfo.bins; let i = index" [attr.transform]="'translate(0, ' + (rlcInfo.headerHeight + i*rlcInfo.groupHeight) + ')'">
+                <!-- using [attr.y]="rlcInfo.binHeight+2" for <text> below because rendered height of <rects> includes extra 2px for stroke -->
+                <text class="histo-primary-label" [attr.x]="rlcInfo.leftWidth"
+                    [attr.y]="rlcInfo.binHeight+2" text-anchor="end" dx="-.45em">{{ bin.label }}</text>
+                <line class="axis-tick" [attr.x1]="rlcInfo.xScale(0)" [attr.x2]="rlcInfo.xScale(0)" y1="0" [attr.y2]="rlcInfo.groupHeight"/>
+                <rect class="left-histo-legend" [attr.x]="rlcInfo.leftWidth" y="3.5"
+                    [attr.width]="rlcInfo.xScale(0) - rlcInfo.leftWidth + 1" [attr.height]="rlcInfo.binHeight"
+                    [attr.fill]="bin.color" [attr.stroke]="bin.isMissingValue ? '#000000' : bin.color"/>
+                <!-- if this is the highlight bin, increase stroke, adjust y to accommodate stroke, change fill, change text -->
+                <!-- make sure the rect is at least 1px wide, to match 0% case in comp -->
+                <rect class="left-histo-bar" [attr.x]="rlcInfo.xScale(0)" y="3.5"
+                    [attr.width]="rlcInfo.xScale(bin.getCount()/totalCount) - rlcInfo.xScale(0) < 1 ? 1 : rlcInfo.xScale(bin.getCount()/totalCount) - rlcInfo.xScale(0)"
+                    [attr.height]="rlcInfo.binHeight" [attr.stroke-width.px]="bin === highlightBin ? 2 : 1"
+                    [attr.fill]="bin === highlightBin ? bin.color : '#FFFFFF'"
+                    (mouseover)="setHighlightBin(bin, $event)" (mouseout)="setHighlightBin(null, $event)"/>
+                <!-- display text outside bar if bar is small, else display text inside bar -->
+                <text class="histo-percentage" [class.highlight]="bin === highlightBin"
+                    [attr.x]="rlcInfo.xScale(bin.getCount()/totalCount)" [attr.y]="rlcInfo.binHeight+2" dy="-.05em"
+                    [attr.dx]="bin.getCount()/(totalCount*rlcInfo.histoMax) < .1 ? '.35em' : '-.35em'"
+                    [attr.text-anchor]="bin.getCount()/(totalCount*rlcInfo.histoMax) < .1 ? 'start' : 'end'">{{ bin.getCount()/totalCount  * 100 | numFormatter : false : false }} %</text>
+            </g>
+        </svg>
+        <svg *ngIf="rlnInfo" class="left-plot" [attr.width]="rlnInfo.getWidth()" [attr.height]="plotMatchedHeight">
+            <defs>
+                <linearGradient [attr.id]="rlnInfo.patternId">
+                    <stop *ngFor="let stop of rlnInfo.gradientStops"  [attr.stop-color]="stop.color" [attr.offset]="stop.offset"/>
+                </linearGradient>
+            </defs>
+            <!-- labels -->
+            <g [attr.transform]="'translate(0,' + rlnInfo.marginTop + ')'">
+                <text class="axis-label" text-anchor="end"
+                    [attr.x]="rlnInfo.clampMarginLeft" dx="-.35em"
+                    [attr.y]=".5*rlnInfo.headerHeight" dy=".25em">% Samples</text>
+                <text class="axis-label-arrow" text-anchor="start"
+                    [attr.x]="rlnInfo.clampMarginLeft" dx="-.25em"
+                    [attr.y]=".5*rlnInfo.headerHeight" dy=".35em">&#x25B8;</text>
+                <text class="axis-label" text-anchor="end"
+                    [attr.x]="rlnInfo.clampMarginLeft" dx="-.35em"
+                    [attr.y]="1.5*rlnInfo.headerHeight + rlnInfo.headerMarginBottom" dy=".25em">Bins</text>
+                <text class="axis-label-arrow" text-anchor="start"
+                    [attr.x]="rlnInfo.clampMarginLeft" dx="-.25em"
+                    [attr.y]="1.5*rlnInfo.headerHeight + rlnInfo.headerMarginBottom" dy=".35em">&#x25B8;</text>
+                <text class="axis-tick-label" text-anchor="end"
+                    [attr.x]="rlnInfo.clampMarginLeft" dx="-.35em"
+                    [attr.y]="2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight + rlnInfo.graphTopBottomPadding"
+                    dy=".85em">{{ rlnInfo.histoMax }}</text>
+                <text class="axis-label" text-anchor="end"
+                    [attr.x]="rlnInfo.clampMarginLeft" dx="-.35em"
+                    [attr.y]="2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight + .5*rlnInfo.graphHeight"
+                    dy="-.55em"># of</text>
+                <text class="axis-label" text-anchor="end"
+                    [attr.x]="rlnInfo.clampMarginLeft" dx="-.35em"
+                    [attr.y]="2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight + .5*rlnInfo.graphHeight"
+                    dy=".55em">Samples</text>
+                <text class="axis-tick-label" text-anchor="end"
+                    [attr.x]="rlnInfo.clampMarginLeft" dx="-.35em"
+                    [attr.y]="2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight + rlnInfo.graphHeight - rlnInfo.graphTopBottomPadding">0</text>
+            </g>
+            <!-- horizontal lines -->
+            <line class="left-plot-hr" x1="0" [attr.x2]="rlnInfo.getWidth()" [attr.stroke-width.px]="rlnInfo.hrHeight"
+                [attr.y1]="rlnInfo.marginTop + 2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom)"
+                [attr.y2]="rlnInfo.marginTop + 2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom)"
+            />
+            <line class="left-plot-hr" x1="0" [attr.x2]="rlnInfo.getWidth()" [attr.stroke-width.px]="rlnInfo.hrHeight"
+                [attr.y1]="rlnInfo.marginTop + 2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight + rlnInfo.graphHeight"
+                [attr.y2]="rlnInfo.marginTop + 2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight + rlnInfo.graphHeight"
+            />
+            <!-- clamp -->
+            <g [attr.transform]="'translate(' + rlnInfo.clampMarginLeft + ',' + (rlnInfo.marginTop + 2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight) + ')'">
+                <line class="clamp" x1="0" x2="0" [attr.y1]="rlnInfo.graphTopBottomPadding" [attr.y2]="rlnInfo.graphHeight - rlnInfo.graphTopBottomPadding"/>
+                <line class="clamp" x1="0" [attr.x2]="rlnInfo.clampWidth" [attr.y1]="rlnInfo.graphTopBottomPadding" [attr.y2]="rlnInfo.graphTopBottomPadding"/>
+                <line class="clamp" x1="0" [attr.x2]="rlnInfo.clampWidth" [attr.y1]="rlnInfo.graphHeight - rlnInfo.graphTopBottomPadding" [attr.y2]="rlnInfo.graphHeight - rlnInfo.graphTopBottomPadding"/>
+            </g>
+            <!-- bins -->
+            <g *ngFor="let bin of rlnInfo.bins; let i = index" [attr.transform]="'translate(' + rlnInfo.getBinX(bin, i) + ',' + rlnInfo.marginTop + ')'">
+                <rect x="0" y="0" class="header-box-percent" [attr.height]="rlnInfo.headerHeight"
+                    [attr.width]="bin.isMissingValue ? rlnInfo.mvBinWidth : rlnInfo.normalBinWidth"/>
+                <text class="axis-tick-label" text-anchor="middle"
+                    [attr.y]="rlnInfo.headerHeight/2"
+                    [attr.x]="bin.isMissingValue ? rlnInfo.mvBinWidth/2 : rlnInfo.normalBinWidth/2"
+                    dy=".35em">{{ (100 * bin.getCount() / totalCount) | numFormatter: true:false }}</text>
+                <!-- in order to handle MV, we add a stroke in all cases and resize accordingly -->
+                <rect class="header-box-bins" [attr.fill]="bin.color" [attr.x]="rlnInfo.headerStrokeWidth"
+                    [attr.y]="rlnInfo.headerHeight + rlnInfo.headerMarginBottom + rlnInfo.headerStrokeWidth"
+                    [attr.height]="rlnInfo.headerHeight - 2*rlnInfo.headerStrokeWidth"
+                    [attr.width]="(bin.isMissingValue ? rlnInfo.mvBinWidth : rlnInfo.normalBinWidth) - 2*rlnInfo.headerStrokeWidth"
+                    [attr.stroke-width.px]="rlnInfo.headerStrokeWidth" [attr.stroke]="bin.isMissingValue ? '#D8D8D8' : bin.color"/>
+                <text class="axis-tick-label" text-anchor="middle"
+                    [attr.y]="1.5*rlnInfo.headerHeight + rlnInfo.headerMarginBottom"
+                    [attr.x]="bin.isMissingValue ? rlnInfo.mvBinWidth/2 : rlnInfo.normalBinWidth/2"
+                    [style.fill]="bin.labelColor"
+                    dy=".35em">{{ bin.isMissingValue ? "MV" : (bin.label | truncator: 7) }}</text>
+                <rect class="header-box-bins-mouse-foreground" fill="transparent" x="0"
+                    [attr.y]="rlnInfo.headerHeight + rlnInfo.headerMarginBottom" [attr.height]="rlnInfo.headerHeight"
+                    [attr.width]="bin.isMissingValue ? rlnInfo.mvBinWidth : rlnInfo.normalBinWidth"
+                    (mouseover)="setHighlightBin(bin, $event, true)" (mouseout)="setHighlightBin(null, $event, true)"/>
+                <!-- graph portion -->
+                <g [attr.transform]="'translate(0,' + (2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight) + ')'">
+                    <rect class="graph-background" x="0" y="0"
+                        [attr.height]="rlnInfo.graphHeight"
+                        [attr.width]="bin.isMissingValue ? rlnInfo.mvBinWidth : rlnInfo.normalBinWidth"/>
+                    <!-- sub-bins -->
+                    <rect *ngFor="let count of bin.subBinCounts; let j = index" class="subbin-bar"
+                        [attr.x]="j * rlnInfo.getSubBinWidth(bin)"
+                        [attr.width]="rlnInfo.getSubBinWidth(bin)"
+                        [attr.y]="rlnInfo.graphHeight - rlnInfo.yScale(count)"
+                        [attr.height]="rlnInfo.yScale(count)"/>
+                    <!-- mouse listener -->
+                    <rect class="graph-mouse-foreground" x="0" y="0"
+                        [attr.height]="rlnInfo.graphHeight"
+                        [attr.width]="bin.isMissingValue ? rlnInfo.mvBinWidth : rlnInfo.normalBinWidth"
+                        [attr.stroke-width.px]="bin === highlightBin && !tooltipIsLabel ? 2 : 0"
+                        (mouseover)="setHighlightBin(bin, $event)" (mouseout)="setHighlightBin(null, $event)"/>
+                    <line *ngIf="bin.isMissingValue" class="curve"
+                        x1="0" [attr.x2]="rlnInfo.mvBinWidth"
+                        [attr.y1]="rlnInfo.graphHeight - rlnInfo.yScale(bin.getCount())"
+                        [attr.y2]="rlnInfo.graphHeight - rlnInfo.yScale(bin.getCount())"/>
+                </g>
+            </g>
+            <!-- curve -->
+            <g [attr.transform]="'translate(0,' + (rlnInfo.marginTop + 2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + rlnInfo.hrHeight) + ')'">
+                <path class="curve" [attr.d]="rlnInfo.curve"/>
+            </g>
+            <!-- legend -->
+            <g [attr.transform]="'translate(' + rlnInfo.labelAreaWidth + ',' + (rlnInfo.marginTop + 2*(rlnInfo.headerHeight + rlnInfo.headerMarginBottom) + 2*rlnInfo.hrHeight + rlnInfo.graphHeight + rlnInfo.colorBarMarginTop) + ')'">
+                <rect x="0" y="0" [attr.width]="rlnInfo.getColorBarWidth()"
+                    [attr.height]="rlnInfo.colorBarHeight" [attr.fill]="'url(#' + rlnInfo.patternId + ')'"/>
+                <text class="axis-tick-label" text-anchor="start"
+                    x="0" dx=".35em" dy=".35em" [style.fill]="rlnInfo.bins[0].labelColor"
+                    [attr.y]="rlnInfo.colorBarHeight/2" >{{ rlnInfo.xMin | numFormatter }}</text>
+                <text class="axis-tick-label" text-anchor="end"
+                    [attr.x]="rlnInfo.getColorBarWidth()" dx="-.35em" dy=".35em" [style.fill]="rlnInfo.bins[rlnInfo.bins.length-2].labelColor"
+                    [attr.y]="rlnInfo.colorBarHeight/2" >{{ rlnInfo.xMax | numFormatter }}</text>
+                <rect [attr.x]="rlnInfo.getColorBarWidth() + rlnInfo.normalBinMarginRight + rlnInfo.headerStrokeWidth"
+                    [attr.y]="rlnInfo.headerStrokeWidth" [attr.width]="rlnInfo.mvBinWidth - 2*rlnInfo.headerStrokeWidth"
+                    [attr.height]="rlnInfo.colorBarHeight - 2*rlnInfo.headerStrokeWidth"
+                    [attr.stroke-width.px]="rlnInfo.headerStrokeWidth" stroke="#D8D8D8" fill="none"/>
+                <text class="axis-tick-label" text-anchor="middle" dy=".35em"
+                    [attr.x]="rlnInfo.getColorBarWidth() + rlnInfo.normalBinMarginRight + rlnInfo.mvBinWidth/2"
+                    [style.fill]="rlnInfo.bins[rlnInfo.bins.length-1].labelColor"
+                    [attr.y]="rlnInfo.colorBarHeight/2">MV</text>
+            </g>
+        </svg>
+        <svg *ngIf="rrInfo && rrInfo.groupingType == 'normal'" class="right-plot" [attr.width]="rrInfo.leftWidth + rrInfo.rightWidth - 1" [attr.height]="plotMatchedHeight">
+            <rect class="plot-background-shaded" [attr.x]="rrInfo.leftWidth+1" y="0" [attr.width]="rrInfo.rightWidth" [attr.height]="plotMatchedHeight"/>
+            <g [attr.transform]="'translate(0, ' + rrInfo.headerBaseline + ')'">
+                <text class="axis-tick-label" [attr.x]="rrInfo.xScale(rrInfo.histoMax)" dx="-.15em" text-anchor="start">{{ rrInfo.histoMax }}</text>
+                <line class="axis-tick" [attr.x1]="rrInfo.xScale(rrInfo.histoMax)" [attr.x2]="rrInfo.xScale(rrInfo.histoMax)" [attr.y1]="rrInfo.headerHeight - rrInfo.headerBaseline - rrInfo.tickHeight" [attr.y2]="rrInfo.headerHeight - rrInfo.headerBaseline"/>
+                <text class="axis-tick-label" [attr.x]="rrInfo.xScale(rrInfo.histoMax/2)" text-anchor="middle">{{ rrInfo.histoMax / 2 }}</text>
+                <line class="axis-tick" [attr.x1]="rrInfo.xScale(rrInfo.histoMax/2)" [attr.x2]="rrInfo.xScale(rrInfo.histoMax/2)" [attr.y1]="rrInfo.headerHeight - rrInfo.headerBaseline - rrInfo.tickHeight" [attr.y2]="rrInfo.headerHeight - rrInfo.headerBaseline"/>
+                <text class="axis-tick-label" [attr.x]="rrInfo.xScale(0)" dx=".35em" text-anchor="end">0</text>
+                <line class="axis-tick" [attr.x1]="rrInfo.xScale(0)" [attr.x2]="rrInfo.xScale(0)" [attr.y1]="rrInfo.headerHeight - rrInfo.headerBaseline - rrInfo.tickHeight" [attr.y2]="rrInfo.headerHeight - rrInfo.headerBaseline"/>
+                <text class="axis-label-arrow" [attr.x]="rrInfo.leftWidth" dy=".15em">&#x25C2;</text>
+                <text class="axis-label" [attr.x]="rrInfo.leftWidth + 16" dy=".1em">Number of Samples</text>
+            </g>
+            <line class="axis-line" x1="0" [attr.x2]="rrInfo.leftWidth + rrInfo.rightWidth - 1"
+                [attr.y1]="rrInfo.headerHeight" [attr.y2]="rrInfo.headerHeight"/>
+            <g *ngFor="let group of rrInfo.groups; let i = index" [attr.transform]="'translate(0, ' + (rrInfo.headerHeight + i*rrInfo.getGroupHeight()) + ')'">
+                <text class="histo-primary-label" [attr.x]="rrInfo.leftWidth"
+                    [attr.y]="rrInfo.getGroupHeight()/2" text-anchor="start" dx=".45em"
+                    trunctip maxLength="19" [tooltipText]="group.label"/>
+                <text class="histo-secondary-label" [attr.x]="rrInfo.leftWidth + rrInfo.secondaryLabelOffset"
+                    [attr.y]="rrInfo.getGroupHeight()/2" text-anchor="start">-{{ group.count }} sample{{ group.count == 1 ? "" : "s" }}</text>
+                <rect *ngFor="let bin of group.bins; let j = index" class="right-histo-bar"
+                    [attr.x]="rrInfo.getBinX(bin)" [attr.width]="rrInfo.getBinWidth(bin)"
+                    [attr.y]="rrInfo.getBinY(bin, highlightBin, j)" [attr.height]="rrInfo.getBinHeight(bin, highlightBin)"
+                    [attr.fill]="bin.color" [attr.stroke-width.px]="rrInfo.binStroke"
+                    [attr.stroke]="rrInfo.getBinStrokeColor(bin, highlightBin)"
+                    (mouseover)="setHighlightBin(bin, $event)" (mouseout)="setHighlightBin(null, $event)"/>
+            </g>
+        </svg>
+    </div>
+</div>
+<!-- keep this outside the ng-draggable so its location isn't transformed -->
+<div *ngIf="highlightBin" class="tooltip bottom" [style.top.px]="tooltipTop" [style.left.px]="tooltipLeft">
+    <div class="tooltip-arrow"></div>
+    <div *ngIf="!tooltipIsLabel" class="tooltip-inner">
+        <span class="tooltip-samples-count">{{ highlightBin.getCount() }}&nbsp;</span>Sample{{ highlightBin.getCount() == 1 ? "" : "s" }}
+    </div>
+    <div *ngIf="tooltipIsLabel" class="tooltip-inner">
+        <span class="tooltip-samples-count">{{ highlightBin.label }}</span>
+    </div>
+</div>
+
+<div *ngIf="showTimeToEventPopup" class="panel panel-default time-to-event-popup"
+    [style.left.px]="timeToEventPopupLeft - getPopupWidth()" [style.top.px]="timeToEventPopupTop" ngDraggable>
+    <div class="panel-heading">
+        <div class="panel-title" [style.width.px]="getPopupWidth()">{{row.getName() }} Time-to-Event Analysis</div>
+        <div *ngIf="timeToEventFormModel.isDone" class="close-x" (click)="onCloseTimeToEventPopup()"><i class="fa fa-times"></i></div>
+    </div>
+    <div class="panel-body">
+        <div *ngIf="timeToEventFormModel.isDone" class="time-to-event-plot-container">
+            <div class="buttons-row">
+                <button class="btn btn-primary" (click)="onReturnToForm()">Edit Setup</button>
+                <ng-template #tteHelpContent>
+                    <p>The graph area shows
+                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3932959/" target="_blank">Kaplan-Meier curves</a>
+                    for the samples in your data, where the samples have been grouped
+                    according to {{ row.getName() }}. Any samples that did not have
+                    a value for {{ row.getName() }} are excluded.</p>
+                    <p>The <i>log-rank p-value</i> is a summary statistic that
+                    captures the extent to which the differences between the groups'
+                    curves are significant.</p>
+                </ng-template>
+                <i class="fa fa-info-circle"
+                    [popover]="tteHelpContent"
+                    containerClass="infoClass"
+                    popoverTitle="About this Analysis"
+                    placement="bottom"
+                    outsideClick="true">
+                </i>
+            </div>
+            <survival-curves-plot [timeUnitsLabel]="null" [survivalCohorts]="survivalCohorts" [pValue]="timeToEventPValue"></survival-curves-plot>
+        </div>
+        <form *ngIf="!timeToEventFormModel.isDone" #timeToEventForm="ngForm">
+            <p class="instructions">Select the data to be used for the time-to-event analysis.</p>
+            <p class="big-label">Event / Censor Status:</p>
+            <div class="form-group">
+                <label class="control-label">SELECT SPREADSHEET</label>
+                <select class="form-control" [(ngModel)]="timeToEventFormModel.eventSpreadsheetIndex"
+                    required name="eventSpreadsheetIndex" #eventSpreadsheetIndex="ngModel"
+                    (change)="onChangeEventSpreadsheetIndex()">
+                    <option *ngIf="timeToEventFormModel.eventSpreadsheetIndex === null" value selected></option>
+                    <option *ngFor="let fileInfo of timeToEventFormModel.spreadsheetOptions" [value]="fileInfo.index">{{ fileInfo.name }}</option>
+                </select>
+            </div>
+            <div *ngIf="timeToEventFormModel.eventRowOptions?.length > timeToEventMaxRowsForSelect" class="form-group">
+                <label class="control-label">SEARCH ROW LABEL</label>
+                <div class="typeahead-input-container input-group">
+                    <span class="input-group-addon" [class.disabled]="!eventSpreadsheetIndex.valid">
+                        <i class="fa fa-fw fa-search"></i>
+                    </span>
+                    <input [(ngModel)]="timeToEventFormModel.eventRowFilter"
+                        name="eventRowFilter"
+                        [typeahead]="timeToEventFormModel.eventRowOptions"
+                        (keyup)="onEventRowKeyup()"
+                        (typeaheadOnSelect)="onChangeEventRow($event)"
+                        typeaheadOptionsLimit="10"
+                        placeholder="SEARCH ROW LABEL"
+                        class="form-control"
+                        autocomplete="off"
+                        [disabled]="!eventSpreadsheetIndex.valid">
+                </div>
+            </div>
+            <div *ngIf="timeToEventFormModel.eventRowOptions?.length <= timeToEventMaxRowsForSelect" class="form-group">
+                <label class="control-label">SELECT ROW LABEL</label>
+                <select class="form-control" [(ngModel)]="timeToEventFormModel.eventRowIndex"
+                    required name="eventRowIndex" #eventRowIndex="ngModel"
+                    (change)="onChangeEventRowIndex()">
+                    <option *ngIf="timeToEventFormModel.eventRowIndex === null" value selected></option>
+                    <option *ngFor="let name of timeToEventFormModel.eventRowOptions; let rowIndex = index"
+                        [value]="rowIndex">{{ name }}</option>
+                </select>
+            </div>
+            <div class="form-group inline-form-group">
+                <label class="control-label">EVENT VALUE</label><!-- no whitespace, because this portion is inline-block
+             --><select class="form-control" [(ngModel)]="timeToEventFormModel.eventValue"
+                    required name="eventValue" #eventValue="ngModel"
+                    [disabled]="timeToEventFormModel.eventRowIndex === null || timeToEventFormModel.eventValueOptions.length == 0"
+                    (change)="onChangeEventValue()">
+                    <option *ngIf="timeToEventFormModel.eventValue === null" value selected></option>
+                    <option *ngFor="let option of timeToEventFormModel.eventValueOptions" [value]="option">{{ option }}</option>
+                </select>
+            </div>
+            <hr>
+            <p class="big-label">Serial Time:</p>
+            <div class="form-group">
+                <label class="control-label">SELECT SPREADSHEET</label>
+                <select class="form-control" [(ngModel)]="timeToEventFormModel.timeSpreadsheetIndex"
+                    required name="timeSpreadsheetIndex" #timeSpreadsheetIndex="ngModel"
+                    (change)="onChangeTimeSpreadsheetIndex()">
+                    <option *ngIf="timeToEventFormModel.timeSpreadsheetIndex === null" value selected></option>
+                    <option *ngFor="let fileInfo of timeToEventFormModel.spreadsheetOptions" [value]="fileInfo.index">{{ fileInfo.name }}</option>
+                </select>
+            </div>
+            <div *ngIf="timeToEventFormModel.timeRowOptions?.length > timeToEventMaxRowsForSelect" class="form-group">
+                <label class="control-label">SEARCH ROW LABEL</label>
+                <div class="typeahead-input-container input-group">
+                    <span class="input-group-addon" [class.disabled]="!timeSpreadsheetIndex.valid">
+                        <i class="fa fa-fw fa-search"></i>
+                    </span>
+                    <input [(ngModel)]="timeToEventFormModel.timeRowFilter"
+                        name="timeRowFilter"
+                        [typeahead]="timeToEventFormModel.timeRowOptions"
+                        (keyup)="onTimeRowKeyup()"
+                        (typeaheadOnSelect)="onChangeTimeRow($event)"
+                        typeaheadOptionsLimit="10"
+                        placeholder="SEARCH ROW LABEL"
+                        class="form-control"
+                        autocomplete="off"
+                        [disabled]="!timeSpreadsheetIndex.valid">
+                </div>
+            </div>
+            <div *ngIf="timeToEventFormModel.timeRowOptions?.length <= timeToEventMaxRowsForSelect" class="form-group">
+                <label class="control-label">SELECT ROW LABEL</label>
+                <select class="form-control" [(ngModel)]="timeToEventFormModel.timeRowIndex"
+                    required name="timeRowIndex" #timeRowIndex="ngModel"
+                    (change)="onChangeTimeRowIndex()">
+                    <option *ngIf="timeToEventFormModel.timeRowIndex === null" value selected></option>
+                    <!-- don't like looking up indices this way, but this might be option that'd
+                         require fewest changes for eventual ng-bootstrap upgrade -->
+                    <option *ngFor="let name of timeToEventFormModel.timeRowOptions"
+                        [value]="getIndexForRow(getSpreadsheetFromIdString(timeToEventFormModel.timeSpreadsheetIndex), name)">{{ name }}</option>
+                </select>
+            </div>
+            <div class="button-container">
+                <button class="btn btn-default" (click)="onCloseTimeToEventPopup()">Cancel</button><!-- no whitespace
+             --><button class="btn btn-primary" (click)="onTimeToEventFormDone()" [disabled]="timeToEventFormModel.eventValue === null || timeToEventFormModel.timeRowIndex === null">Done</button>
+            </div>
+        </form>
+    </div>
+</div>

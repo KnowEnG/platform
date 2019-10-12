@@ -40,7 +40,7 @@ def get_collections(all_species, all_networks):
     """
     # keeping kegg even though it's not part of our usual KN anymore
     # for all I know, it'll be available in specially licensed versions
-    default_pg_names = ['gene_ontology', 'kegg_pathway', 'pfam_domains']
+    default_pg_names = ['gene_ontology', 'kegg_pathway', 'pfam_prot']
     sc_display_orders = {
         'Ontologies': 1,
         'Pathways': 2,
