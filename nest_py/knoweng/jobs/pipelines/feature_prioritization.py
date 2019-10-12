@@ -1,38 +1,4 @@
 """This module defines a class for running knoweng's feature prioritization jobs."""
-
-### Summary of paths and docker mounts for AWS (TODO: generalize across hosts and pipelines) ###
-# on the host:
-#
-# /mnt/storage/interface/   <-- mounted to pipeline's docker container
-#
-# /mnt/storage/interface/networks/   <-- contains network files in tree of subdirectories
-#
-# /mnt/storage/interface/userfiles/projectid/jobs/jobid/   <-- contains yml file
-#
-# /mnt/storage/interface/userfiles/projectid/jobs/jobid/results/   <-- contains outputs
-#
-# /mnt/storage/interface/userfiles/projectid/files/fileid   <-- the user's features file
-# /mnt/storage/interface/userfiles/projectid/files/file2id   <-- the user's response file
-#
-#
-# in the container:
-#
-# /home/run_dir/ can map to the host's /mnt/storage/interface/
-#
-#
-# calling the script:
-#
-# -run_directory can be /home/run_dir/userfiles/projectid/jobs/jobid/
-# -run_file can be the name of a yml file in that directory
-#
-#
-# in the yml file:
-#
-# (working directory will be /home/run_dir/userfiles/projectid/jobid/)
-# results_directory can be ./results/
-# network file paths will look like ../../../networks/...
-# spreadsheet files paths will look like ../fileid
-
 import csv
 import logging
 import os
