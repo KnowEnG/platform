@@ -21,7 +21,7 @@ jsoncomment==0.3.0
 # note we also have non-python dependencies installed in docker images via apt-get:
 # pkg-config libpng-dev libfreetype6-dev libblas-dev liblapack-dev gfortran
 matplotlib==2.0.2
-IPython==5.3.0
+IPython==7.16.3
 scipy==1.2.1
 scikit-bio==0.4.2
 
