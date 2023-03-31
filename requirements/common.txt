@@ -3,7 +3,7 @@ urllib3==1.23
 requests==2.19.1
 
 # redis
-redis==2.10.3
+redis==4.4.4
 
 # job queue
 # if changing the version of rq, check the cPickle override in hooks.py
