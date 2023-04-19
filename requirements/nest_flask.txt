@@ -12,4 +12,4 @@ Flask-Script==2.0.5
 Flask-SQLAlchemy==2.1
 
 # status endpoint
-GitPython==2.1.11
+GitPython==3.1.30
