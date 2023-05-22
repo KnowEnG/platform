@@ -1,6 +1,6 @@
 # HTTP requests
 urllib3==1.23
-requests==2.19.1
+requests==2.31.0
 
 # redis
 redis==2.10.3
