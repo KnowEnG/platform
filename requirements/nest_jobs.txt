@@ -22,7 +22,7 @@ jsoncomment==0.3.0
 # pkg-config libpng-dev libfreetype6-dev libblas-dev liblapack-dev gfortran
 matplotlib==2.0.2
 IPython==5.3.0
-scipy==1.2.1
+scipy==1.10.0
 scikit-bio==0.4.2
 
 #biom-format for reading tornado output. also needs non-python deps for
